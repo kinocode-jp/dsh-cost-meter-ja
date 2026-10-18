@@ -2579,7 +2579,7 @@
       // 设置页「费用/Cost」分节:语言变化时撤销旧注册并重建,让侧边栏标签同步。
       const sectionActive = slotActive()
       const registerSection = locale => {
-        registerSlot(sectionActive, 'settings.section', { name: 'settings.section', id: 'cost-meter', order: 30, label: locale === 'en' ? MESSAGES.en.sectionLabel : MESSAGES.zh.sectionLabel, inject: injected }, CostSection, true)
+        registerSlot(sectionActive, 'settings.section', { name: 'settings.section', id: 'cost-meter', order: 30, label: makeT(locale)('sectionLabel'), inject: injected }, CostSection, true)
       }
       // Token 用量统计「通用设置」行(position = general 时,注入宿主通用设置页的 settings.general.item 插槽)。
       const generalUsageActive = slotActive()
@@ -2589,7 +2589,7 @@
       // Token 用量统计「独立分节」(position = section 时,像「费用」一样拥有自己的设置导航项)。
       const usageSectionActive = slotActive()
       const registerUsageSection = (enabled, locale) => {
-        registerSlot(usageSectionActive, 'settings.section', { name: 'settings.section', id: 'cost-meter-usage', order: 31, label: locale === 'en' ? MESSAGES.en.usageSectionLabel : MESSAGES.zh.usageSectionLabel, inject: injected }, UsagePanel, enabled)
+        registerSlot(usageSectionActive, 'settings.section', { name: 'settings.section', id: 'cost-meter-usage', order: 31, label: makeT(locale)('usageSectionLabel'), inject: injected }, UsagePanel, enabled)
       }
       let lastPosition = null
       let lastFooter = null
