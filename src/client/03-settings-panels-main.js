@@ -848,11 +848,8 @@
 
     /** 窗口短标签(本地化;未知窗口名原样展示)。 */
     function planWindowLabelOf(wk, locale) {
-      const ja = locale === 'ja'
-      if (wk === 'fiveHour') return locale === 'en' ? '5-hour' : ja ? '5 時間' : '5 小时'
-      if (wk === 'weekly') return locale === 'en' ? 'This week' : ja ? '今週' : '本周'
-      if (wk === 'monthly') return locale === 'en' ? 'This month' : ja ? '今月' : '本月'
-      if (wk === 'daily') return locale === 'en' ? 'Today' : ja ? '今日' : '当日'
+      const key = { fiveHour: 'planWindow5h', weekly: 'planWindowWeek', monthly: 'planWindowMonth', daily: 'planWindowDay' }[wk]
+      if (key) return makeT(locale)(key)
       return wk
     }
     /** Plan 提供商显示名(复用额度面板的 labelKey;Go 单独)。 */
@@ -1193,11 +1190,11 @@
     }
 
     /** 额度窗口行(Go 与 Coding Plan 共用):无百分比的文本窗口显示为纯文本行。 */
-    const quotaWindowRow = (t, label, win, direction, main, key = label) => {
+    const quotaWindowRow = (t, label, win, direction, main, key = label, config = null) => {
       if (typeof win?.percent !== 'number') {
         return el('div', { key, className: 'cm-go-row' + (main ? ' main' : '') },
           el('span', { className: 'cm-go-label' }, label),
-          el('span', { className: 'cm-go-num' }, planWindowText(key, win, t, true)))
+          el('span', { className: 'cm-go-num' }, planWindowText(key, win, t, true, config)))
       }
       const percent = Math.max(0, Math.min(100, Number(win.percent) || 0))
       const barView = simpleBarByDirection(percent, direction)
@@ -1581,7 +1578,7 @@
                   wide: true,
                   direction: barDirectionOf(config, 'plan'),
                 })
-                : Object.entries(windows).map(([name, win]) => quotaWindowRow(t, codingPlanWindowLabel(name, t), win, barDirectionOf(config, 'plan'), false, name)))
+                : Object.entries(windows).map(([name, win]) => quotaWindowRow(t, codingPlanWindowLabel(name, t), win, barDirectionOf(config, 'plan'), false, name, config)))
               : el('div', { className: 'cm-bal-line' }, t('codingPlanNotQueried')),
             el('div', { className: 'cm-go-time' }, t('goQuotaFetchedAt', {
               time: live.fetchedAt > 0 ? new Date(live.fetchedAt).toLocaleTimeString() : '—',
@@ -1756,7 +1753,7 @@
       const addEntry = (adapter = 'custom') => {
         if (entries.length >= 8) return
         if (adapter === 'workbuddy2api') {
-          setEntries([...entries, { enabled: false, label: resolveLocale(config) === 'ja' ? 'WorkBuddy2API クレジット' : 'WorkBuddy2API 积分', labelEn: 'WorkBuddy2API credits', display: 'both', unit: 'CREDITS', refreshMinutes: 15,
+          setEntries([...entries, { enabled: false, label: resolveLocale(config) === 'en' ? 'WorkBuddy2API 积分' : makeT(resolveLocale(config))('workbuddyCreditsLabel'), labelEn: 'WorkBuddy2API credits', display: 'both', unit: 'CREDITS', refreshMinutes: 15,
             request: { url: 'http://127.0.0.1:8790/api/credits/expiry?package_limit=1', method: 'GET', headers: { 'X-Admin-Token': '{{WORKBUDDY2API_ADMIN_TOKEN}}' } },
             extract: { remaining: 'summary.available_remaining' }, allowedHosts: ['127.0.0.1:8790'], allowInsecureHttp: false }])
           return
@@ -1764,7 +1761,7 @@
         setEntries([...entries, {
           ...(adapter !== 'custom' ? { adapter } : {}),
           enabled: false,
-          label: adapter === 'tokenrhythm' ? 'Token Rhythm' : adapter === 'aliyun' ? (resolveLocale(config) === 'ja' ? 'Qwen / Alibaba Cloud' : '千问 / 阿里云') : '',
+          label: adapter === 'tokenrhythm' ? 'Token Rhythm' : adapter === 'aliyun' ? (resolveLocale(config) === 'en' ? '千问 / 阿里云' : makeT(resolveLocale(config))('aliyunBalanceLabel')) : '',
           labelEn: adapter === 'tokenrhythm' ? 'Token Rhythm' : adapter === 'aliyun' ? 'Qianwen / Alibaba Cloud' : '',
           display: 'both',
           unit: adapter !== 'custom' ? 'CNY' : 'USD',
@@ -2238,10 +2235,10 @@
         // ── 价格:峰谷计价、价格表、模型名匹配、官方价格同步、OpenRouter 公开报价 ──
         tab === 'pricing' ? el('div', { key: 'pricing', className: 'cm-pricing-page' },
         el('div', { className: 'cm-pricing-heading' },
-          el('div', null, el('h3', { className: 'cm-h' }, locale === 'en' ? 'Pricing' : locale === 'ja' ? '料金設定' : '价格设置'), el('p', { className: 'cm-note' }, locale === 'en' ? 'New prices apply to future calls. Historical costs keep their original rates.' : locale === 'ja' ? '価格の変更はこれからの呼び出しに適用されます。過去の費用は元の価格のままです。' : '价格修改用于后续调用，历史费用沿用原价格。')),
-          el('span', { className: 'cm-pricing-unit' }, locale === 'en' ? 'Per 1M tokens' : locale === 'ja' ? '100 万トークンあたり' : '每百万 Token')),
-        el('div', { className: 'cm-pricing-nav', role: 'tablist', 'aria-label': locale === 'en' ? 'Pricing sections' : locale === 'ja' ? '料金の区分' : '价格分区' },
-          [['models', '模型定价', 'Model pricing', 'モデルの価格'], ['catalog', '参考价格表', 'Price tables', '参考価格表'], ['tools', '同步与规则', 'Sync & rules', '同期とルール']].map(([key, zh, en, ja]) => el('button', { key, id: 'cm-pricing-' + key, type: 'button', role: 'tab', 'aria-selected': pricingView === key, 'aria-controls': 'cm-pricing-panel', tabIndex: pricingView === key ? 0 : -1, className: 'cm-pricing-nav-item' + (pricingView === key ? ' active' : ''), onClick: () => setPricingView(key), onKeyDown: event => { const keys = ['models', 'catalog', 'tools']; const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0; if (step) { event.preventDefault(); const next = keys[(keys.indexOf(key) + step + 3) % 3]; setPricingView(next); event.currentTarget.parentElement.querySelector('#cm-pricing-' + next)?.focus() } } }, locale === 'en' ? en : locale === 'ja' ? ja : zh))),
+          el('div', null, el('h3', { className: 'cm-h' }, makeT(locale)('pricingTitle')), el('p', { className: 'cm-note' }, makeT(locale)('pricingNote'))),
+          el('span', { className: 'cm-pricing-unit' }, makeT(locale)('pricingUnit'))),
+        el('div', { className: 'cm-pricing-nav', role: 'tablist', 'aria-label': makeT(locale)('pricingSections') },
+          [['models', 'pricingNavModels'], ['catalog', 'pricingNavCatalog'], ['tools', 'pricingNavTools']].map(([key, labelKey]) => el('button', { key, id: 'cm-pricing-' + key, type: 'button', role: 'tab', 'aria-selected': pricingView === key, 'aria-controls': 'cm-pricing-panel', tabIndex: pricingView === key ? 0 : -1, className: 'cm-pricing-nav-item' + (pricingView === key ? ' active' : ''), onClick: () => setPricingView(key), onKeyDown: event => { const keys = ['models', 'catalog', 'tools']; const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0; if (step) { event.preventDefault(); const next = keys[(keys.indexOf(key) + step + 3) % 3]; setPricingView(next); event.currentTarget.parentElement.querySelector('#cm-pricing-' + next)?.focus() } } }, makeT(locale)(labelKey)))),
         el('div', { id: 'cm-pricing-panel', className: 'cm-pricing-content', role: 'tabpanel', 'aria-labelledby': 'cm-pricing-' + pricingView },
         pricingView === 'models' ?
         el(BillingStatistics, { state, api, load: api.loadPricing, mode: 'matching', draft, setDraft, t, locale, resolveClientPrice, prettyProviderKey, setField, priceEditor: { PriceInput, priceFactor, setPriceFactor, multiplierOptions, priceMultiplierSettings, priceAt } }) : null,
@@ -2388,9 +2385,20 @@
       ctx.effect(() => () => { active = false; clearInterval(pollTimer) }, 'cost-meter: poll timer')
       const refreshLocale = () => { if (active && ctx.fiber?.uid !== null) store.set(store.getSnapshot()) }
       const bindLocale = child => child.effect(() => {
+        // 日本語フォーク: zh/en の辞書を DSH のロケールシステム(名前空間 cost-meter)に登録する。
+        // 他の言語の訳は言語パック(dsh-japanese など)が同じ名前空間に登録する。
+        const runtime = child.get('locale')
+        globalThis.__cmLocaleRuntime = runtime
+        let unregister
+        try { unregister = runtime?.register?.('cost-meter', { zh: MESSAGES.zh, en: MESSAGES.en }) }
+        catch (error) { console.warn('[dsh-cost-meter] locale dictionary registration failed', error) }
         refreshLocale()
-        const stop = child.get('locale')?.subscribe?.(refreshLocale)
-        return () => { stop?.(); refreshLocale() }
+        const stop = runtime?.subscribe?.(refreshLocale)
+        return () => {
+          stop?.(); unregister?.()
+          if (globalThis.__cmLocaleRuntime === runtime) globalThis.__cmLocaleRuntime = undefined
+          refreshLocale()
+        }
       }, 'cost-meter: DSH locale')
       // Native bootstrap may provide locale after this plugin; inject observes arrival/removal.
       if (typeof ctx.inject === 'function') ctx.inject(['locale'], bindLocale)
@@ -2628,9 +2636,12 @@
           registerPeakAlert(peakAlertOn)
           lastPeakAlert = peakAlertOn
         }
-        if (sectionLocale !== lastSectionLocale) {
+        // 日本語フォーク: 言語パックの辞書が後から届くと同じ言語でもラベルが変わるため、ラベルも比較する。
+        const sectionKey = [sectionLocale, makeT(sectionLocale)('sectionLabel'), makeT(sectionLocale)('usageSectionLabel')].join('\u0000')
+        const sectionChanged = sectionKey !== lastSectionLocale
+        if (sectionChanged) {
           registerSection(sectionLocale)
-          lastSectionLocale = sectionLocale
+          lastSectionLocale = sectionKey
         }
         if (usagePosition !== lastUsagePosition) {
           if (USAGE_POSITION_SWITCHABLE) {
@@ -2638,7 +2649,7 @@
             registerUsageSection(usagePosition === 'section', sectionLocale)
           }
           lastUsagePosition = usagePosition
-        } else if (USAGE_POSITION_SWITCHABLE && usagePosition === 'section' && sectionLocale !== lastSectionLocale) {
+        } else if (USAGE_POSITION_SWITCHABLE && usagePosition === 'section' && sectionChanged) {
           registerUsageSection(true, sectionLocale)
         }
       }

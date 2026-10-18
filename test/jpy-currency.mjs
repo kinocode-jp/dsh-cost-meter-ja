@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { Ledger, sanitizeConfig } from '../lib/store.js'
+import { Ledger, sanitizeConfig, applyJapaneseDefaults, defaultConfig } from '../lib/store.js'
 import { createExchangeRateRefresh, parseExchangeRates, EXCHANGE_RATE_URL } from '../lib/exchange-rate-refresh.js'
 import { fxRatesOf, fxRateFor, frozenAmounts, freezeLegacyAmounts, displayUsd, DEFAULT_JPY_RATE } from '../lib/exchange-rates.js'
 import { usdFromCost, normalizeCustomPrice } from '../lib/pricing.js'
@@ -15,7 +15,8 @@ const near = (a, b) => assert.ok(Math.abs(a - b) < 1e-8, `${a} != ${b}`)
 assert.equal(fxRatesOf({}).JPY, undefined)
 assert.equal(fxRateFor({}, 'JPY'), DEFAULT_JPY_RATE)
 assert.equal(fxRatesOf({ fxRates: { JPY: 158 } }).JPY, 158)
-assert.equal(fxRatesOf({ currency: 'JPY', exchangeRate: 160 }).JPY, 160, '表示通貨 JPY の手入力レート')
+assert.equal(fxRatesOf({ currency: 'JPY', exchangeRate: 160 }).JPY, undefined, '自動更新中の表示レート(既定 150 など)では凍結しない')
+assert.equal(fxRatesOf({ currency: 'JPY', exchangeRate: 160, exchangeRateAuto: false }).JPY, 160, '手入力レートは実レート')
 assert.equal(frozenAmounts(1, 1, {}).costJpy, undefined)
 near(frozenAmounts(2, 1, { fxRates: { JPY: 158 } }).costJpy, 316)
 near(frozenAmounts(2, 1, { fxRates: { JPY: 158 } }).apiCostJpy, 158)
@@ -27,6 +28,13 @@ assert.equal(days['2026-10-01'].costJpy, undefined, 'レート未取得なら円
 freezeLegacyAmounts(days, { exchangeRate: 7, fxRates: { CNY: 6.5, EUR: .8, JPY: 158 } })
 near(days['2026-10-01'].costJpy, 316); near(days['2026-10-01'].apiCostJpy, 158); near(days['2026-10-01'].costCny, 14)
 near(displayUsd(days['2026-10-01'], { currency: 'JPY', exchangeRate: 160 }) * 160, 316, '凍結した円額をそのまま表示')
+
+// 既定: 言語は日本語、通貨は日本円。上流の既定のままの項目だけを切り替える。
+const ja = applyJapaneseDefaults(defaultConfig())
+assert.equal(ja.locale, 'ja'); assert.equal(ja.currency, 'JPY'); assert.equal(ja.symbol, '¥'); assert.equal(ja.exchangeRate, DEFAULT_JPY_RATE)
+assert.equal(applyJapaneseDefaults({ locale: 'auto', currency: 'CNY', fxRates: { JPY: 158 } }).exchangeRate, 158)
+const chosen = applyJapaneseDefaults({ locale: 'en', currency: 'EUR', symbol: '€' })
+assert.equal(chosen.locale, 'en'); assert.equal(chosen.currency, 'EUR', '明示的に選んだ言語・通貨は変えない')
 
 // 取得: JPY は任意(なくても CNY/EUR は更新する)。
 const at = Date.parse('2026-10-16T12:00:00Z')
@@ -59,3 +67,9 @@ try {
   near(view.days['2026-10-01'].cost * view.config.exchangeRate, 316)
   console.log('[ok] JPY: rates only when known, legacy rows filled on first quote, custom JPY quotes, JPY view')
 } finally { ledger?.close(); rmSync(root, { recursive: true, force: true }) }
+
+// 整形処理は locale 'ja' を保持する(以前は auto に戻していた)。
+{
+  const { sanitizeConfig: sanitize } = await import('../lib/store.js')
+  assert.equal(sanitize({ locale: 'ja' }).locale, 'ja')
+}

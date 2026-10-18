@@ -123,7 +123,7 @@ window.__ModuleLoader__.load({
       // 已选项被补进列表时列表非空,就不能再报「没有匹配的模型」——否则列表里明明有
       // 一行、提示却说没有,自相矛盾。此时改为说明「无匹配,下面是当前选择」。
       const note = !words.length ? null
-        : matched.length ? (en ? `${matched.length} matches` : (globalThis.__cmLang === 'ja' ? `${matched.length}件の一致` : `${matched.length} 个结果`))
+        : matched.length ? (en ? `${matched.length} matches` : (globalThis.__cmText ? globalThis.__cmText('{n} 个结果', '{n} matches') : '{n} 个结果').replace('{n}', matched.length))
           : shown.length ? (en ? 'No matches · showing the current choice' : (globalThis.__cmText ? globalThis.__cmText('没有匹配的模型 · 下面是当前选择','No matches · showing the current choice') : '没有匹配的模型 · 下面是当前选择'))
             : (en ? 'No matches' : (globalThis.__cmText ? globalThis.__cmText('没有匹配的模型','No matches') : '没有匹配的模型'))
       // 面板直接建在 portal 目标里,不做「先就地渲染再搬家」:否则首帧会白建一整份候选。
@@ -371,11 +371,11 @@ window.__ModuleLoader__.load({
               el('p', { className: 'cm-note' }, en ? 'Review current rates. Open a model to change its price source or enter a custom quote.' : (globalThis.__cmText ? globalThis.__cmText('先看当前单价，点“设置价格”后选择来源或填写这个渠道的价格。','Review current rates. Open a model to change its price source or enter a custom quote.') : '先看当前单价，点“设置价格”后选择来源或填写这个渠道的价格。'))),
             el('div', { className: 'cm-model-toolbar' },
               el('input', { type: 'search', className: 'cm-input', value: query, placeholder: en ? 'Find a model or channel…' : (globalThis.__cmText ? globalThis.__cmText('查找模型或渠道…','Find a model or channel…') : '查找模型或渠道…'), 'aria-label': en ? 'Find configured models' : (globalThis.__cmText ? globalThis.__cmText('查找已用模型','Find configured models') : '查找已用模型'), onChange: event => { setQuery(event.target.value); setLimit(24) }, onKeyDown: event => { if (event.key === 'Escape') { setQuery(''); setLimit(24); event.stopPropagation() } } }),
-              el('span', { className: 'cm-note', role: 'status' }, en ? `${total} models` : (globalThis.__cmLang === 'ja' ? `${total}個のモデル` : `${total} 个模型`))),
+              el('span', { className: 'cm-note', role: 'status' }, en ? `${total} models` : (globalThis.__cmText ? globalThis.__cmText('{n} 个模型', '{n} models') : '{n} 个模型').replace('{n}', total))),
             visiblePending.length ? el('section', { className: 'cm-model-group' }, el('h4', { className: 'cm-pricing-group-title' }, t('unmatchedTitle'), el('span', null, pending.length)), ...visiblePending.map(key => row(key, false))) : null,
             visibleMatched.length ? el('section', { className: 'cm-model-group' }, el('h4', { className: 'cm-pricing-group-title' }, t('matchedTitle'), el('span', null, matched.length)), ...visibleMatched.map(key => row(key, true))) : null,
             total === 0 ? el('p', { className: 'cm-pricing-empty' }, query ? (en ? 'No models found. Try another keyword.' : (globalThis.__cmText ? globalThis.__cmText('没有找到模型，试试其他关键词。','No models found. Try another keyword.') : '没有找到模型，试试其他关键词。')) : (en ? 'Models appear here after their first call.' : (globalThis.__cmText ? globalThis.__cmText('调用过的模型会显示在这里，之后可按渠道设置价格。','Models appear here after their first call.') : '调用过的模型会显示在这里，之后可按渠道设置价格。'))) : null,
-            total > limit ? el('button', { type: 'button', className: 'cm-btn', onClick: () => setLimit(n => n + 24) }, en ? `Show more · ${total - limit} remaining` : (globalThis.__cmLang === 'ja' ? `さらに表示 · 残り${total - limit}件` : `显示更多 · 还有 ${total - limit} 个`)) : null,
+            total > limit ? el('button', { type: 'button', className: 'cm-btn', onClick: () => setLimit(n => n + 24) }, en ? `Show more · ${total - limit} remaining` : (globalThis.__cmText ? globalThis.__cmText('显示更多 · 还有 {n} 个', 'Show more · {n} remaining') : '显示更多 · 还有 {n} 个').replace('{n}', total - limit)) : null,
             dismissed.length > 0 ? el('button', { type: 'button', className: 'cm-btn small', onClick: () => setField('priceMatchDismissed', []) }, t('restorePriceMatches', { count: dismissed.length })) : null,
             el('details', { className: 'cm-pricing-rules' }, el('summary', null, en ? 'Automatic matching rules' : (globalThis.__cmText ? globalThis.__cmText('自动匹配规则','Automatic matching rules') : '自动匹配规则')),
               el('label', { className: 'cm-field' }, el('span', null, t('priceMatchLabel')), el('select', { className: 'cm-input', value: draft?.priceMatch === 'exact' ? 'exact' : 'auto', onChange: event => setField('priceMatch', event.target.value) }, el('option', { value: 'auto' }, t('priceMatchAuto')), el('option', { value: 'exact' }, t('priceMatchExact')))),
@@ -407,7 +407,7 @@ window.__ModuleLoader__.load({
         el('div', { className: 'cm-catalog-toolbar' },
           el('input', { type: 'search', className: 'cm-input', value: query, 'aria-label': en ? 'Search mounted prices' : (globalThis.__cmText ? globalThis.__cmText('搜索已挂载价格','Search mounted prices') : '搜索已挂载价格'), placeholder: en ? 'Search models or providers…' : (globalThis.__cmText ? globalThis.__cmText('搜索模型或厂商…','Search models or providers…') : '搜索模型或厂商…'), onChange: event => changeQuery(event.target.value), onKeyDown: event => { if (event.key === 'Escape') { changeQuery(''); event.stopPropagation() } } }),
           el('select', { className: 'cm-input', value: vendor, 'aria-label': en ? 'Filter price provider' : (globalThis.__cmText ? globalThis.__cmText('筛选价格厂商','Filter price provider') : '筛选价格厂商'), onChange: event => { setVendor(event.target.value); setLimits({}); setOpen({}) } }, el('option', { value: '' }, en ? 'All providers' : (globalThis.__cmText ? globalThis.__cmText('全部厂商','All providers') : '全部厂商')), ...vendors.map(id => el('option', { key: id, value: id }, vendorLabels[id] ?? id))),
-          el('span', { className: 'cm-note', role: 'status' }, en ? `${total} models` : (globalThis.__cmLang === 'ja' ? `${total}個のモデル` : `${total} 个模型`))),
+          el('span', { className: 'cm-note', role: 'status' }, en ? `${total} models` : (globalThis.__cmText ? globalThis.__cmText('{n} 个模型', '{n} models') : '{n} 个模型').replace('{n}', total))),
         ...groups.map(({ id, ids }) => {
           const expanded = open[id] ?? (id === 'deepseek' || words.length > 0 || vendor === id)
           const currency = id === 'deepseek' ? prices.currency ?? 'USD' : 'USD', limit = limits[id] ?? 16
@@ -427,7 +427,7 @@ window.__ModuleLoader__.load({
                     el(RateSummary, { entry, currency, priceEditor, locale }), el(Chevron, { className: 'cm-catalog-edit-caret', open: active })),
                   active ? el('div', { className: 'cm-catalog-editor' }, renderEditor(id, model, entry)) : null)
               }),
-              ids.length > limit ? el('button', { type: 'button', className: 'cm-catalog-more', onClick: () => setLimits(value => ({ ...value, [id]: limit + 16 })) }, en ? `Show more · ${ids.length - limit} remaining` : (globalThis.__cmLang === 'ja' ? `さらに表示 · 残り${ids.length - limit}件` : `显示更多 · 还有 ${ids.length - limit} 个`)) : null) : null)
+              ids.length > limit ? el('button', { type: 'button', className: 'cm-catalog-more', onClick: () => setLimits(value => ({ ...value, [id]: limit + 16 })) }, en ? `Show more · ${ids.length - limit} remaining` : (globalThis.__cmText ? globalThis.__cmText('显示更多 · 还有 {n} 个', 'Show more · {n} remaining') : '显示更多 · 还有 {n} 个').replace('{n}', ids.length - limit)) : null) : null)
         }),
         total === 0 ? el('p', { className: 'cm-pricing-empty' }, en ? 'No matching models.' : (globalThis.__cmText ? globalThis.__cmText('没有找到匹配的模型。','No matching models.') : '没有找到匹配的模型。')) : null,
         el('details', { className: 'cm-pricing-rules' }, el('summary', null, en ? 'Pricing notes' : (globalThis.__cmText ? globalThis.__cmText('计价说明','Pricing notes') : '计价说明')), el('p', { className: 'cm-note' }, t('priceTableNote'))),

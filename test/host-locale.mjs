@@ -52,7 +52,7 @@ try {
   process.env.DSH_HOME = work
   const file = join(work, 'storages', 'cost-meter', 'ledger.json')
   mkdirSync(join(work, 'storages', 'cost-meter'), { recursive: true })
-  writeFileSync(file, JSON.stringify({ version: 1, days: {}, config: { locale: 'auto', goQuota: { enabled: true }, balance: { display: 'off' } } }))
+  writeFileSync(file, JSON.stringify({ version: 1, days: {}, migrations: ['ja-fork-locale-currency-defaults', 'ja-fork-locale-default-2'], config: { locale: 'auto', goQuota: { enabled: true }, balance: { display: 'off' } } }))
   globalThis.fetch = async () => { throw Error('locale regression must not access the network') }
   preference = 'zh'
   apply({ ...ctx,

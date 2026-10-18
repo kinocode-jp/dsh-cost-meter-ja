@@ -131,7 +131,7 @@
         for (const id of Object.keys(v.prices.models)) models[id] = parsePrice(v.prices.models[id], path + '.prices.models.' + id)
       }
       return {
-        locale: v.locale === 'zh' || v.locale === 'en' || v.locale === 'auto' ? v.locale : 'auto',
+        locale: v.locale === 'zh' || v.locale === 'en' || v.locale === 'ja' || v.locale === 'auto' ? v.locale : 'auto',
         position: v.position === 'header' || v.position === 'off' ? v.position : 'dock',
         sidebar: v.sidebar !== false,
         // showSessionId 曾遗漏于本白名单:checkbox 能保存但读侧恒 undefined,
@@ -839,10 +839,18 @@
       if (value > 0 && value < Math.pow(10, -decimals)) effective = decimals + 2
       return symbol + fixedAmount(value, effective)
     }
+    /** 日本語フォーク: 括弧書きに添えるドル額(1 ドル以上は 2 桁、小さい額は桁を増やす)。 */
+    function usdAside(usd) {
+      const v = Math.max(0, Number(usd) || 0)
+      return '$' + fixedAmount(v, v === 0 || v >= 1 ? 2 : v >= 0.01 ? 4 : 6)
+    }
     function formatMoneyUsd(usd, config) {
       const rate = Number(config?.exchangeRate)
       const value = usd * (Number.isFinite(rate) && rate > 0 ? rate : 1)
-      return formatMoneyValue(value, config)
+      const main = formatMoneyValue(value, config)
+      // 日本語フォーク: 日本円で表示するときはドル額を括弧で添える(例: ¥267.058（$1.69）)。
+      if (config?.currency !== 'JPY') return main
+      return resolveLocale(config) === 'ja' ? main + '（' + usdAside(usd) + '）' : main + ' (' + usdAside(usd) + ')'
     }
     function formatTokens(n) {
       const v = Math.max(0, Number(n) || 0)
@@ -1614,11 +1622,10 @@
       }, [sessionId, start, end, pricingKey, config?.hideTurnCost])
       if (!config || config.hideTurnCost || start == null || end == null) return null
       const locale = resolveLocale(config), en = locale === 'en'
-      const names = en ? { input: 'Input', output: 'Output', cacheRead: 'Cache read', cacheWrite: 'Cache write', reasoning: 'Reasoning' }
-        : locale === 'ja' ? { input: '入力', output: '出力', cacheRead: 'キャッシュ読み取り', cacheWrite: 'キャッシュ書き込み', reasoning: '推論' } : { input: '输入', output: '输出', cacheRead: '缓存读取', cacheWrite: '缓存写入', reasoning: '推理' }
+      const tx = (zh, english) => en ? english : globalThis.__cmText ? globalThis.__cmText(zh, english) : zh
+      const names = { input: tx('输入', 'Input'), output: tx('输出', 'Output'), cacheRead: tx('缓存读取', 'Cache read'), cacheWrite: tx('缓存写入', 'Cache write'), reasoning: tx('推理', 'Reasoning') }
       const money = n => formatMoneyUsd(n, { ...config, decimals: Math.max(8, config.decimals ?? 2) })
-      const kinds = en ? { model: 'Model call', compaction: 'Context compaction', search: 'Native search', fetch: 'Web fetch' }
-        : locale === 'ja' ? { model: 'モデル呼び出し', compaction: 'コンテキスト圧縮', search: 'ネイティブ検索', fetch: 'Web 取得' } : { model: '模型调用', compaction: '上下文压缩', search: '原生搜索', fetch: '网页抓取' }
+      const kinds = { model: tx('模型调用', 'Model call'), compaction: tx('上下文压缩', 'Context compaction'), search: tx('原生搜索', 'Native search'), fetch: tx('网页抓取', 'Web fetch') }
       const rowView = (row, i) => el('div', { key: i, style: { marginBottom: 4, overflowWrap: 'anywhere' } },
         row.provider + ':' + row.model + ' · ' + (names[row.bucket] || (row.bucket === 'fetchRequests' ? (en ? 'Fetch requests' : (globalThis.__cmText ? globalThis.__cmText('抓取请求','Fetch requests') : '抓取请求')) : (en ? 'Search requests' : (globalThis.__cmText ? globalThis.__cmText('搜索请求','Search requests') : '搜索请求')))) + (row.plan ? ' (Plan)' : '') + ': ' + (row.requests ? row.requests + (en ? ' requests' : (globalThis.__cmText ? globalThis.__cmText(' 次',' requests') : ' 次')) : row.tokens.toLocaleString()) + ' × ' + (row.priced ? money(row.rate) : '?') + (row.requests ? ' ≈ ' : ' / 1,000,000 ≈ ') + (row.priced ? money(row.cost) : '?'),
         !row.priced ? (en ? ' (price unavailable)' : (globalThis.__cmText ? globalThis.__cmText('（未配置价格）',' (price unavailable)') : '（未配置价格）')) : row.bucket === 'reasoning' && row.rate === 0 ? (en ? ' (no separate charge)' : (globalThis.__cmText ? globalThis.__cmText('（不单独收费）',' (no separate charge)') : '（不单独收费）')) : '')
@@ -1700,7 +1707,22 @@
     /** 记账币种代码 → 符号(官方/自定义余额金额不经汇率换算,符号必须与数值同币种)。 */
     const BALANCE_CURRENCY_SYMBOLS = { USD: '$', CNY: '¥', EUR: '€' }
 
+    /**
+     * 日本語フォーク: 表示通貨が日本円のとき、残高(USD/CNY/EUR)を円に換算し、ドル額を括弧で添える。
+     * 換算できない通貨(クレジットなど)は null を返し、呼び出し側は元の表示を使う。
+     */
+    function balanceInDisplayCurrency(value, config, currency) {
+      if (config?.currency !== 'JPY') return null
+      const code = typeof currency === 'string' ? currency.toUpperCase() : ''
+      const n = Number(value)
+      if (!Number.isFinite(n) || !['USD', 'CNY', 'EUR'].includes(code)) return null
+      const valid = v => typeof v === 'number' && Number.isFinite(v) && v > 0 && v < 1e6
+      const rate = code === 'USD' ? 1 : valid(config.fxRates?.[code]) ? config.fxRates[code] : code === 'CNY' ? 7.2 : 0.92
+      return formatMoneyUsd(n / rate, config)
+    }
     function formatBalanceMoney(value, config, currency) {
+      const converted = balanceInDisplayCurrency(value, config, currency)
+      if (converted !== null) return converted
       // 余额是官方接口返回的记账币种金额(如 CNY),不经过汇率换算;
       // 此前恒用显示币种符号(¥53 渲染成 $53),数值未换算而符号错位近汇率倍。
       const code = typeof currency === 'string' ? currency.toUpperCase() : ''
@@ -1922,9 +1944,8 @@
     function resolveCustomBalanceLabel(cfg, locale) {
       const zh = typeof cfg?.label === 'string' ? cfg.label : ''
       const en = typeof cfg?.labelEn === 'string' ? cfg.labelEn : ''
-      if (locale === 'en') return en || zh || 'Custom balance'
-      if (locale === 'ja') return zh || en || 'カスタム残高'
-      return zh || en || '自定义余额'
+      if (locale === 'en') return en || zh || MESSAGES.en.customBalanceDefaultLabel
+      return zh || en || makeT(locale)('customBalanceDefaultLabel')
     }
 
     // 多配置形态(v1.7.0,issue #79):unit/label 优先读条目自身配置,旧单条
@@ -1941,6 +1962,8 @@
       const unit = customBalanceUnitOf(config, custom, entryCfg)
       const value = Number(amount)
       if (!Number.isFinite(value)) return '—'
+      const converted = balanceInDisplayCurrency(value, config, unit)
+      if (converted !== null) return converted
       // 仅在显示层换算，快照、预算单位和进度比例始终保留源币种。
       const rate = config?.currency === 'USD' ? 1 : Number(config?.exchangeRate)
       if ((entryCfg ?? config?.customBalance)?.convertToDisplayCurrency === true && unit === 'USD' && Number.isFinite(rate) && rate > 0) {
@@ -2809,8 +2832,11 @@
     }
 
     /** 日本語フォーク: 残高の窓は金額(amount)に言語ごとの「残高」を付ける。labelled は窓名ラベルの後ろに続く場合。 */
-    function planWindowText(name, win, t, labelled) {
-      if (typeof win?.amount === 'string') return labelled && name === 'balance' ? win.amount : t('codingPlanWindowBalance') + ' ' + win.amount
+    function planWindowText(name, win, t, labelled, config) {
+      if (typeof win?.amount === 'string') {
+        const amount = balanceInDisplayCurrency(win.value, config, win.currency) ?? win.amount
+        return labelled && name === 'balance' ? amount : t('codingPlanWindowBalance') + ' ' + amount
+      }
       return typeof win?.text === 'string' ? win.text : '—'
     }
 
@@ -2833,7 +2859,7 @@
         const pct = pctOf(win)
         if (pct === null) {
           return el('div', { key: name, className: 'cm-mm-row wide' },
-            el('span', { className: 'cm-mm-text' }, planWindowText(name, win, t, false)))
+            el('span', { className: 'cm-mm-text' }, planWindowText(name, win, t, false, state.config)))
         }
         const level = pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok'
         const barView = simpleBarByDirection(pct, planDirection)
@@ -2846,7 +2872,7 @@
       const detailParts = entries.map(([name, win]) => {
         const pct = pctOf(win)
         const reset = miniMaxResetText(win, t)
-        const value = pct === null ? planWindowText(name, win, t, true)
+        const value = pct === null ? planWindowText(name, win, t, true, state.config)
           : quotaValueText(simpleBarByDirection(pct, planDirection).label, planDirection, t)
         return codingPlanWindowLabel(name, t) + ' ' + value + (reset ? ' · ' + reset : '')
       })
@@ -2858,7 +2884,7 @@
       const level = pcts.some(p => p >= 100) ? 'over' : pcts.some(p => p >= 80) ? 'warn' : 'ok'
       const railText = pcts.length > 0
         ? pcts.slice(0, 2).map(p => simpleBarByDirection(p, planDirection).label + '%').join(' ')
-        : planWindowText(entries[0][0], entries[0][1], t, false)
+        : planWindowText(entries[0][0], entries[0][1], t, false, state.config)
       return el(Tooltip, { portal: true, label: el('span', { style: { whiteSpace: 'pre-line' } }, detail), side: 'right', delayMs: 300 },
         el('div', { ...hoverProps, 'data-cm-display': 'plan', className: 'cm-bbox cm-mm clickable' + (level === 'ok' ? '' : ' ' + level) + (wide === false ? ' rail' : '') + (refresh.busy ? ' busy' : ''), ...clickableRefreshProps(refresh.busy, refresh.run) },
           wide === false
@@ -3080,10 +3106,10 @@
             const pct = win !== null && typeof win === 'object' && typeof win.percent === 'number'
               ? Math.max(0, Math.min(100, Math.round(Number(win.percent) || 0))) : null
             detailParts.push(label + ' '
-              + (pct === null ? planWindowText(name, win, t, true) : pct + '%') + reset)
+              + (pct === null ? planWindowText(name, win, t, true, config) : pct + '%') + reset)
             if (pct === null) {
               // 文本窗口(余额等无百分比的量):以文本段展示,不占进度条名额。
-              segs.push({ name, pct: null, text: planWindowText(name, win, t, false) })
+              segs.push({ name, pct: null, text: planWindowText(name, win, t, false, config) })
               continue
             }
             if (shown >= (rowDef.id === 'factory' ? 3 : 2)) continue
