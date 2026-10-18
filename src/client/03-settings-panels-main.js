@@ -675,9 +675,9 @@
 
     const CATALOG_VENDOR_LABELS = {
       deepseek: 'DeepSeek', stepfun: 'StepFun', openai: 'OpenAI', anthropic: 'Anthropic', google: 'Google Gemini',
-      moonshot: 'Moonshot (Kimi)', 'z-ai': 'Z.ai / 智谱', xai: 'xAI', alibaba: '阿里云百炼',
-      minimax: 'MiniMax', tencent: '腾讯混元', xiaomi: '小米', upstage: 'Upstage', nvidia: 'NVIDIA', mistral: 'Mistral',
-      meta: 'Meta', meituan: '美团 LongCat', 'opencode-go': 'OpenCode Go',
+      moonshot: 'Moonshot (Kimi)', 'z-ai': 'Z.ai (Zhipu)', xai: 'xAI', alibaba: 'Alibaba Cloud Model Studio',
+      minimax: 'MiniMax', tencent: 'Tencent Hunyuan', xiaomi: 'Xiaomi', upstage: 'Upstage', nvidia: 'NVIDIA', mistral: 'Mistral',
+      meta: 'Meta', meituan: 'Meituan LongCat', 'opencode-go': 'OpenCode Go',
     }
 
     /** provider 展示名归一:历史请求携带的 'zen' 是错误叫法,统一展示为 'go'。 */

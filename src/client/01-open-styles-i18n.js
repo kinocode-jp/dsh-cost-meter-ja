@@ -2070,6 +2070,10 @@ window.__ModuleLoader__.load({
 
     // 分块界面(统计/显示/料金表)の日本語表記。英語原文をキーにした対応表。
     const CHUNK_JA = {
+        "Preview unavailable. Display options are still available below.": "プレビューを表示できません。下の表示オプションは引き続き使えます。",
+        "Retry preview": "プレビューを再試行",
+        "More options · layout, currency and refresh intervals": "詳細設定 · レイアウト、金額の形式、更新間隔",
+        "Detected dsh-codex-subscription {version}. Codex subscription usage is not billed as API usage; for compatibility this plugin now defaults new Codex usage to Plan. Reclassify the billing of historical codex-class models as Plan (subscription quota, excluded from API usage)?": "dsh-codex-subscription {version} を検出しました。Codex のサブスクリプション利用は API の費用に含まれません。互換性のため、新しい Codex の利用は自動でプランに分類しています。過去の codex 系モデルの課金もプラン（サブスクリプション枠。API の費用に含めない）に分類し直しますか？",
         "Time": "日時",
         "Scope": "範囲",
         "Before": "再計算前",
