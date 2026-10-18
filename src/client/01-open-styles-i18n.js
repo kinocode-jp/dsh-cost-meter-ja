@@ -2070,6 +2070,11 @@ window.__ModuleLoader__.load({
 
     // 分块界面(统计/显示/料金表)の日本語表記。英語原文をキーにした対応表。
     const CHUNK_JA = {
+        "Time": "日時",
+        "Scope": "範囲",
+        "Before": "再計算前",
+        "After": "再計算後",
+        "Session/day records": "セッション・日付の記録",
         " / request": " / リクエスト",
         " / step ": " / ステップ ",
         " Requests without complete usage: ": " 使用量が不完全なリクエスト：",

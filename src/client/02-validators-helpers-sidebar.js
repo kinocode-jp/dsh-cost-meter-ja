@@ -1607,10 +1607,12 @@
         return () => { active = false }
       }, [sessionId, start, end, pricingKey, config?.hideTurnCost])
       if (!config || config.hideTurnCost || start == null || end == null) return null
-      const en = resolveLocale(config) === 'en'
-      const names = en ? { input: 'Input', output: 'Output', cacheRead: 'Cache read', cacheWrite: 'Cache write', reasoning: 'Reasoning' } : { input: '输入', output: '输出', cacheRead: '缓存读取', cacheWrite: '缓存写入', reasoning: '推理' }
+      const locale = resolveLocale(config), en = locale === 'en'
+      const names = en ? { input: 'Input', output: 'Output', cacheRead: 'Cache read', cacheWrite: 'Cache write', reasoning: 'Reasoning' }
+        : locale === 'ja' ? { input: '入力', output: '出力', cacheRead: 'キャッシュ読み取り', cacheWrite: 'キャッシュ書き込み', reasoning: '推論' } : { input: '输入', output: '输出', cacheRead: '缓存读取', cacheWrite: '缓存写入', reasoning: '推理' }
       const money = n => formatMoneyUsd(n, { ...config, decimals: Math.max(8, config.decimals ?? 2) })
-      const kinds = en ? { model: 'Model call', compaction: 'Context compaction', search: 'Native search', fetch: 'Web fetch' } : { model: '模型调用', compaction: '上下文压缩', search: '原生搜索', fetch: '网页抓取' }
+      const kinds = en ? { model: 'Model call', compaction: 'Context compaction', search: 'Native search', fetch: 'Web fetch' }
+        : locale === 'ja' ? { model: 'モデル呼び出し', compaction: 'コンテキスト圧縮', search: 'ネイティブ検索', fetch: 'Web 取得' } : { model: '模型调用', compaction: '上下文压缩', search: '原生搜索', fetch: '网页抓取' }
       const rowView = (row, i) => el('div', { key: i, style: { marginBottom: 4, overflowWrap: 'anywhere' } },
         row.provider + ':' + row.model + ' · ' + (names[row.bucket] || (row.bucket === 'fetchRequests' ? (en ? 'Fetch requests' : (globalThis.__cmText ? globalThis.__cmText('抓取请求','Fetch requests') : '抓取请求')) : (en ? 'Search requests' : (globalThis.__cmText ? globalThis.__cmText('搜索请求','Search requests') : '搜索请求')))) + (row.plan ? ' (Plan)' : '') + ': ' + (row.requests ? row.requests + (en ? ' requests' : (globalThis.__cmText ? globalThis.__cmText(' 次',' requests') : ' 次')) : row.tokens.toLocaleString()) + ' × ' + (row.priced ? money(row.rate) : '?') + (row.requests ? ' ≈ ' : ' / 1,000,000 ≈ ') + (row.priced ? money(row.cost) : '?'),
         !row.priced ? (en ? ' (price unavailable)' : (globalThis.__cmText ? globalThis.__cmText('（未配置价格）',' (price unavailable)') : '（未配置价格）')) : row.bucket === 'reasoning' && row.rate === 0 ? (en ? ' (no separate charge)' : (globalThis.__cmText ? globalThis.__cmText('（不单独收费）',' (no separate charge)') : '（不单独收费）')) : '')
@@ -2799,6 +2801,12 @@
       return String(name).replace(/_/g, ' ')
     }
 
+    /** 日本語フォーク: 残高の窓は金額(amount)に言語ごとの「残高」を付ける。labelled は窓名ラベルの後ろに続く場合。 */
+    function planWindowText(name, win, t, labelled) {
+      if (typeof win?.amount === 'string') return labelled && name === 'balance' ? win.amount : t('codingPlanWindowBalance') + ' ' + win.amount
+      return typeof win?.text === 'string' ? win.text : '—'
+    }
+
     function CodingPlanBox(props) {
       const hoverProps = useQuotaHoverRefresh()
       const { id, state, wide, api } = props
@@ -2818,7 +2826,7 @@
         const pct = pctOf(win)
         if (pct === null) {
           return el('div', { key: name, className: 'cm-mm-row wide' },
-            el('span', { className: 'cm-mm-text' }, typeof win?.text === 'string' ? win.text : '—'))
+            el('span', { className: 'cm-mm-text' }, planWindowText(name, win, t, false)))
         }
         const level = pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok'
         const barView = simpleBarByDirection(pct, planDirection)
@@ -2831,7 +2839,7 @@
       const detailParts = entries.map(([name, win]) => {
         const pct = pctOf(win)
         const reset = miniMaxResetText(win, t)
-        const value = pct === null ? (typeof win?.text === 'string' ? win.text : '—')
+        const value = pct === null ? planWindowText(name, win, t, true)
           : quotaValueText(simpleBarByDirection(pct, planDirection).label, planDirection, t)
         return codingPlanWindowLabel(name, t) + ' ' + value + (reset ? ' · ' + reset : '')
       })
@@ -2843,7 +2851,7 @@
       const level = pcts.some(p => p >= 100) ? 'over' : pcts.some(p => p >= 80) ? 'warn' : 'ok'
       const railText = pcts.length > 0
         ? pcts.slice(0, 2).map(p => simpleBarByDirection(p, planDirection).label + '%').join(' ')
-        : (typeof entries[0][1]?.text === 'string' ? entries[0][1].text : '—')
+        : planWindowText(entries[0][0], entries[0][1], t, false)
       return el(Tooltip, { portal: true, label: el('span', { style: { whiteSpace: 'pre-line' } }, detail), side: 'right', delayMs: 300 },
         el('div', { ...hoverProps, 'data-cm-display': 'plan', className: 'cm-bbox cm-mm clickable' + (level === 'ok' ? '' : ' ' + level) + (wide === false ? ' rail' : '') + (refresh.busy ? ' busy' : ''), ...clickableRefreshProps(refresh.busy, refresh.run) },
           wide === false
@@ -3065,10 +3073,10 @@
             const pct = win !== null && typeof win === 'object' && typeof win.percent === 'number'
               ? Math.max(0, Math.min(100, Math.round(Number(win.percent) || 0))) : null
             detailParts.push(label + ' '
-              + (pct === null ? (typeof win?.text === 'string' ? win.text : '—') : pct + '%') + reset)
+              + (pct === null ? planWindowText(name, win, t, true) : pct + '%') + reset)
             if (pct === null) {
               // 文本窗口(余额等无百分比的量):以文本段展示,不占进度条名额。
-              segs.push({ name, pct: null, text: typeof win?.text === 'string' ? win.text : '—' })
+              segs.push({ name, pct: null, text: planWindowText(name, win, t, false) })
               continue
             }
             if (shown >= (rowDef.id === 'factory' ? 3 : 2)) continue

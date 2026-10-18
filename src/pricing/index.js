@@ -480,7 +480,7 @@ window.__ModuleLoader__.load({
         error ? el('p', { role: 'alert', className: 'cm-err' }, error) : null,
         runs.length ? el('details', { className: 'cm-repricing-history' }, el('summary', null, en ? 'Recalculation records · original amounts retained' : (globalThis.__cmText ? globalThis.__cmText('重算记录 · 原金额已保留','Recalculation records · original amounts retained') : '重算记录 · 原金额已保留')),
           el('div', { className: 'cm-stat-scroll' }, el('table', { className: 'cm-stat-table' },
-            el('thead', null, el('tr', null, ...(en ? ['Time', 'Scope', 'Before', 'After', 'Session/day records'] : ['重算时间', '范围', '原金额', '重算后', '会话日期记录']).map(s => el('th', { key: s, scope: 'col' }, s)))),
+            el('thead', null, el('tr', null, ...(en ? ['Time', 'Scope', 'Before', 'After', 'Session/day records'] : ['重算时间', '范围', '原金额', '重算后', '会话日期记录'].map((zh, i) => globalThis.__cmText ? globalThis.__cmText(zh, ['Time', 'Scope', 'Before', 'After', 'Session/day records'][i]) : zh)).map(s => el('th', { key: s, scope: 'col' }, s)))),
             el('tbody', null, ...runs.map(row => el('tr', { key: row.at }, el('td', null, new Date(row.at).toLocaleString(locale)), el('td', null, row.model || allLabel), el('td', null, money(row, 'before')), el('td', null, money(row, 'after')), el('td', null, row.sessions))))))) : null)
     }
 

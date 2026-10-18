@@ -550,5 +550,10 @@
   "Session cost unavailable": "セッション費用は現在利用できません",
   "Session cost: no ledger records": "セッション費用：台帳の記録がありません",
   "Turn cost": "ターン費用",
-  "price unavailable": "価格不明"
+  "price unavailable": "価格不明",
+  "Time": "日時",
+  "Scope": "範囲",
+  "Before": "再計算前",
+  "After": "再計算後",
+  "Session/day records": "セッション・日付の記録"
 }

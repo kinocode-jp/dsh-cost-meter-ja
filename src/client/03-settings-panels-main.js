@@ -1195,7 +1195,7 @@
       if (typeof win?.percent !== 'number') {
         return el('div', { key, className: 'cm-go-row' + (main ? ' main' : '') },
           el('span', { className: 'cm-go-label' }, label),
-          el('span', { className: 'cm-go-num' }, typeof win?.text === 'string' ? win.text : '—'))
+          el('span', { className: 'cm-go-num' }, planWindowText(key, win, t, true)))
       }
       const percent = Math.max(0, Math.min(100, Number(win.percent) || 0))
       const barView = simpleBarByDirection(percent, direction)

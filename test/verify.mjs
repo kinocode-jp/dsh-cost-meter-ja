@@ -2036,6 +2036,7 @@ assert.ok(CODING_PLAN_ENDPOINTS.zai.slice(2).some(u => u.includes('/v3/')), 'Z.a
   assert.equal(cc.weekly.percent, 19, 'CommandCode 周窗口已用%(38000/200000)')
   assert.equal(cc.fiveHour.resetsAt, new Date(1753920000000).toISOString(), 'CommandCode resetAt epoch 毫秒 → ISO')
   assert.equal(cc.monthly.text, '余额 $42.50', 'CommandCode 月度 Credits 余额文本')
+  assert.equal(cc.monthly.amount, '$42.50', '日本語フォーク: 残高の金額だけを amount に持つ')
   assert.equal(cc.monthly.resetsAt, '', 'CommandCode 余额窗口无重置时刻')
   // 容错:cap<=0/负 used 的窗口剔除;无 credits 只出窗口;全空 → null。
   const partial = parseCommandCodeCredits({ windowLimits: { bad: { used: 1, cap: 0 }, weekly: { used: -3, cap: 10 }, fiveHour: { used: 5, cap: 10 } } })
