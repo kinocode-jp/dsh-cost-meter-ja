@@ -2385,13 +2385,21 @@
       ctx.effect(() => () => { active = false; clearInterval(pollTimer) }, 'cost-meter: poll timer')
       const refreshLocale = () => { if (active && ctx.fiber?.uid !== null) store.set(store.getSnapshot()) }
       const bindLocale = child => child.effect(() => {
-        // 日本語フォーク: zh/en の辞書を DSH のロケールシステム(名前空間 cost-meter)に登録する。
-        // 他の言語の訳は言語パック(dsh-japanese など)が同じ名前空間に登録する。
+        // 日本語フォーク: zh/en/ja の辞書を DSH のロケールシステム(名前空間 cost-meter と
+        // cost-meter-text)に登録する。他の言語の訳は言語パックが同じ名前空間に登録できる。
         const runtime = child.get('locale')
         globalThis.__cmLocaleRuntime = runtime
-        let unregister
-        try { unregister = runtime?.register?.('cost-meter', { zh: MESSAGES.zh, en: MESSAGES.en }) }
-        catch (error) { console.warn('[dsh-cost-meter] locale dictionary registration failed', error) }
+        const disposers = []
+        const register = (ns, dicts) => {
+          try { const off = runtime?.register?.(ns, dicts); if (typeof off === 'function') disposers.push(off) }
+          // 言語パックが同じ名前空間・言語を先に登録していれば、そちらを使う。
+          catch (error) { console.warn('[dsh-cost-meter] locale dictionary registration skipped', ns, error?.message ?? error) }
+        }
+        register('cost-meter', { zh: MESSAGES.zh, en: MESSAGES.en })
+        for (const [lang, namespaces] of Object.entries(LOCALE_DICTIONARIES)) {
+          for (const [ns, dict] of Object.entries(namespaces)) register(ns, { [lang]: dict })
+        }
+        const unregister = () => { for (const off of disposers.splice(0)) off() }
         refreshLocale()
         const stop = runtime?.subscribe?.(refreshLocale)
         return () => {

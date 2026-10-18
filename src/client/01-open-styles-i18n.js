@@ -1539,9 +1539,10 @@ window.__ModuleLoader__.load({
 
     /** 构造按当前语言取文案的函数 t(key, vars)。 */
     /**
-     * 日本語フォーク: 文言は DSH のロケールシステムに寄せる。zh/en は本プラグインが名前空間
-     * cost-meter に登録し、それ以外の言語(ja など)は言語パックが同じ名前空間に登録した辞書を、
-     * DSH の言語ごとのフォールバック(最後は en)で引く。言語パックがなければ英語になる。
+     * 日本語フォーク: 文言は DSH のロケールシステムに寄せる。本プラグインが名前空間 cost-meter に
+     * zh/en/ja の辞書を登録し(ja は 02-locale-ja.js)、zh/en 以外の言語は DSH の言語ごとの
+     * フォールバック(最後は en)で引く。他の言語の訳は言語パックが同じ名前空間に登録できる。
+     * DSH のロケールサービスがない、または言語が未登録のときは、手元の辞書を直接引く。
      */
     function dshText(ns, key, locale) {
       const runtime = globalThis.__cmLocaleRuntime
@@ -1559,7 +1560,7 @@ window.__ModuleLoader__.load({
     function makeT(locale) {
       const dict = locale === 'zh' ? MESSAGES.zh : locale === 'en' ? MESSAGES.en : null
       return (key, vars) => {
-        let text = (dict ? dict[key] : dshText('cost-meter', key, locale)) ?? MESSAGES.en[key] ?? key
+        let text = (dict ? dict[key] : dshText('cost-meter', key, locale) ?? LOCALE_DICTIONARIES[locale]?.['cost-meter']?.[key]) ?? MESSAGES.en[key] ?? key
         if (vars) for (const name of Object.keys(vars)) text = text.split('{' + name + '}').join(String(vars[name]))
         return text
       }
@@ -1573,12 +1574,12 @@ window.__ModuleLoader__.load({
 
     if (typeof globalThis !== 'undefined') {
       // 日本語フォーク: 分割チャンクの text(zh, en) は、zh/en 以外の言語では DSH のロケール辞書
-      // (名前空間 cost-meter-text、英語原文がキー)を引く。訳は言語パック(dsh-japanese など)が登録する。
+      // (名前空間 cost-meter-text、英語原文がキー)を引く。日本語は本プラグインが登録する。
       globalThis.__cmText = (zh, en) => {
         const active = dshActiveLocale()
         globalThis.__cmLang = active
         if (active === 'zh') return zh
         if (active === 'en') return en
-        return dshText('cost-meter-text', en, active) ?? en
+        return dshText('cost-meter-text', en, active) ?? LOCALE_DICTIONARIES[active]?.['cost-meter-text']?.[en] ?? en
       }
     }

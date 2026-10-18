@@ -8,9 +8,9 @@
 - 文言は DSH のロケールシステムに寄せる
   - 中国語・英語の辞書（`MESSAGES.zh` / `MESSAGES.en`）を DSH のロケールに名前空間 `cost-meter` で登録する
   - 分割チャンクの `text(zh, en)` は、zh/en 以外の言語では名前空間 `cost-meter-text`（英語原文がキー）を引く
-  - 日本語訳は言語パック [@kinocode/dsh-japanese](https://github.com/kinocode-jp/dsh-japanese) の
-    `locale/ja/cost-meter.json` と `locale/ja/cost-meter-text.json` が登録する（このリポジトリには持たない）。
-    言語パックがなければ英語で表示する
+  - 日本語の辞書もこのパッケージが持ち（`src/client/02-locale-ja.js`、`cost-meter` 562 キーと
+    `cost-meter-text` 566 件）、DSH のロケールに登録する。言語パックがなくても日本語で表示できる。
+    他の言語の訳は、言語パックが同じ名前空間に登録すれば使われる
   - ホスト側（サーバー）の文言は DSH のロケールを使えないため、`lib/locale-ja.js` に日本語を持つ
 - 言語の既定を日本語、表示通貨の既定を日本円にする（新しい台帳と、既存台帳の一度だけの移行。
   上流の既定のまま＝言語「自動」・通貨 CNY の項目だけを切り替える）
