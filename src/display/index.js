@@ -226,7 +226,8 @@ window.__ModuleLoader__.load({
               },
                 el('option', { value: 'CNY' }, t('currencyCny')),
                 el('option', { value: 'USD' }, t('currencyUsd')),
-                el('option', { value: 'EUR' }, t('currencyEur')))),
+                el('option', { value: 'EUR' }, t('currencyEur')),
+                el('option', { value: 'JPY' }, t('currencyJpy')))),
             el('div', { className: 'cm-field' },
               el('label', null, t('rateLabel')),
               // 清空不提交:汇率 0 会被服务端校验拒绝并整包报错,保留原值更友好。

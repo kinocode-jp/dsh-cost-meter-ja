@@ -545,5 +545,6 @@
   "sectionLabel": "費用",
   "rpcFailed": "{method} の呼び出しに失敗しました",
   "rpcSyncFailed": "同期の呼び出しに失敗しました",
-  "rpcBalanceFailed": "残高更新の呼び出しに失敗しました"
+  "rpcBalanceFailed": "残高更新の呼び出しに失敗しました",
+  "currencyJpy": "日本円（JPY）"
 }

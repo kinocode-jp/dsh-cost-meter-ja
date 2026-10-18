@@ -44,7 +44,7 @@
       }
       return out
     }
-    const frozenMoneyFields = ['costCny', 'apiCostCny', 'costEur', 'apiCostEur']
+    const frozenMoneyFields = ['costCny', 'apiCostCny', 'costEur', 'apiCostEur', 'costJpy', 'apiCostJpy']
     const parseFrozenMoney = row => Object.fromEntries(frozenMoneyFields.filter(key => Number.isFinite(row?.[key])).map(key => [key, row[key]]))
     function parseUsageFields(v, path) {
       needObject(v, path)
@@ -618,7 +618,7 @@
         },
         {
           id: '@kinocode/dsh-cost-meter-ja#costMeter/getTurnCost', service: 'costMeter', namespace: 'costMeter', method: 'getTurnCost', invocation: { kind: 'direct' },
-          parameters: [rpcParam('sessionId', 'SessionId', codecOf(v => needStr(v, 'sessionId'))), ...['startSeq', 'endSeq'].map(name => rpcParam(name, 'TurnSeq', codecOf(v => { if (!Number.isSafeInteger(v) || v < 0) fail(name, 'nonnegative integer'); return v }))), { ...rpcParam('displayCurrency', 'DisplayCurrency', codecOf(v => { if (v !== undefined && !['USD', 'CNY', 'EUR'].includes(v)) fail('displayCurrency', 'currency'); return v })), acceptsUndefined: true }],
+          parameters: [rpcParam('sessionId', 'SessionId', codecOf(v => needStr(v, 'sessionId'))), ...['startSeq', 'endSeq'].map(name => rpcParam(name, 'TurnSeq', codecOf(v => { if (!Number.isSafeInteger(v) || v < 0) fail(name, 'nonnegative integer'); return v }))), { ...rpcParam('displayCurrency', 'DisplayCurrency', codecOf(v => { if (v !== undefined && !['USD', 'CNY', 'EUR', 'JPY'].includes(v)) fail('displayCurrency', 'currency'); return v })), acceptsUndefined: true }],
           result: strictCodec('TurnCost', codecOf(v => ({ ...parseFrozenMoney(v), found: needBool(v.found, 'found'), ...(v.inherited === undefined ? {} : { inherited: needBool(v.inherited, 'inherited') }), cost: needNum(v.cost, 'cost'), apiCost: needNum(v.apiCost, 'apiCost'), rows: parseTurnRows(v.rows),
             calls: (Array.isArray(v.calls) ? v.calls : fail('calls', 'array')).map(c => ({ kind: needStr(c.kind, 'kind'), provider: needStr(c.provider, 'provider'), model: needStr(c.model, 'model'), atMs: needNum(c.atMs, 'atMs'), cost: needNum(c.cost, 'cost'), apiCost: needNum(c.apiCost, 'apiCost'), plan: needBool(c.plan, 'plan'), priced: needBool(c.priced, 'priced'), longContext: needBool(c.longContext, 'longContext'), rows: parseTurnRows(c.rows), ...(c.metering ? { metering: parseMetering(c.metering) } : {}) })) }))),
         },
@@ -802,9 +802,9 @@
       const c = Number(cost)
       if (!Number.isFinite(c) || c < 0) return 0
       if (c === 0) return 0
-      if (currency !== 'CNY') return c
+      if (currency !== 'CNY' && currency !== 'JPY') return c
       const r = Number(rate)
-      if (!Number.isFinite(r) || r <= 0) return c
+      if (!Number.isFinite(r) || r <= 0) return currency === 'JPY' ? c / 150 : c
       return c / r
     }
     /**
@@ -1111,7 +1111,7 @@
      * 预算/卡片/徽章/表格等全部金额展示统一走这里,保证同一开关下口径一致。
      */
     function displayCostOf(entry, config) {
-      const suffix = { CNY: 'Cny', EUR: 'Eur' }[config?.currency]
+      const suffix = { CNY: 'Cny', EUR: 'Eur', JPY: 'Jpy' }[config?.currency]
       const withPlan = config?.showTotalWithPlan === true
       const saved = suffix && entry?.[(withPlan ? 'cost' : 'apiCost') + suffix]
       const usd = withPlan ? (Number(entry?.cost) || 0) : moneyCostOf(entry)
@@ -1258,7 +1258,7 @@
         const resolved = resolveClientPrice(provider, modelId, config)
         if (resolved.priced) {
           const c = costOfBuckets(byModel[providerKey], tierFor(normalizeClientPrice(resolved.entry), now, { ...peak, enabled: ['deepseek-peak', 'utc-peak'].includes(resolved.billingMode) && peak.enabled }))
-          const billed = usdFromCostLocal(c, resolved.currency, cnyRate)
+          const billed = usdFromCostLocal(c, resolved.currency, resolved.currency === 'JPY' ? jpyRateOfLocal(config) : cnyRate)
           total += billed
           if (billingClassOfLocal(provider, modelId, config) === 'api') api += billed
         }
@@ -1283,6 +1283,12 @@
       total += leftoverBilled
       api += leftoverBilled
       return { total, api }
+    }
+    /** 日本語フォーク: カスタム見積もり(JPY)の換算レート。未取得なら表示通貨 JPY の手入力レート、なければ 150。 */
+    function jpyRateOfLocal(config) {
+      const valid = value => typeof value === 'number' && Number.isFinite(value) && value > 0 && value < 1e6
+      if (valid(config.fxRates?.JPY)) return config.fxRates.JPY
+      return config.currency === 'JPY' && valid(config.exchangeRate) ? config.exchangeRate : 150
     }
     function cnyRateOfLocal(config) {
       const valid = value => typeof value === 'number' && Number.isFinite(value) && value > 0 && value < 1e6
@@ -1570,7 +1576,7 @@
     }
 
     function sessionCostParts(usage, config) {
-      if (Number.isFinite(usage?.costCny) || Number.isFinite(usage?.costEur)) {
+      if (Number.isFinite(usage?.costCny) || Number.isFinite(usage?.costEur) || Number.isFinite(usage?.costJpy)) {
         const total = displayCostOf(usage, { ...config, showTotalWithPlan: true }), api = displayCostOf(usage, { ...config, showTotalWithPlan: false })
         return { cost: config.showTotalWithPlan ? total : api, planPart: config.showTotalWithPlan ? 0 : Math.max(0, total - api) }
       }

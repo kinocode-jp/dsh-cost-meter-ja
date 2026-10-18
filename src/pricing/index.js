@@ -237,7 +237,7 @@ window.__ModuleLoader__.load({
         onChange(next)
       }
       const field = ([key, title]) => el('label', { key }, title, el('span', { className: 'cm-custom-amount' },
-        el('span', { 'aria-hidden': true }, value.currency === 'CNY' ? '¥' : '$'), el(PriceInput, { entry: value, value: value[key] ?? null, path: 'base.' + key, t,
+        el('span', { 'aria-hidden': true }, value.currency === 'CNY' || value.currency === 'JPY' ? '¥' : '$'), el(PriceInput, { entry: value, value: value[key] ?? null, path: 'base.' + key, t,
           emptyMode: ['cacheWrite', 'reasoning'].includes(key) ? 'clear' : 'ignore', label: label + ' · ' + title,
           placeholder: key === 'cacheWrite' ? (en ? 'Same as cached input' : (globalThis.__cmText ? globalThis.__cmText('跟随缓存读取','Same as cached input') : '跟随缓存读取')) : key === 'reasoning' ? (en ? 'Included in output' : (globalThis.__cmText ? globalThis.__cmText('含在输出中','Included in output') : '含在输出中')) : '0',
           onCommit: (number, factor) => edit(key, number, factor) })))
@@ -245,12 +245,12 @@ window.__ModuleLoader__.load({
         el('legend', null, en ? 'Custom price · per 1M tokens' : (globalThis.__cmText ? globalThis.__cmText('自定义价格 · 每百万 Token','Custom price · per 1M tokens') : '自定义价格 · 每百万 Token')),
         el('div', { className: 'cm-custom-head' }, el('span', null, en ? 'Only this channel and model' : (globalThis.__cmText ? globalThis.__cmText('仅用于此渠道的这个模型','Only this channel and model') : '仅用于此渠道的这个模型')),
           el('label', null, en ? 'Currency' : (globalThis.__cmText ? globalThis.__cmText('币种','Currency') : '币种'), el('select', { className: 'cm-input', value: value.currency, onChange: event => onChange({ ...value, currency: event.target.value }) },
-            el('option', { value: 'USD' }, en ? 'USD · US dollar' : (globalThis.__cmText ? globalThis.__cmText('USD · 美元','USD · US dollar') : 'USD · 美元')), el('option', { value: 'CNY' }, en ? 'CNY · Yuan' : (globalThis.__cmText ? globalThis.__cmText('CNY · 人民币','CNY · Yuan') : 'CNY · 人民币'))))),
+            el('option', { value: 'USD' }, en ? 'USD · US dollar' : (globalThis.__cmText ? globalThis.__cmText('USD · 美元','USD · US dollar') : 'USD · 美元')), el('option', { value: 'CNY' }, en ? 'CNY · Yuan' : (globalThis.__cmText ? globalThis.__cmText('CNY · 人民币','CNY · Yuan') : 'CNY · 人民币')), el('option', { value: 'JPY' }, en ? 'JPY · Japanese yen' : (globalThis.__cmText ? globalThis.__cmText('JPY · 日元','JPY · Japanese yen') : 'JPY · 日元'))))),
         el('div', { className: 'cm-custom-grid' }, ...fields.slice(0, 3).map(field)),
         multiplierOptions(value, t, separate => onChange({ ...value, separateMultipliers: separate, multipliers: {} })),
         el('div', { className: 'cm-custom-effective', role: 'status' },
           el('div', { className: 'cm-effective-heading' }, el('span', null, en ? 'Effective prices' : (globalThis.__cmText ? globalThis.__cmText('实际单价','Effective prices') : '实际单价')), el('small', null, en ? 'Price × multiplier / 1M tokens' : (globalThis.__cmText ? globalThis.__cmText('单价 × 倍率 / 百万 Token','Price × multiplier / 1M tokens') : '单价 × 倍率 / 百万 Token'))),
-          el('div', { className: 'cm-effective-grid' }, ...fields.slice(0, 3).map(([key, title]) => el('div', { key }, el('span', null, title), el('strong', null, (value.currency === 'CNY' ? '¥' : '$') + Number((value[key] * priceFactor(value, 'base.' + key)).toPrecision(8)).toLocaleString(en ? 'en-US' : (globalThis.__cmText ? globalThis.__cmText('zh-CN','en-US') : 'zh-CN'), { maximumFractionDigits: 8 })))))),
+          el('div', { className: 'cm-effective-grid' }, ...fields.slice(0, 3).map(([key, title]) => el('div', { key }, el('span', null, title), el('strong', null, (value.currency === 'CNY' || value.currency === 'JPY' ? '¥' : '$') + Number((value[key] * priceFactor(value, 'base.' + key)).toPrecision(8)).toLocaleString(en ? 'en-US' : (globalThis.__cmText ? globalThis.__cmText('zh-CN','en-US') : 'zh-CN'), { maximumFractionDigits: 8 })))))),
         el('details', { className: 'cm-custom-more' }, el('summary', null, en ? 'More billing fields' : (globalThis.__cmText ? globalThis.__cmText('更多计费项','More billing fields') : '更多计费项')),
           el('div', { className: 'cm-custom-grid' }, ...fields.slice(3).map(field)),
           el('p', { className: 'cm-hint' }, en ? 'Leave reasoning blank when it is included in output. Leave cache write blank to use the cached input rate.' : (globalThis.__cmText ? globalThis.__cmText('推理已包含在输出中时无需另填。缓存写入留空则使用缓存读取价格。','Leave reasoning blank when it is included in output. Leave cache write blank to use the cached input rate.') : '推理已包含在输出中时无需另填。缓存写入留空则使用缓存读取价格。'))),
@@ -263,7 +263,7 @@ window.__ModuleLoader__.load({
       return el('span', { className: 'cm-rate-summary' }, ...fields.map(([key, alias, label]) => {
         const raw = local ? 0 : current?.unpriced ? null : current?.[key] ?? current?.[alias]
         const rate = raw == null ? null : raw * (priceEditor?.priceFactor?.(current ?? {}, 'base.' + key) ?? 1)
-        return el('span', { key, className: 'cm-rate-item' }, el('span', null, label), el('strong', null, rate === null ? '—' : (currency === 'CNY' ? '¥' : '$') + Number(rate.toPrecision(8)).toLocaleString(en ? 'en-US' : (globalThis.__cmText ? globalThis.__cmText('zh-CN','en-US') : 'zh-CN'), { maximumFractionDigits: 8 })))
+        return el('span', { key, className: 'cm-rate-item' }, el('span', null, label), el('strong', null, rate === null ? '—' : (currency === 'CNY' || currency === 'JPY' ? '¥' : '$') + Number(rate.toPrecision(8)).toLocaleString(en ? 'en-US' : (globalThis.__cmText ? globalThis.__cmText('zh-CN','en-US') : 'zh-CN'), { maximumFractionDigits: 8 })))
       }))
     }
 
@@ -442,7 +442,7 @@ window.__ModuleLoader__.load({
       const [model, setModel] = useState('')
       const en = locale === 'en'
       const money = (row, field) => {
-        const suffix = state.config.currency === 'CNY' ? 'Cny' : state.config.currency === 'EUR' ? 'Eur' : ''
+        const suffix = { CNY: 'Cny', EUR: 'Eur', JPY: 'Jpy' }[state.config.currency] ?? ''
         const native = suffix && row[field + suffix], rate = Number(state.config.exchangeRate)
         return formatMoneyUsd(typeof native === 'number' && rate > 0 ? native / rate : row[field], state.config)
       }

@@ -896,6 +896,7 @@ window.__ModuleLoader__.load({
         currencyCny: '人民币 CNY',
         currencyUsd: '美元 USD',
         currencyEur: '欧元 EUR',
+        currencyJpy: '日元 JPY',
         symbolLabel: '货币符号',
         rateLabel: '汇率(1 美元 = ? 目标币种)',
         decimalsLabel: '小数位数',
@@ -1433,6 +1434,7 @@ window.__ModuleLoader__.load({
         currencyCny: 'Chinese Yuan (CNY)',
         currencyUsd: 'US Dollar (USD)',
         currencyEur: 'Euro (EUR)',
+        currencyJpy: 'Japanese Yen (JPY)',
         symbolLabel: 'Currency symbol',
         rateLabel: 'Exchange rate (1 USD = ? target currency)',
         decimalsLabel: 'Decimal places',
@@ -1982,6 +1984,7 @@ window.__ModuleLoader__.load({
         "currencyCny": "中国人民元（CNY）",
         "currencyUsd": "米ドル（USD）",
         "currencyEur": "ユーロ（EUR）",
+        "currencyJpy": "日本円（JPY）",
         "symbolLabel": "通貨記号",
         "rateLabel": "為替レート（1 USD = 対象通貨）",
         "decimalsLabel": "小数点以下の桁数",
@@ -2070,6 +2073,7 @@ window.__ModuleLoader__.load({
 
     // 分块界面(统计/显示/料金表)の日本語表記。英語原文をキーにした対応表。
     const CHUNK_JA = {
+        "JPY · Japanese yen": "JPY・日本円",
         "Preview unavailable. Display options are still available below.": "プレビューを表示できません。下の表示オプションは引き続き使えます。",
         "Retry preview": "プレビューを再試行",
         "More options · layout, currency and refresh intervals": "詳細設定 · レイアウト、金額の形式、更新間隔",

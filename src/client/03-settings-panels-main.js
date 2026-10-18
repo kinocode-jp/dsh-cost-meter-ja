@@ -306,6 +306,7 @@
       CNY: { symbol: '¥', decimals: 4, exchangeRate: 7.2 },
       USD: { symbol: '$', decimals: 6, exchangeRate: 1 },
       EUR: { symbol: '€', decimals: 6, exchangeRate: 0.92 },
+      JPY: { symbol: '¥', decimals: 3, exchangeRate: 150 },
     }
 
     // ── 预算面板(设置页顶部) ──────────────────────────────────────────────
