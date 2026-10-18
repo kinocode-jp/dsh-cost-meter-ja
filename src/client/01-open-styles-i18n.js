@@ -2605,4 +2605,13 @@ window.__ModuleLoader__.load({
         "USD · US dollar": "USD・米ドル",
         "View QR code ↗": "QRコードを表示 ↗",
         "en-US": "en-US"
-}
+};
+
+    if (typeof globalThis !== 'undefined') {
+      globalThis.__cmText = (zh, en) => {
+        const lang = (typeof document !== 'undefined' && document.documentElement && document.documentElement.lang || '').toLowerCase()
+        globalThis.__cmLang = lang.startsWith('zh') ? 'zh' : lang.startsWith('ja') ? 'ja' : 'en'
+        if (lang.startsWith('ja')) return CHUNK_JA[en] ?? en
+        return lang.startsWith('zh') ? zh : en
+      }
+    }
