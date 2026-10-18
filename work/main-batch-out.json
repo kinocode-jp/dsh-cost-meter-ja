@@ -1,0 +1,32 @@
+{
+  "entries": {
+    " (equivalent)": " （相当額）",
+    " (no separate charge)": " （別途課金なし）",
+    " (price unavailable)": " （価格不明）",
+    " + unpriced usage": " + 価格未設定の使用量",
+    " open": " open",
+    " requests": " リクエスト",
+    " · Retry ": " · 再試行 ",
+    " · inherited history": " · 継承された履歴",
+    " · long context": " · 長コンテキスト価格",
+    " · partial usage": " · 使用量が不完全",
+    "Close": "閉じる",
+    "Complete usage records unavailable": "完全な使用量記録がありません",
+    "Conversation cost details": "会話の費用明細",
+    "Cost details": "費用明細",
+    "Estimated from recorded usage and configured prices; rates per 1M tokens.": "記録された使用量と設定価格に基づく推定額です。レートは100万トークンあたりです。",
+    "Fetch requests": "取得リクエスト",
+    "Individual calls": "個別の呼び出し",
+    "Inherited usage is not billed again in this conversation.": "継承された使用量は、この会話では再度課金されません。",
+    "Loading session cost…": "セッション費用を読み込み中…",
+    "Loading…": "読み込み中…",
+    "Log estimate at configured prices; session cost uses recorded ledger amounts.": "ターン費用は設定価格によるログ推定です。セッション費用は台帳に記録された金額を使用します。",
+    "Retry": "再試行",
+    "Search requests": "検索リクエスト",
+    "Session cost unavailable": "セッション費用は現在利用できません",
+    "Session cost: no ledger records": "セッション費用：台帳の記録がありません",
+    "Turn cost": "ターン費用",
+    "price unavailable": "価格不明",
+    "Cost statistics": "費用統計"
+  }
+}

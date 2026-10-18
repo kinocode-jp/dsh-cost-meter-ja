@@ -2604,7 +2604,24 @@ window.__ModuleLoader__.load({
         "USD + CNY": "USD + CNY",
         "USD · US dollar": "USD・米ドル",
         "View QR code ↗": "QRコードを表示 ↗",
-        "en-US": "en-US"
+        "en-US": "en-US",
+        " (equivalent)": " （相当額）",
+        " (no separate charge)": " （別途課金なし）",
+        " (price unavailable)": " （価格不明）",
+        " + unpriced usage": " + 価格未設定の使用量",
+        " open": " open",
+        " · inherited history": " · 継承された履歴",
+        " · long context": " · 長コンテキスト価格",
+        " · partial usage": " · 使用量が不完全",
+        "Complete usage records unavailable": "完全な使用量記録がありません",
+        "Estimated from recorded usage and configured prices; rates per 1M tokens.": "記録された使用量と設定価格に基づく推定額です。レートは100万トークンあたりです。",
+        "Inherited usage is not billed again in this conversation.": "継承された使用量は、この会話では再度課金されません。",
+        "Loading session cost…": "セッション費用を読み込み中…",
+        "Log estimate at configured prices; session cost uses recorded ledger amounts.": "ターン費用は設定価格によるログ推定です。セッション費用は台帳に記録された金額を使用します。",
+        "Session cost unavailable": "セッション費用は現在利用できません",
+        "Session cost: no ledger records": "セッション費用：台帳の記録がありません",
+        "Turn cost": "ターン費用",
+        "price unavailable": "価格不明"
 };
 
     if (typeof globalThis !== 'undefined') {

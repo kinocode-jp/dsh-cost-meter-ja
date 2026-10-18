@@ -68,12 +68,12 @@
       // Prefetch only on hover/focus. A mounted fee button must not replay logs.
       if (!props.sessionId || hidden) return null
       const en = resolveLocale(state?.config) === 'en'
-      const label = en ? 'Conversation cost details' : '本会话费用明细'
+      const label = en ? 'Conversation cost details' : (globalThis.__cmText ? globalThis.__cmText('本会话费用明细','Conversation cost details') : '本会话费用明细')
       return el(Fragment, null,
-        el('button', { type: 'button', className: 'cm-btn cm-stat-entry cm-stat-' + (props.entryPosition || 'dock'), title: label, 'aria-label': label, 'aria-haspopup': 'dialog', onMouseEnter: () => warmPage(props.api.loadStatistics, { state, sessionId: props.sessionId }), onFocus: () => warmPage(props.api.loadStatistics, { state, sessionId: props.sessionId }), onClick: () => setOpenedId(props.sessionId) }, en ? 'Cost details' : '费用明细'),
+        el('button', { type: 'button', className: 'cm-btn cm-stat-entry cm-stat-' + (props.entryPosition || 'dock'), title: label, 'aria-label': label, 'aria-haspopup': 'dialog', onMouseEnter: () => warmPage(props.api.loadStatistics, { state, sessionId: props.sessionId }), onFocus: () => warmPage(props.api.loadStatistics, { state, sessionId: props.sessionId }), onClick: () => setOpenedId(props.sessionId) }, en ? 'Cost details' : (globalThis.__cmText ? globalThis.__cmText('费用明细','Cost details') : '费用明细')),
         open ? el('dialog', { ref: dialog, role: 'dialog', className: STAT_DIALOG_CLASS, 'aria-label': label, onCancel: () => setOpenedId(null) },
-          el('header', { className: 'cm-stat-dialog-head' }, el('strong', null, label), el('button', { type: 'button', className: 'cm-btn', autoFocus: true, 'aria-label': en ? 'Close' : '关闭', onClick: () => setOpenedId(null) }, '×')),
-          el('div', { className: 'cm-stat-dialog-body' }, state ? el(BillingStatistics, { key: props.sessionId, state, api: props.api, sessionId: props.sessionId }) : el('p', { role: snapshot?.error ? 'alert' : 'status' }, snapshot?.error || (en ? 'Loading…' : '加载中…'), el('button', { type: 'button', className: 'cm-btn', onClick: () => props.api.reload() }, en ? 'Retry' : '重试')))) : null)
+          el('header', { className: 'cm-stat-dialog-head' }, el('strong', null, label), el('button', { type: 'button', className: 'cm-btn', autoFocus: true, 'aria-label': en ? 'Close' : (globalThis.__cmText ? globalThis.__cmText('关闭','Close') : '关闭'), onClick: () => setOpenedId(null) }, '×')),
+          el('div', { className: 'cm-stat-dialog-body' }, state ? el(BillingStatistics, { key: props.sessionId, state, api: props.api, sessionId: props.sessionId }) : el('p', { role: snapshot?.error ? 'alert' : 'status' }, snapshot?.error || (en ? 'Loading…' : (globalThis.__cmText ? globalThis.__cmText('加载中…','Loading…') : '加载中…')), el('button', { type: 'button', className: 'cm-btn', onClick: () => props.api.reload() }, en ? 'Retry' : (globalThis.__cmText ? globalThis.__cmText('重试','Retry') : '重试'))))) : null)
     }
 
     function ExternalUsagePanel({ state, t }) {
@@ -100,7 +100,7 @@
     }
 
     /** 折叠面板标题行:三角箭头 + 标题,aria-expanded 随 open 翻转(配合 .cm-collapse-h / .cm-caret 样式)。 */
-    const collapseHeader = (open, onClick, title) => el('button', { type: 'button', className: 'cm-collapse-h', 'aria-expanded': String(open), onClick }, el('span', { className: 'cm-caret' + (open ? ' open' : '') }), el('h3', { className: 'cm-h' }, title))
+    const collapseHeader = (open, onClick, title) => el('button', { type: 'button', className: 'cm-collapse-h', 'aria-expanded': String(open), onClick }, el('span', { className: 'cm-caret' + (open ? ' open' : (globalThis.__cmText ? globalThis.__cmText('',' open') : '')) }), el('h3', { className: 'cm-h' }, title))
 
     // 历史记录折叠面板(issue #22):三角展开/收起,内部为按天表格(日期行再展开会话明细)。
     function HistoryPanel(props) {
@@ -2074,7 +2074,7 @@
       // 设置页标签(issue #29):按用途分五组,切换只改可见分区,不拆配置模型与保存逻辑。
       const tabItems = [
         ['overview', t('tabOverview')],
-        ['statistics', locale === 'en' ? 'Cost statistics' : '计费统计'],
+        ['statistics', locale === 'en' ? 'Cost statistics' : (globalThis.__cmText ? globalThis.__cmText('计费统计','Cost statistics') : '计费统计')],
         ['quotas', t('tabQuotas')],
         ['usage', t('tabUsage')],
         ['pricing', t('tabPricing')],

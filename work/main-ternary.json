@@ -1,0 +1,31 @@
+{
+  "entries": {
+    " (equivalent)": " (equivalent)",
+    " (no separate charge)": " (no separate charge)",
+    " (price unavailable)": " (price unavailable)",
+    " + unpriced usage": " + unpriced usage",
+    " open": " open",
+    " requests": " requests",
+    " · Retry ": " · Retry ",
+    " · inherited history": " · inherited history",
+    " · long context": " · long context",
+    " · partial usage": " · partial usage",
+    "Close": "Close",
+    "Complete usage records unavailable": "Complete usage records unavailable",
+    "Conversation cost details": "Conversation cost details",
+    "Cost details": "Cost details",
+    "Estimated from recorded usage and configured prices; rates per 1M tokens.": "Estimated from recorded usage and configured prices; rates per 1M tokens.",
+    "Fetch requests": "Fetch requests",
+    "Individual calls": "Individual calls",
+    "Inherited usage is not billed again in this conversation.": "Inherited usage is not billed again in this conversation.",
+    "Loading session cost…": "Loading session cost…",
+    "Loading…": "Loading…",
+    "Log estimate at configured prices; session cost uses recorded ledger amounts.": "Log estimate at configured prices; session cost uses recorded ledger amounts.",
+    "Retry": "Retry",
+    "Search requests": "Search requests",
+    "Session cost unavailable": "Session cost unavailable",
+    "Session cost: no ledger records": "Session cost: no ledger records",
+    "Turn cost": "Turn cost",
+    "price unavailable": "price unavailable"
+  }
+}
