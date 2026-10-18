@@ -1917,6 +1917,7 @@
       const zh = typeof cfg?.label === 'string' ? cfg.label : ''
       const en = typeof cfg?.labelEn === 'string' ? cfg.labelEn : ''
       if (locale === 'en') return en || zh || 'Custom balance'
+      if (locale === 'ja') return zh || en || 'カスタム残高'
       return zh || en || '自定义余额'
     }
 

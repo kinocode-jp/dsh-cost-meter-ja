@@ -7,7 +7,7 @@ import { supportedLocale, hostLocaleOf, localeOf, invalidateHostLocale, forgetHo
 import { apply } from '../lib/index.js'
 import { stateSchema } from '../lib/typert.host.js'
 
-for (const [input, expected] of [['zh', 'zh'], ['ZH-CN', 'zh'], ['en_US', 'en'], ['en-GB', 'en'], ['fr', null], ['auto', null], [null, null], [42, null]]) assert.equal(supportedLocale(input), expected)
+for (const [input, expected] of [['zh', 'zh'], ['ZH-CN', 'zh'], ['en_US', 'en'], ['en-GB', 'en'], ['ja', 'ja'], ['ja-JP', 'ja'], ['fr', null], ['auto', null], [null, null], [42, null]]) assert.equal(supportedLocale(input), expected)
 assert.equal(hostLocaleOf(null), null)
 assert.equal(hostLocaleOf({ get: () => { throw Error('unsupported service') } }), null)
 let preference = 'zh', active, describeCalls = 0
@@ -25,7 +25,8 @@ active = { getSnapshot: () => ({ active: 'fr' }) }
 assert.equal(hostLocaleOf(ctx), 'en', 'unsupported optional face falls through to saved supported preference')
 active = undefined; preference = undefined; invalidateHostLocale(ctx)
 assert.equal(hostLocaleOf(ctx), null)
-assert.equal(localeOf({ locale: 'auto' }, ctx), 'zh', 'unobservable browser/native preference retains the Host compatibility fallback')
+assert.equal(localeOf({ locale: 'auto' }, ctx), 'ja', '日本語フォーク: ホストが言語を示さないときは日本語')
+assert.equal(localeOf({ locale: 'ja' }, ctx), 'ja')
 
 let recursiveReads = 0
 const reentrant = { get: name => name === 'settings' ? { describe: () => {
