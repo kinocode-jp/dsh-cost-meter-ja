@@ -1,6 +1,6 @@
 /** Read-only OpenRouter prices, loaded by Prices settings or the composer model picker. */
 window.__ModuleLoader__.load({
-  id: 'dsh-cost-meter', chunk: 'client.openrouter.js',
+  id: '@kinocode/dsh-cost-meter-ja', chunk: 'client.openrouter.js',
   factory: require => {
     const React = require('react')
     const { createElement: el, useState, useEffect, useRef } = React
@@ -17,9 +17,9 @@ window.__ModuleLoader__.load({
     const schema = { parse: parseCatalog }
     const CONTRIBUTION = {
       package: 'dsh-cost-meter-openrouter', face: 'host', descriptors: [{
-        id: 'dsh-cost-meter#costMeter/getOpenRouterCatalog', service: 'costMeter', namespace: 'costMeter', method: 'getOpenRouterCatalog',
+        id: '@kinocode/dsh-cost-meter-ja#costMeter/getOpenRouterCatalog', service: 'costMeter', namespace: 'costMeter', method: 'getOpenRouterCatalog',
         invocation: { kind: 'direct' }, parameters: [],
-        result: { mode: 'strict', typeSymbol: 'dsh-cost-meter#OpenRouterCatalog', schema, create: () => schema },
+        result: { mode: 'strict', typeSymbol: '@kinocode/dsh-cost-meter-ja#OpenRouterCatalog', schema, create: () => schema },
       }],
     }
     const modelUrl = id => 'https://openrouter.ai/' + id.split('/').map(encodeURIComponent).join('/')
@@ -46,7 +46,7 @@ window.__ModuleLoader__.load({
       return session.pending
     }
     function PriceBrowser({ api, state, resolveLocale }) {
-      const en = resolveLocale(state.config) === 'en', text = (zh, english) => en ? english : zh
+      const en = resolveLocale(state.config) === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
       const session = priceSession(api)
       const [value, setValue] = useState(() => session.value), [error, setError] = useState(() => session.error), [busy, setBusy] = useState(false)
       const [query, setQuery] = useState(() => session.query), [sort, setSort] = useState(() => session.sort), [page, setPage] = useState(() => session.page)
@@ -119,7 +119,7 @@ window.__ModuleLoader__.load({
       return models.length === 1 ? models[0] : null
     }
     function priceTooltip(model, value, locale, error = '') {
-      const en = locale === 'en', text = (zh, english) => en ? english : zh
+      const en = locale === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
       const row = value?.models.find(row => row.id === model.id)
       const lines = [model.name, 'OpenRouter · ' + model.id]
       if (row) {

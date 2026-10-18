@@ -539,11 +539,11 @@
     })
 
     // ── RPC 贡献(与服务端 ./typert 清单一一对应) ───────────────────────────
-    const strictCodec = (name, schema) => ({ mode: 'strict', typeSymbol: 'dsh-cost-meter#' + name, schema, create: () => schema })
+    const strictCodec = (name, schema) => ({ mode: 'strict', typeSymbol: '@kinocode/dsh-cost-meter-ja#' + name, schema, create: () => schema })
     const rpcParam = (name, type, schema, optional = false) => ({ name, wire: name, source: 'json', codec: strictCodec(type, schema), ...(optional ? { acceptsUndefined: true } : {}) })
 
     const CONTRIBUTION = {
-      package: 'dsh-cost-meter',
+      package: '@kinocode/dsh-cost-meter-ja',
       descriptors: [
         {
           method: 'getStateSince',
@@ -617,7 +617,7 @@
           result: strictCodec('SessionCost', codecOf(v => ({ own: parseSession(v.own, 'own'), subagents: parseSession(v.subagents, 'subagents'), found: needBool(v.found, 'found'), subagentCount: needNum(v.subagentCount, 'subagentCount') }))),
         },
         {
-          id: 'dsh-cost-meter#costMeter/getTurnCost', service: 'costMeter', namespace: 'costMeter', method: 'getTurnCost', invocation: { kind: 'direct' },
+          id: '@kinocode/dsh-cost-meter-ja#costMeter/getTurnCost', service: 'costMeter', namespace: 'costMeter', method: 'getTurnCost', invocation: { kind: 'direct' },
           parameters: [rpcParam('sessionId', 'SessionId', codecOf(v => needStr(v, 'sessionId'))), ...['startSeq', 'endSeq'].map(name => rpcParam(name, 'TurnSeq', codecOf(v => { if (!Number.isSafeInteger(v) || v < 0) fail(name, 'nonnegative integer'); return v }))), { ...rpcParam('displayCurrency', 'DisplayCurrency', codecOf(v => { if (v !== undefined && !['USD', 'CNY', 'EUR'].includes(v)) fail('displayCurrency', 'currency'); return v })), acceptsUndefined: true }],
           result: strictCodec('TurnCost', codecOf(v => ({ ...parseFrozenMoney(v), found: needBool(v.found, 'found'), ...(v.inherited === undefined ? {} : { inherited: needBool(v.inherited, 'inherited') }), cost: needNum(v.cost, 'cost'), apiCost: needNum(v.apiCost, 'apiCost'), rows: parseTurnRows(v.rows),
             calls: (Array.isArray(v.calls) ? v.calls : fail('calls', 'array')).map(c => ({ kind: needStr(c.kind, 'kind'), provider: needStr(c.provider, 'provider'), model: needStr(c.model, 'model'), atMs: needNum(c.atMs, 'atMs'), cost: needNum(c.cost, 'cost'), apiCost: needNum(c.apiCost, 'apiCost'), plan: needBool(c.plan, 'plan'), priced: needBool(c.priced, 'priced'), longContext: needBool(c.longContext, 'longContext'), rows: parseTurnRows(c.rows), ...(c.metering ? { metering: parseMetering(c.metering) } : {}) })) }))),
@@ -648,7 +648,7 @@
           },
         // Codex 订阅兼容(契约 D/E):并入/忽略 Codex 历史用量,宿主回传完整 state。
         ...['applyCodexCompatHistory', 'dismissCodexCompat'].map(method => ({ method, result: strictCodec('CostState', stateCodec) })),
-      ].map(def => ({ id: 'dsh-cost-meter#costMeter/' + def.method, service: 'costMeter', namespace: 'costMeter',
+      ].map(def => ({ id: '@kinocode/dsh-cost-meter-ja#costMeter/' + def.method, service: 'costMeter', namespace: 'costMeter',
         invocation: { kind: 'direct' }, parameters: [], result: strictCodec('FetchPricesResult', fetchCodec), ...def })),
     }
 

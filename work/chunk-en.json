@@ -1,0 +1,1375 @@
+{
+ "Search requests": [
+  "搜索请求"
+ ],
+ "Fetch requests": [
+  "抓取请求"
+ ],
+ "Context cost refresh failed; previous results are retained.": [
+  "上下文费用刷新失败，保留上次结果。"
+ ],
+ "Context cost breakdown": [
+  "上下文费用构成"
+ ],
+ "Turn off integration": [
+  "关闭联动"
+ ],
+ "Refresh": [
+  "刷新"
+ ],
+ "Current context cost breakdown": [
+  "当前上下文费用构成"
+ ],
+ "Select Refresh to retry.": [
+  "点击刷新重试。"
+ ],
+ "Reading current context…": [
+  "正在读取当前上下文…"
+ ],
+ "Generation or compaction is running. Context costs refresh after it finishes.": [
+  "正在生成或摘要，完成后自动更新上下文费用。"
+ ],
+ "Complete a request to see context costs at that model’s rates.": [
+  "完成一次请求后，可显示该模型的上下文费用。"
+ ],
+ "Open this conversation to read its current context.": [
+  "打开此会话后可读取当前上下文。"
+ ],
+ "Context measurement is unavailable on this host. Recorded costs remain available in billing details.": [
+  "当前宿主未提供上下文测量；已发生费用仍可在费用明细中查看。"
+ ],
+ "System prompt": [
+  "系统提示"
+ ],
+ "Tool schemas": [
+  "工具定义"
+ ],
+ "User messages": [
+  "用户输入"
+ ],
+ "Injected context": [
+  "注入内容"
+ ],
+ "Skills": [
+  "技能内容",
+  "技能"
+ ],
+ "Prior replies": [
+  "历史回复"
+ ],
+ "Tool results": [
+  "工具结果"
+ ],
+ "Other": [
+  "其他"
+ ],
+ "Unpriced": [
+  "未定价"
+ ],
+ "Uncached input": [
+  "非缓存输入",
+  "未缓存输入"
+ ],
+ "Cache reads": [
+  "缓存读取"
+ ],
+ "Cache writes": [
+  "缓存写入"
+ ],
+ "Output (including reasoning tokens)": [
+  "输出（含推理 Token）"
+ ],
+ "Separate reasoning fees": [
+  "单独推理费用"
+ ],
+ "Current context": [
+  "当前上下文"
+ ],
+ "Plan input equivalent": [
+  "Plan 输入等值"
+ ],
+ "Uncached input estimate": [
+  "非缓存输入估算"
+ ],
+ "Estimates one send of the current context as uncached input, excluding cache discounts and output costs. This is not the session total.": [
+  "按当前上下文全部作为非缓存输入发送一次估算，不含缓存折扣和输出费用，也不是本会话累计费用。"
+ ],
+ "The total follows reported usage plus subsequent context changes. Component tokens and costs are proportional estimates, not measured post-compression usage for each part.": [
+  "总量按提供商最近用量及后续上下文变化校准；各部分 Token 和费用按组成比例估算，不代表压缩后的逐段实际用量。"
+ ],
+ "The total and components are local estimates without an available provider-usage anchor.": [
+  "总量及各部分均为本地估算，尚无可用的提供商用量校准。"
+ ],
+ "Reference cost share": [
+  "参考费用占比"
+ ],
+ "Token share": [
+  "Token 占比"
+ ],
+ "Component costs": [
+  "各部分计费"
+ ],
+ "Latest call · usage-based costs": [
+  "最近一次调用 · 用量计费"
+ ],
+ "Cost share": [
+  "费用占比"
+ ],
+ "Call billing details": [
+  "调用计费明细"
+ ],
+ "Total ": [
+  "合计 "
+ ],
+ " · Plan API equivalent": [
+  " · Plan 的 API 等值"
+ ],
+ "No reported usage from a completed call yet.": [
+  "尚无已完成调用的用量数据。"
+ ],
+ "Model rates not configured": [
+  "未配置模型单价"
+ ],
+ "System": [
+  "系统"
+ ],
+ "Tools": [
+  "工具定义",
+  "工具调用"
+ ],
+ "User": [
+  "用户"
+ ],
+ "Replies": [
+  "历史回复"
+ ],
+ "Results": [
+  "工具结果"
+ ],
+ "Enabled preview": [
+  "启用后预览"
+ ],
+ "Before preview": [
+  "启用前预览"
+ ],
+ "After · context + costs": [
+  "启用后 · 上下文 + 费用"
+ ],
+ "Before · context": [
+  "启用前 · 上下文"
+ ],
+ "Input cost reference": [
+  "输入费用参考"
+ ],
+ "Estimated at uncached rates": [
+  "按非缓存单价估算"
+ ],
+ "Latest call": [
+  "最近一次调用"
+ ],
+ "Input $0.012 · output $0.004": [
+  "输入 $0.012 · 输出 $0.004"
+ ],
+ "Usage-based total $0.016": [
+  "用量计费合计 $0.016"
+ ],
+ "billion-context billing compatibility": [
+  "billion-context 计费兼容提醒"
+ ],
+ "Detected billion-context ": [
+  "检测到 billion-context "
+ ],
+ ". Update to 0.1.181 or later for complete internal billing.": [
+  "。请更新到 0.1.181 或更新版本，再接入完整内部计费。"
+ ],
+ "The billion-context metering interface has changed. Internal cost coverage is incomplete. Report this in the community group or open an issue so the integration can be updated.": [
+  "检测到 billion-context 计费接口变化，内部费用尚未完整采集。请到交流群反馈，或提交 issue，以便更新接入。"
+ ],
+ "Automatic billing for the original billion-context package is not connected. Fully restart DSH after updating cost-meter so its local proxy starts with metering. If the problem persists, contact the community group or open an issue.": [
+  "原版 billion-context 的自动计费接入尚未完成。更新费用插件后请完全重启 DSH，让新启动的本地代理接入计费；仍有问题时，到交流群反馈或提交 issue。"
+ ],
+ "Include the billion-context, cost-meter and DSH versions in your report.": [
+  "反馈时请附 billion-context、费用插件及 DSH 的版本。"
+ ],
+ "Community group": [
+  "加入交流群"
+ ],
+ "Open an issue": [
+  "提交 issue"
+ ],
+ "Dismiss": [
+  "知道了"
+ ],
+ "See context usage and costs together": [
+  "让上下文占用与费用一起可见"
+ ],
+ "Close preview": [
+  "关闭预览"
+ ],
+ "Compatible version detected: ": [
+  "已检测到兼容版本 "
+ ],
+ ". Add context costs inside its current-context panel.": [
+  "。启用后，在它的当前上下文面板内增加上下文费用区。"
+ ],
+ "Interface preview. Enable integration when a verified compatible version is detected.": [
+  "界面预览。检测到已验证的兼容版本后，可以开启联动。"
+ ],
+ "Not now": [
+  "暂不启用"
+ ],
+ "Enable integration": [
+  "启用联动"
+ ],
+ "dsh-context integration settings": [
+  "dsh-context 联动设置"
+ ],
+ "integration": [
+  "联动"
+ ],
+ "On": [
+  "已启用"
+ ],
+ "Off": [
+  "未启用"
+ ],
+ "Show context costs in dsh-context": [
+  "在 dsh-context 面板中显示上下文费用"
+ ],
+ "Install and enable dsh-context, then check again.": [
+  "请安装并启用 dsh-context，然后重新检测。"
+ ],
+ "Could not read dsh-context status. Check again.": [
+  "无法读取 dsh-context 状态，请重新检测。"
+ ],
+ "Required dsh-context view interfaces are unavailable. Update the plugin or host, then check again.": [
+  "当前 dsh-context 未提供所需界面接口，请更新插件或宿主后重新检测。"
+ ],
+ "Could not save the setting; integration remains off. Retry here.": [
+  "设置保存失败，联动保持关闭。可在此重试。"
+ ],
+ "Preview before and after": [
+  "查看启用前后预览"
+ ],
+ "Check again": [
+  "重新检测"
+ ],
+ "Previous": [
+  "上一页"
+ ],
+ "Next": [
+  "下一页"
+ ],
+ "Peak ": [
+  "最高 "
+ ],
+ "No measurable share yet": [
+  "暂无可计算的占比"
+ ],
+ "Retry": [
+  "重试"
+ ],
+ "Loading this turn’s input and tools…": [
+  "读取这一轮的输入和工具调用…"
+ ],
+ "Original records for this turn are unavailable.": [
+  "这一轮的原始日志不可用。"
+ ],
+ "User input for this turn": [
+  "本轮用户输入"
+ ],
+ "No user input is recorded for this turn.": [
+  "日志未记录本轮用户输入。"
+ ],
+ "First 16,000 characters": [
+  "显示前 16,000 字符"
+ ],
+ "Tool calls": [
+  "工具调用"
+ ],
+ "No tool calls are recorded in this turn.": [
+  "这一轮没有工具调用记录。"
+ ],
+ "Step ": [
+  "步骤 "
+ ],
+ "Completed": [
+  "已完成"
+ ],
+ "Failed": [
+  "失败",
+  "调用失败"
+ ],
+ "No recorded result": [
+  "未记录结果"
+ ],
+ "Arguments": [
+  "调用参数",
+  "参数"
+ ],
+ "Result": [
+  "返回结果"
+ ],
+ "No text result is available": [
+  "没有可显示的文本结果"
+ ],
+ "Content truncated": [
+  "内容已截取"
+ ],
+ " chars": [
+  " 字符"
+ ],
+ "Call content": [
+  "调用内容"
+ ],
+ "Call content views": [
+  "调用内容视图"
+ ],
+ "Inputs": [
+  "输入记录"
+ ],
+ "Response": [
+  "模型回复",
+  "本次回复"
+ ],
+ "Loading call content…": [
+  "读取调用内容…"
+ ],
+ "Original content unavailable": [
+  "原始内容不可用"
+ ],
+ "Compaction summary": [
+  "压缩摘要"
+ ],
+ "Reasoning": [
+  "思考内容",
+  "推理"
+ ],
+ "This response contains tool calls": [
+  "本次回复为工具调用"
+ ],
+ "No recorded response": [
+  "未记录回复内容"
+ ],
+ "Turn input": [
+  "本轮用户输入"
+ ],
+ "Previous step’s tool results": [
+  "上一步工具返回"
+ ],
+ "No recorded input": [
+  "未记录输入内容"
+ ],
+ "No tools in this call": [
+  "本次没有工具调用"
+ ],
+ "No result": [
+  "未记录结果"
+ ],
+ "Long text limited to 16,000 characters": [
+  "长文本显示前 16,000 字符"
+ ],
+ " requests": [
+  " 次请求",
+  " 次"
+ ],
+ "Call billing breakdown": [
+  "本次计费明细"
+ ],
+ "Plan equivalent": [
+  "Plan 等值",
+  "Plan 等值费用"
+ ],
+ "API cost": [
+  "API 费用"
+ ],
+ " · Retry ": [
+  " · 重试 "
+ ],
+ " · observed usage only; unknown charges are not inferred": [
+  " · 仅含已收到的用量，未知费用未估补"
+ ],
+ "This call’s costs": [
+  "本次费用构成"
+ ],
+ "Component": [
+  "计费项目"
+ ],
+ "Usage": [
+  "用量"
+ ],
+ "Rate / request": [
+  "单价 / 次"
+ ],
+ "Rate / 1M": [
+  "单价 / 百万"
+ ],
+ "Cost": [
+  "金额",
+  "费用"
+ ],
+ "Share": [
+  "占比"
+ ],
+ " / request": [
+  " / 次"
+ ],
+ "No separate charge": [
+  "未单独计费"
+ ],
+ "Call content not stored": [
+  "未保存调用内容"
+ ],
+ "Read files": [
+  "读取文件"
+ ],
+ "Local search": [
+  "本地检索"
+ ],
+ "File changes": [
+  "文件修改"
+ ],
+ "Commands": [
+  "命令执行"
+ ],
+ "Other tools": [
+  "其他工具调用",
+  "其他工具"
+ ],
+ "Model responses": [
+  "模型回复"
+ ],
+ "Web search": [
+  "网页搜索"
+ ],
+ "Web fetch": [
+  "网页抓取"
+ ],
+ "Compaction": [
+  "上下文压缩"
+ ],
+ "Agent coordination": [
+  "代理协作"
+ ],
+ "Mixed tools": [
+  "多类工具"
+ ],
+ "Other calls": [
+  "其他调用"
+ ],
+ "Cost ownership path": [
+  "费用归属路径"
+ ],
+ "All costs": [
+  "全部费用"
+ ],
+ "Grouping": [
+  "分类方式"
+ ],
+ "By activity": [
+  "按用途"
+ ],
+ "By agent": [
+  "按代理"
+ ],
+ "Cost treemap": [
+  "矩形费用分布"
+ ],
+ "No priced cost": [
+  "没有已定价费用"
+ ],
+ "Cost ownership": [
+  "费用归属"
+ ],
+ "Steps": [
+  "步骤",
+  "步数"
+ ],
+ "Calls": [
+  "调用",
+  "调用次数"
+ ],
+ "Of conversation": [
+  "占对话"
+ ],
+ "Of parent": [
+  "占父级"
+ ],
+ "Fee details": [
+  "费用详细信息"
+ ],
+ "Close fee details": [
+  "关闭详细信息"
+ ],
+ "Output": [
+  "输出"
+ ],
+ "Cache read": [
+  "缓存读取"
+ ],
+ "Cache write": [
+  "缓存写入"
+ ],
+ "Selected step cost": [
+  "选中步骤费用"
+ ],
+ "Loading call details…": [
+  "读取调用明细…"
+ ],
+ "Call records for this step are unavailable": [
+  "未找到该步骤的调用记录"
+ ],
+ "Calls in this step": [
+  "本步骤调用"
+ ],
+ "Turn ": [
+  "轮次 "
+ ],
+ " · step ": [
+  " · 步骤 "
+ ],
+ "Highest cost first": [
+  "金额从高到低"
+ ],
+ " steps": [
+  " 步"
+ ],
+ "Loading calls…": [
+  "读取调用列表…"
+ ],
+ "Show more": [
+  "展开更多"
+ ],
+ "No available calls": [
+  "没有可用的调用"
+ ],
+ "Call #": [
+  "调用 #"
+ ],
+ "Refresh the cost view to load this call’s details.": [
+  "该调用的详细记录尚未载入，请刷新费用页面。"
+ ],
+ "Loading": [
+  "读取中"
+ ],
+ "Step category": [
+  "步骤类别"
+ ],
+ "All activities": [
+  "全部用途"
+ ],
+ "Step agent": [
+  "步骤代理"
+ ],
+ "All agents": [
+  "全部代理"
+ ],
+ "Grid order": [
+  "热力图排序"
+ ],
+ "Trajectory order": [
+  "轨迹顺序"
+ ],
+ "Index": [
+  "序号"
+ ],
+ "Locate step index": [
+  "定位步骤序号"
+ ],
+ "Go": [
+  "定位"
+ ],
+ "One cell per step · hue = activity, shade = cost": [
+  "每格一步 · 颜色区分类别，深浅表示费用"
+ ],
+ "Step cost heatmap": [
+  "逐步费用热力图"
+ ],
+ "No matching steps": [
+  "没有符合条件的步骤"
+ ],
+ "Input": [
+  "输入"
+ ],
+ "Cost categories updating in background": [
+  "费用分类正在后台更新"
+ ],
+ "This conversation": [
+  "本会话",
+  "当前对话"
+ ],
+ "Subagent ": [
+  "子代理 "
+ ],
+ "Step billing details": [
+  "步骤费用明细"
+ ],
+ " steps · ": [
+  " 步 · "
+ ],
+ " calls · average per step ": [
+  " 次调用 · 单步均值 "
+ ],
+ "Average per step": [
+  "单步均值"
+ ],
+ "Top 10 steps": [
+  "最高 10 步占比"
+ ],
+ "Cost by category": [
+  "费用类型构成"
+ ],
+ "Updating": [
+  "更新中"
+ ],
+ "Refresh incomplete, click to retry": [
+  "更新未完成，点击重试"
+ ],
+ "Cost views": [
+  "费用视图"
+ ],
+ "Categories": [
+  "归类占比"
+ ],
+ "Treemap": [
+  "矩形分布"
+ ],
+ "Ownership": [
+  "父子归属"
+ ],
+ "Step heatmap": [
+  "步骤热力图"
+ ],
+ "Conversation total": [
+  "对话总费用"
+ ],
+ "Web fetch includes related model steps. Successful DeepSeek Fetch API requests have a separate request fee; local HTTP fetching has no separate fee.": [
+  "网页抓取分类包含相关模型步骤；DeepSeek Fetch API 的成功请求另计次数费，本地 HTTP 抓取不另收费。"
+ ],
+ "Zero cost": [
+  "零费用"
+ ],
+ "Includes unpriced": [
+  "含未定价"
+ ],
+ "Step cost share distribution": [
+  "单步费用占比分布"
+ ],
+ "Categorized billing details": [
+  "归类计费明细"
+ ],
+ "Input and output costs": [
+  "输入与输出费用构成"
+ ],
+ "Step cost details": [
+  "逐步费用明细"
+ ],
+ "All steps": [
+  "全部步骤"
+ ],
+ "All": [
+  "全部"
+ ],
+ "Step order": [
+  "步骤排序"
+ ],
+ "Rank": [
+  "排名"
+ ],
+ "Step / tool": [
+  "步骤 / 工具"
+ ],
+ "Loading…": [
+  "读取中…"
+ ],
+ "Show more steps": [
+  "展开更多步骤"
+ ],
+ "Model call": [
+  "模型调用"
+ ],
+ "Native search": [
+  "原生搜索"
+ ],
+ "Turn not recorded": [
+  "未标明轮次"
+ ],
+ "Loading this conversation’s usage records…": [
+  "正在读取本对话的用量明细…"
+ ],
+ "Background refresh incomplete": [
+  "后台更新未完成"
+ ],
+ "Call logs are unavailable; missing details do not mean zero cost.": [
+  "没有可用的调用日志；缺失明细不代表零费用。"
+ ],
+ "Main conversation": [
+  "主会话"
+ ],
+ "Known cost share": [
+  "已知费用占比"
+ ],
+ "Other ": [
+  "其余 "
+ ],
+ " models": [
+  " 个模型"
+ ],
+ "Cache read share": [
+  "缓存读取的占比"
+ ],
+ "Input tokens": [
+  "输入 Token"
+ ],
+ "Input cost": [
+  "输入费用"
+ ],
+ "Highest-cost calls": [
+  "高额调用"
+ ],
+ "Top ": [
+  "前 "
+ ],
+ " calls ": [
+  " 次合计 "
+ ],
+ "Of conversation ": [
+  "占对话 "
+ ],
+ " calls": [
+  " 次调用"
+ ],
+ "Input / cache / output tokens": [
+  "输入 / 缓存 / 输出 Tokens"
+ ],
+ "Overview": [
+  "费用概览"
+ ],
+ "Cost details": [
+  "费用明细"
+ ],
+ "API + Plan equivalent": [
+  "API + Plan 等值"
+ ],
+ "Estimated from this conversation’s call logs": [
+  "按本对话调用日志估算"
+ ],
+ "Includes subagents": [
+  "包含子代理"
+ ],
+ "Token usage": [
+  "Token 用量"
+ ],
+ "Input, cache and output": [
+  "输入、缓存与输出"
+ ],
+ "Cache hit rate": [
+  "缓存命中率"
+ ],
+ "Cache reads among input tokens": [
+  "输入 Token 中的缓存读取"
+ ],
+ "Context cost reference": [
+  "上下文费用参考"
+ ],
+ "Recorded costs · call details": [
+  "已发生费用 · 调用明细"
+ ],
+ "Conversation cost details": [
+  "单对话费用明细"
+ ],
+ "Includes subagents and their descendants": [
+  "包含子代理及其后代"
+ ],
+ "Own conversation calls": [
+  "本会话自身的调用"
+ ],
+ "Ledger and available details differ: ledger ": [
+  "账本与可用明细不同：账本 "
+ ],
+ " calls; details ": [
+  " 次；明细 "
+ ],
+ " calls.": [
+  " 次。"
+ ],
+ "Main conversation and subagents · ledger costs": [
+  "主会话与子代理 · 账本费用"
+ ],
+ "Some calls are unpriced": [
+  "存在未定价调用"
+ ],
+ "Cost composition": [
+  "费用构成"
+ ],
+ "Cost by model": [
+  "模型费用排行",
+  "模型费用分布"
+ ],
+ "Cost by activity": [
+  "各环节费用占比"
+ ],
+ "Individual calls": [
+  "逐次调用明细"
+ ],
+ "Turns, steps and rates": [
+  "轮次、步骤与单价"
+ ],
+ "Share by step": [
+  "各步骤占比"
+ ],
+ "Cost share · all calls": [
+  "费用占比 · 全部调用"
+ ],
+ "Call count share · all calls": [
+  "调用次数占比 · 全部调用"
+ ],
+ "All other steps": [
+  "其余步骤合计"
+ ],
+ "Rates and token details": [
+  "单价与 Token 明细"
+ ],
+ "Cost component": [
+  "费用构成"
+ ],
+ "Cost by call type": [
+  "按调用类型统计"
+ ],
+ "Cost by turn": [
+  "按轮次统计"
+ ],
+ "Expand to inspect input and tool calls": [
+  "展开查看输入和工具调用"
+ ],
+ "Cost per call · current page": [
+  "逐次调用费用 · 当前页"
+ ],
+ " / step ": [
+  " / 步骤 "
+ ],
+ " · long-context rate": [
+  " · 长上下文价"
+ ],
+ "billion-context request metering is connected, including internal compression, retries and additional calls. Collection starts when enabled; earlier missing records cannot be recovered.": [
+  "已接入 billion-context 的逐次请求，包括内部压缩、重试和追加请求。只从启用后开始采集，启用前的缺失记录无法补齐。"
+ ],
+ " Usage refresh failed; saved amounts are retained.": [
+  " 用量读取失败，保留已有金额。"
+ ],
+ " Requests without the full metering bridge: ": [
+  " 未建立完整采集的请求："
+ ],
+ "; these requests retain DSH usage accounting.": [
+  "；这些请求沿用 DSH 用量。"
+ ],
+ " Requests without complete usage: ": [
+  " 没有完整用量回执的请求："
+ ],
+ "; unknown charges are not inferred.": [
+  "；这些请求的未知费用没有估补。"
+ ],
+ "billion-context detected. These totals use its reported DSH usage; unreported internal compression, retries and additional requests are excluded.": [
+  "已检测到 billion-context。此处统计它上报给 DSH 的用量；代理内部未上报的压缩、重试和追加请求未计入。"
+ ],
+ "Open proxy statistics": [
+  "查看代理统计"
+ ],
+ "Could not save the cost basis. Try again.": [
+  "计费口径保存失败，请重试。"
+ ],
+ "This conversation · all calls": [
+  "当前对话 · 全部调用"
+ ],
+ "Display and integration settings": [
+  "显示与联动设置"
+ ],
+ "Cost basis": [
+  "计费口径"
+ ],
+ "Cost statistics": [
+  "计费统计"
+ ],
+ "Conversation · ": [
+  "单对话 · "
+ ],
+ "All conversations · from totals to individual calls": [
+  "全部对话 · 从总额查看每一笔调用"
+ ],
+ "Billing and integration settings": [
+  "计费与联动设置"
+ ],
+ "← All conversations": [
+  "← 全部对话"
+ ],
+ "Today": [
+  "今天"
+ ],
+ "Last 7 days": [
+  "近 7 天"
+ ],
+ "Last 30 days": [
+  "近 30 天"
+ ],
+ "All retained": [
+  "全部记录"
+ ],
+ "Custom": [
+  "自定义"
+ ],
+ "From": [
+  "开始日期"
+ ],
+ "To": [
+  "结束日期"
+ ],
+ "Provider": [
+  "提供商"
+ ],
+ "All providers": [
+  "全部提供商"
+ ],
+ "Model": [
+  "模型"
+ ],
+ "All models": [
+  "全部模型"
+ ],
+ "Loading statistics…": [
+  "加载统计…"
+ ],
+ "Retained ledger ": [
+  "账本保留范围 "
+ ],
+ "Recorded estimate": [
+  "已入账估算"
+ ],
+ " conversations · average ": [
+  " 个对话 · 平均 "
+ ],
+ "Some models have no rates": [
+  "部分模型未配置价格"
+ ],
+ "No recorded usage in this range.": [
+  "所选范围没有已记录的用量。"
+ ],
+ "Cost over time · ": [
+  "费用趋势 · "
+ ],
+ " calls · ": [
+  " 次 · "
+ ],
+ "Show less": [
+  "收起"
+ ],
+ "Show all models": [
+  "显示全部模型"
+ ],
+ "Historical cost without a model: ": [
+  "历史未分配到模型的费用："
+ ],
+ "Token composition": [
+  "Token 构成"
+ ],
+ "Reported reasoning tokens: ": [
+  "单独上报的推理 Token："
+ ],
+ "Cost by conversation": [
+  "对话费用排行"
+ ],
+ "Select for details · includes subagents, each call counted once": [
+  "点击查看明细 · 包含子代理，每笔费用只计一次"
+ ],
+ "Select a conversation for details": [
+  "点击对话查看明细"
+ ],
+ "Conversation": [
+  "对话",
+  "会话内容"
+ ],
+ "Cache hits": [
+  "缓存命中"
+ ],
+ "Cost not linked to a conversation: ": [
+  "未关联对话的费用："
+ ],
+ "Placement": [
+  "显示位置"
+ ],
+ "Show today’s usage": [
+  "显示今日用量"
+ ],
+ "Hover to see the cost breakdown.": [
+  "悬停查看费用分项。"
+ ],
+ "Set up a budget in Overview to show it here.": [
+  "先在“概览”中设置预算，启用后会在这里显示。"
+ ],
+ "Shown after Go quota is configured and available.": [
+  "配置并获取 Go 额度后显示；这里只调整外观。"
+ ],
+ "Primary window": [
+  "主进度条"
+ ],
+ "Week": [
+  "周"
+ ],
+ "Month": [
+  "月"
+ ],
+ "Peak bar style": [
+  "峰谷条样式"
+ ],
+ "Slim": [
+  "细条"
+ ],
+ "Segmented": [
+  "分段"
+ ],
+ "Set each account’s placement in Quota.": [
+  "各账户的显示位置在“额度”中设置。"
+ ],
+ "Data source": [
+  "数据源"
+ ],
+ "Auto-detect": [
+  "自动检测"
+ ],
+ "Auto prefers dsh-codex-subscription, then falls back to dsh-codex-connect.": [
+  "自动检测优先 dsh-codex-subscription，失败回退 dsh-codex-connect。"
+ ],
+ "Update exchange rates daily": [
+  "每日自动更新汇率"
+ ],
+ "Daily reference rates; past costs retain their recorded rates.": [
+  "参考汇率每日更新；历史费用保留记录时的汇率。"
+ ],
+ "Currency and language": [
+  "金额与语言"
+ ],
+ "Applies to all cost components.": [
+  "统一应用于所有费用组件。"
+ ],
+ "Appearance and component settings": [
+  "外观与组件设置"
+ ],
+ "Sidebar style": [
+  "侧栏样式"
+ ],
+ "Progress card examples": [
+  "进度卡片示例"
+ ],
+ "‹ Back to styles": [
+  "‹ 返回样式选择"
+ ],
+ "Sidebar layout": [
+  "侧栏布局"
+ ],
+ "Simple": [
+  "简洁"
+ ],
+ "Standard": [
+  "标准"
+ ],
+ "Compact": [
+  "紧凑"
+ ],
+ "Quota windows sit side by side; the budget card stays intact.": [
+  "多时段额度并排，预算卡保持完整。"
+ ],
+ "Customize": [
+  "点击调整",
+  "调整组件"
+ ],
+ "Choose a component": [
+  "选择组件"
+ ],
+ "Show this component": [
+  "显示此组件"
+ ],
+ "Sidebar footer": [
+  "侧栏底部"
+ ],
+ "Workspace": [
+  "工作区"
+ ],
+ " · Click to customize": [
+  " · 点击调整"
+ ],
+ "Signed in to DeepSeek": [
+  "已登录 DeepSeek"
+ ],
+ "Components not shown": [
+  "未显示的组件"
+ ],
+ "Official balance": [
+  "官方余额"
+ ],
+ "Sidebar budget": [
+  "侧栏预算"
+ ],
+ "Today’s usage": [
+  "今日用量"
+ ],
+ "Peak / off-peak": [
+  "峰谷时段"
+ ],
+ "Model costs": [
+  "模型花费"
+ ],
+ "Go quota": [
+  "Go 额度"
+ ],
+ "Plan bars": [
+  "套餐进度条"
+ ],
+ "Custom balance": [
+  "自定义余额"
+ ],
+ "Codex quota": [
+  "Codex 额度"
+ ],
+ "Session cost summary": [
+  "会话费用摘要"
+ ],
+ "Header cost details": [
+  "顶部费用明细"
+ ],
+ "Composer cost details": [
+  "输入框下方费用明细"
+ ],
+ "Per-turn cost": [
+  "每轮费用"
+ ],
+ "Corner quota": [
+  "右下角额度"
+ ],
+ "Budget strip": [
+  "预算进度条"
+ ],
+ "Go strip": [
+  "Go 进度条"
+ ],
+ "Plan strip": [
+  "套餐进度条"
+ ],
+ ", click to customize": [
+  "，点击调整"
+ ],
+ "Above composer · ": [
+  "输入框上方 · "
+ ],
+ " · In 128K · Out 4K": [
+  " · 输入 128K · 输出 4K"
+ ],
+ " · No cached session data": [
+  " · 暂无会话缓存"
+ ],
+ "Sidebar": [
+  "侧栏"
+ ],
+ "Composer": [
+  "输入区"
+ ],
+ "Composer area": [
+  "输入区域"
+ ],
+ "Send a message, / commands, @ files or conversations": [
+  "发消息或创建任务，/ 调用指令，@ 文件或对话"
+ ],
+ "Full access": [
+  "完全权限"
+ ],
+ "Current model": [
+  "当前模型"
+ ],
+ "2 turns · 6 steps · 273 tok/s": [
+  "2 轮 6 步 · 273 tok/s"
+ ],
+ "128K tok · 98% cache": [
+  "128K tok · 缓存命中 98%"
+ ],
+ "Organize the project plan": [
+  "整理项目计划"
+ ],
+ "Conversation cost placement": [
+  "会话费用显示位置"
+ ],
+ "Chat": [
+  "对话"
+ ],
+ "Trace": [
+  "轨迹"
+ ],
+ "Context": [
+  "上下文"
+ ],
+ "The project materials are ready. Next, review the plan and schedule.": [
+  "已整理好项目资料，接下来可以确认计划与时间安排。"
+ ],
+ "Enable example data to see the complete conversation preview.": [
+  "当前会话数据暂不可用，可开启示例数据查看完整效果。"
+ ],
+ "▸ Turn cost ≈ ": [
+  "▸ 本轮费用 ≈ "
+ ],
+ "Use example data": [
+  "使用示例数据"
+ ],
+ "Full preview · example data is not recorded": [
+  "展示完整效果，示例不计入账本"
+ ],
+ "Current data · unavailable values show —": [
+  "展示当前数据，缺失内容显示 —"
+ ],
+ "Preview area": [
+  "预览区域"
+ ],
+ "Interactive display settings": [
+  "交互式显示设置"
+ ],
+ "Make the screen yours": [
+  "设置你看到的界面"
+ ],
+ "Select an outlined item, then customize it on the right. Faded components are hidden.": [
+  "点击虚线框，在右侧调整显示与样式。淡化表示已隐藏。"
+ ],
+ "Expand preview": [
+  "放大预览"
+ ],
+ "Desktop display preview": [
+  "桌面显示预览"
+ ],
+ "Display settings": [
+  "显示设置"
+ ],
+ "Display settings save automatically; the data source only affects this preview.": [
+  "显示设置自动保存；数据来源开关仅影响预览。"
+ ],
+ "OpenRouter model prices": [
+  "OpenRouter 模型价格"
+ ],
+ "Refreshing…": [
+  "刷新中…"
+ ],
+ "Refresh prices": [
+  "刷新价格"
+ ],
+ "Public catalog · USD / million tokens · No API key or inference charges. Previous prices appear immediately; updates every minute while visible or on manual refresh.": [
+  "公开目录 · 美元 / 百万 tokens · 无需 API Key，不产生模型调用费用。优先显示上次价格，前台每分钟更新，也可手动刷新。"
+ ],
+ "Search OpenRouter models": [
+  "搜索 OpenRouter 模型"
+ ],
+ "Search models, e.g. flash": [
+  "搜索模型，例如 flash"
+ ],
+ "Price order": [
+  "价格排序"
+ ],
+ "Model name": [
+  "按模型名称"
+ ],
+ "Input price: low to high": [
+  "输入价格从低到高"
+ ],
+ "Output price: low to high": [
+  "输出价格从低到高"
+ ],
+ "Last updated: ": [
+  "最近更新："
+ ],
+ "Prices not loaded yet": [
+  "尚未取得价格"
+ ],
+ "Refresh failed; previous prices are retained: ": [
+  "刷新失败，以下保留上次价格："
+ ],
+ "Price lookup failed: ": [
+  "价格查询失败："
+ ],
+ "OpenRouter price table": [
+  "OpenRouter 价格表"
+ ],
+ "Context tokens": [
+  "上下文 tokens"
+ ],
+ "Price changed": [
+  "价格已变动"
+ ],
+ "Loading public catalog…": [
+  "正在查询公开目录…"
+ ],
+ "No matching models.": [
+  "没有匹配的模型。"
+ ],
+ "Current public token reference rates; — means unavailable. Open a model for routing, price tiers and extra image/search fees. Promotions and final charges are determined by OpenRouter.": [
+  "显示当前公开 token 参考价；— 表示目录未提供。具体路由、阶梯价格和图片、搜索等附加费用请点模型查看。优惠与实际结算以 OpenRouter 为准。"
+ ],
+ "USD / million tokens": [
+  "美元 / 百万 tokens"
+ ],
+ "Token price unavailable for this model in the public catalog": [
+  "公开目录未提供此模型的 token 单价"
+ ],
+ "Price lookup failed": [
+  "价格查询失败"
+ ],
+ "Loading public prices…": [
+  "正在查询公开价格…"
+ ],
+ "Updated: ": [
+  "最近更新: "
+ ],
+ "Refresh failed; prices have not been updated": [
+  "刷新失败，价格未更新"
+ ],
+ "Public reference rates; promotions and billing follow OpenRouter": [
+  "公开参考价；优惠与结算以 OpenRouter 为准"
+ ],
+ "Compatibility fix": [
+  "兼容修复"
+ ],
+ "Close": [
+  "关闭"
+ ],
+ "Historical Codex usage: {calls} calls · {cost} · {days} days": [
+  "历史 Codex 用量：{calls} 次调用 · {cost} · {days} 天"
+ ],
+ "Failed: ": [
+  "失败："
+ ],
+ "Keep status quo": [
+  "保持现状"
+ ],
+ "Reclassify as Plan": [
+  "统一归类为 Plan"
+ ],
+ "You can change this later in Settings → Cost → Codex subscription compatibility.": [
+  "之后可在 设置 → 费用 → Codex 订阅兼容 中处理。"
+ ],
+ "Codex subscription compatibility": [
+  "Codex 订阅兼容"
+ ],
+ "Detected version: {version}": [
+  "检测版本：{version}"
+ ],
+ "Current billing class: {planClass}": [
+  "当前计费方式：{planClass}"
+ ],
+ "Historical usage: {calls} calls · {cost} · {tokens} tokens · {days} days": [
+  "历史用量：{calls} 次调用 · {cost} · {tokens} tokens · {days} 天"
+ ],
+ "Reclassified at {time}": [
+  "已归类于 {time}"
+ ],
+ "Historical usage is not reclassified yet.": [
+  "历史用量未归类。"
+ ],
+ "Sources: {providers}": [
+  "来源：{providers}"
+ ],
+ "You chose Keep status quo earlier; you can reclassify anytime.": [
+  "此前选择保持现状，可随时统一归类。"
+ ]
+}

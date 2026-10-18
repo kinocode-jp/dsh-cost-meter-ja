@@ -1,6 +1,6 @@
 /** Billing history and read-only context cost composition, loaded on demand. */
 window.__ModuleLoader__.load({
-  id: 'dsh-cost-meter', chunk: 'client.statistics.js',
+  id: '@kinocode/dsh-cost-meter-ja', chunk: 'client.statistics.js',
   factory: require => {
     const React = require('react')
     const { createElement: el, useState, useEffect, useRef, Fragment } = React
@@ -95,16 +95,16 @@ window.__ModuleLoader__.load({
       if (v.displayCurrency != null) { if (!['USD', 'CNY', 'EUR'].includes(v.displayCurrency)) throw Error('Invalid display currency'); q.displayCurrency = v.displayCurrency }
       return q
     }
-    const codec = (name, parse) => { const schema = { parse }; return { mode: 'strict', typeSymbol: 'dsh-cost-meter#' + name, schema, create: () => schema } }
+    const codec = (name, parse) => { const schema = { parse }; return { mode: 'strict', typeSymbol: '@kinocode/dsh-cost-meter-ja#' + name, schema, create: () => schema } }
     // Remote contributions have separate ownership from Host manifests. The main
     // client already owns "dsh-cost-meter"; a lazy group needs its own identity.
     // Endpoints and type symbols still match the original Host costMeter face.
     const CONTRIBUTION = { package: 'dsh-cost-meter/statistics', descriptors: [
       ['getSessionTrajectory', 'Trajectory', parseTrajectory, parseTrajectoryQuery],
       ['getBillingStatistics', 'BillingStatistics', parseStatistics], ['getSessionBilling', 'SessionBilling', parseDetail], ['getTurnInspection', 'TurnInspection', parseInspection, parseInspectionQuery], ['getCallInspection', 'CallInspection', parseCallInspection, parseCallInspectionQuery], ['getContextCosts', 'ContextCosts', parseContextCosts, parseContextCostsQuery],
-    ].map(([method, name, parse, queryParser]) => ({ id: 'dsh-cost-meter#costMeter/' + method, service: 'costMeter', namespace: 'costMeter', method, invocation: { kind: 'direct' },
+    ].map(([method, name, parse, queryParser]) => ({ id: '@kinocode/dsh-cost-meter-ja#costMeter/' + method, service: 'costMeter', namespace: 'costMeter', method, invocation: { kind: 'direct' },
       parameters: [{ name: 'query', wire: 'query', source: 'json', codec: codec(queryParser ? name + 'Query' : 'StatisticsQuery', queryParser ?? parseQuery) }], result: codec(name, parse) })).concat({
-        id: 'dsh-cost-meter#costMeter/getContextIntegration', service: 'costMeter', namespace: 'costMeter', method: 'getContextIntegration', invocation: { kind: 'direct' }, parameters: [], result: codec('ContextIntegration', parseIntegration),
+        id: '@kinocode/dsh-cost-meter-ja#costMeter/getContextIntegration', service: 'costMeter', namespace: 'costMeter', method: 'getContextIntegration', invocation: { kind: 'direct' }, parameters: [], result: codec('ContextIntegration', parseIntegration),
       }) }
 
     const css = `
@@ -400,7 +400,7 @@ window.__ModuleLoader__.load({
             observer.observe(scope, { childList: true, subtree: true }); sync()
             return () => { observer.disconnect(); node.remove() }
           }, [props.sessionId])
-          const text = (zh, english) => getLocale() === 'en' ? english : zh
+          const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (getLocale() === 'en' ? english : zh)
           const portal = target && props.sessionId ? createPortal(el(ContextCosts, { key: props.sessionId, api, sessionId: props.sessionId, integrated: true, text, revision }), target) : null
           return Original ? el('div', { ref: container, style: { display: 'contents' }, 'data-cm-context-bridge': props.sessionId }, el(Original, props), portal)
             : el(Fragment, null, el('span', { ref: container, hidden: true }), portal)
@@ -545,7 +545,7 @@ window.__ModuleLoader__.load({
     function BillionCompatibilityNotice({ meter, locale }) {
       const ref = useRef(null), [dismissed, setDismissed] = useState('')
       const id = meter?.noticeId ?? '', storageKey = 'dsh-cost-meter:billion-compatibility:' + id
-      const text = (zh, en) => locale === 'en' ? en : zh
+      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en) : (locale === 'en' ? en : zh)
       let seen = dismissed === id
       try { seen ||= window.localStorage.getItem(storageKey) === 'seen' } catch {}
       const visible = id && !seen && ['needs_update', 'changed', 'bridge_missing'].includes(meter.compatibility)
@@ -1294,7 +1294,7 @@ window.__ModuleLoader__.load({
 
     function Statistics({ state, api, sessionId = '', formatMoneyUsd, formatTokens, resolveLocale, contextIntegration }) {
       const en = resolveLocale ? resolveLocale(state.config) === 'en' : (state.config.locale === 'en' || state.config.locale !== 'zh' && (state.config.activeLocale || state.meta?.locale || (typeof navigator !== 'undefined' && /^zh/i.test(navigator.language) ? 'zh' : 'en')) === 'en')
-      const text = (zh, english) => en ? english : zh
+      const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
       const [period, setPeriod] = useState(sessionId ? 'all' : 'week'), [custom, setCustom] = useState(null)
       const [scope, setScope] = useState({ id: sessionId, title: sessionId }), [provider, setProvider] = useState(''), [model, setModel] = useState('')
       const preference = useStatisticsBasis(state.config, api, text), { basis } = preference, [offset, setOffset] = useState(0), [revision, setRevision] = useState(0), [showModels, setShowModels] = useState(false)

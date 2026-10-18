@@ -3,7 +3,7 @@
  *  DSH STORE 256 KiB per-file bound. Text lives here as local zh/en pairs instead of the
  *  main bundle MESSAGES table (the main table would be billed against client.js). */
 window.__ModuleLoader__.load({
-  id: 'dsh-cost-meter', chunk: 'client.codex.js',
+  id: '@kinocode/dsh-cost-meter-ja', chunk: 'client.codex.js',
   factory: require => {
     const React = require('react')
     const { createElement: el, useState, useEffect, useRef } = React
@@ -57,7 +57,7 @@ window.__ModuleLoader__.load({
       const compat = state?.codexCompat
       const api = props.api
       const en = props.locale === 'en'
-      const text = (zh, english) => en ? english : zh
+      const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
       const dialog = useRef(null)
       const [busy, error, run] = useCodexAction()
       const [closed, setClosed] = useState(wasDismissed)
@@ -116,7 +116,7 @@ window.__ModuleLoader__.load({
       const api = props.api
       const t = props.t
       const en = props.locale === 'en'
-      const text = (zh, english) => en ? english : zh
+      const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
       const usage = compat.usage ?? {}
       const applied = compat.historyAppliedAt > 0
       const planClass = compat.planClass === 'plan' ? t('billingClassPlan') : compat.planClass === 'api' ? t('billingClassApi') : t('billingClassAuto')

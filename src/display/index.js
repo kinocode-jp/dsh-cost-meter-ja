@@ -1,6 +1,6 @@
 /** Interactive display settings. Only local presentation components are mounted. */
 window.__ModuleLoader__.load({
-  id: 'dsh-cost-meter', chunk: 'client.display.js',
+  id: '@kinocode/dsh-cost-meter-ja', chunk: 'client.display.js',
   factory: require => {
     const React = require('react')
     const { createElement: el, useState } = React
@@ -19,7 +19,7 @@ window.__ModuleLoader__.load({
     function DisplaySettings(props) {
       const { draft, setDraft, t, locale, formatMoneyUsd, renderSidebar } = props
       const config = draft ?? props.state.config
-      const en = locale === 'en', text = (zh, english) => en ? english : zh
+      const en = locale === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
       const [region, setRegion] = useState('sidebar'), [expanded, setExpanded] = useState(false)
       const [selected, select] = useState(null)
       const [examples, setExamples] = useState(() => {

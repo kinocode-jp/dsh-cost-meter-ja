@@ -1,6 +1,6 @@
 /** Settings-only model search and explicit historical recalculation. */
 window.__ModuleLoader__.load({
-  id: 'dsh-cost-meter', chunk: 'client.pricing.js',
+  id: '@kinocode/dsh-cost-meter-ja', chunk: 'client.pricing.js',
   factory: require => {
     const { createElement: el, Fragment, useState, useEffect, useLayoutEffect, useMemo, useRef, useId } = require('react')
     // 候选面板 portal 到 body:设置面板是宿主 overlay 里 role=dialog 的 div(不是 <dialog>
@@ -24,12 +24,12 @@ window.__ModuleLoader__.load({
       if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid price catalog')
       return value
     } }
-    const codec = (name, schema) => ({ mode: 'strict', typeSymbol: 'dsh-cost-meter#' + name, schema, create: () => schema })
+    const codec = (name, schema) => ({ mode: 'strict', typeSymbol: '@kinocode/dsh-cost-meter-ja#' + name, schema, create: () => schema })
     const CONTRIBUTION = { package: 'dsh-cost-meter-pricing', face: 'host', descriptors: [
-      { id: 'dsh-cost-meter#costMeter/getPriceCatalog', service: 'costMeter', namespace: 'costMeter', method: 'getPriceCatalog', invocation: { kind: 'direct' }, parameters: [], result: codec('PriceCatalog', catalogSchema) },
-      { id: 'dsh-cost-meter#costMeter/getRepricingHistory', service: 'costMeter', namespace: 'costMeter', method: 'getRepricingHistory', invocation: { kind: 'direct' }, parameters: [], result: codec('RepricingHistory', historySchema) },
-      { id: 'dsh-cost-meter#costMeter/repriceHistory', service: 'costMeter', namespace: 'costMeter', method: 'repriceHistory', invocation: { kind: 'direct' }, parameters: [{ name: 'confirmed', wire: 'confirmed', source: 'json', codec: codec('RepricingConfirmation', boolSchema) }], result: codec('FetchPricesResult', resultSchema) },
-      { id: 'dsh-cost-meter#costMeter/repriceModelHistory', service: 'costMeter', namespace: 'costMeter', method: 'repriceModelHistory', invocation: { kind: 'direct' }, parameters: [{ name: 'confirmed', wire: 'confirmed', source: 'json', codec: codec('RepricingConfirmation', boolSchema) }, { name: 'model', wire: 'model', source: 'json', codec: codec('RepricingModel', modelSchema) }], result: codec('FetchPricesResult', resultSchema) },
+      { id: '@kinocode/dsh-cost-meter-ja#costMeter/getPriceCatalog', service: 'costMeter', namespace: 'costMeter', method: 'getPriceCatalog', invocation: { kind: 'direct' }, parameters: [], result: codec('PriceCatalog', catalogSchema) },
+      { id: '@kinocode/dsh-cost-meter-ja#costMeter/getRepricingHistory', service: 'costMeter', namespace: 'costMeter', method: 'getRepricingHistory', invocation: { kind: 'direct' }, parameters: [], result: codec('RepricingHistory', historySchema) },
+      { id: '@kinocode/dsh-cost-meter-ja#costMeter/repriceHistory', service: 'costMeter', namespace: 'costMeter', method: 'repriceHistory', invocation: { kind: 'direct' }, parameters: [{ name: 'confirmed', wire: 'confirmed', source: 'json', codec: codec('RepricingConfirmation', boolSchema) }], result: codec('FetchPricesResult', resultSchema) },
+      { id: '@kinocode/dsh-cost-meter-ja#costMeter/repriceModelHistory', service: 'costMeter', namespace: 'costMeter', method: 'repriceModelHistory', invocation: { kind: 'direct' }, parameters: [{ name: 'confirmed', wire: 'confirmed', source: 'json', codec: codec('RepricingConfirmation', boolSchema) }, { name: 'model', wire: 'model', source: 'json', codec: codec('RepricingModel', modelSchema) }], result: codec('FetchPricesResult', resultSchema) },
     ] }
 
     const comboText = option => (option.label + ' ' + option.value).toLowerCase()
