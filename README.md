@@ -1,4 +1,12 @@
-# dsh-cost-meter
+# dsh-cost-meter (Japanese fork)
+
+> **This is the Japanese fork `@kinocode/dsh-cost-meter-ja`** of [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) (MIT).
+> It adds a Japanese UI registered through DSH's locale system, JPY as a display and quote currency, and Japanese/JPY defaults.
+> Install with `dsh plugin add @kinocode/dsh-cost-meter-ja`; do not install it together with the upstream `dsh-cost-meter`.
+> Changes from upstream: [FORK.ja.md](FORK.ja.md). The text below is the upstream README.
+>
+> **日本語フォーク `@kinocode/dsh-cost-meter-ja`** です。上流の `dsh-cost-meter` とは一緒に入れないでください。変更点は [FORK.ja.md](FORK.ja.md) を参照。
+
 
 **English** | [简体中文](README.zh-CN.md)
 

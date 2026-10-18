@@ -140,7 +140,8 @@
     "docs/tokenrhythm-balance.md",
     "docs/dsh-0.2.1-compatibility.md",
     "docs/pnpm-supply-chain-policy.md",
-    "docs/update-notes-1.9.3.md"
+    "docs/update-notes-1.9.3.md",
+    "FORK.ja.md"
   ],
   "dependencies": {
     "acorn": "8.15.0",
@@ -152,9 +153,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Han-1413141/dsh-cost-meter.git"
+    "url": "git+https://github.com/kinocode-jp/dsh-cost-meter-ja.git"
   },
-  "homepage": "https://github.com/Han-1413141/dsh-cost-meter#readme",
+  "homepage": "https://github.com/kinocode-jp/dsh-cost-meter-ja#readme",
   "keywords": [
     "deepseek",
     "deepseek-harness",
@@ -189,5 +190,8 @@
     "@deepseek-ai/dsh-credentials": "0.2.1-rc.1",
     "@deepseek-ai/dsh-home-paths": "0.2.1-rc.1",
     "esbuild": "^0.28.2"
+  },
+  "bugs": {
+    "url": "https://github.com/kinocode-jp/dsh-cost-meter-ja/issues"
   }
 }
