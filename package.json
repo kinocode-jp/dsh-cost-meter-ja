@@ -1,7 +1,7 @@
 {
   "name": "@kinocode/dsh-cost-meter-ja",
   "version": "1.9.3",
-  "description": "dsh-cost-meter の日本語フォーク。費用・残高・クォータ表示のUIを日本語化し、ピーク判定を日本の祝日カレンダーに変更。",
+  "description": "dsh-cost-meter の日本語フォーク（非公式）。費用・残高・クォータ・統計・料金表のUIを日本語化。ピーク判定は上流どおり北京時間・中国祝日基準のまま。",
   "type": "module",
   "main": "lib/bootstrap.js",
   "bin": {
