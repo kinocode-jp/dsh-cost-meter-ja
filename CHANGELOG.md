@@ -9,6 +9,10 @@
 
 - **Codex 额度双窗口与可配置数据源**：Codex 额度卡片、输入框横条与窄栏现在同时读取 `dsh-codex-subscription` 的 5 小时（18000s）和 7 天（604800s）窗口；新增 `codexQuotaSource`（`auto` / `subscription` / `connect`），`auto` 优先订阅插件的 `/api/codex-subscription/usage`，读取失败时回退既有的 `dsh-codex-connect` 周额度路由，显式选择则只读对应来源。保留仅提供周窗口的旧路由兼容，不影响 Plan/API 计费归类。
 
+## [1.9.4] - 2026-10-19
+
+- （kinocode-jp フォーク）公開を GitHub Actions（npm の Trusted Publishing）に切り替え。npm の公開者は「GitHub Actions」になり、来歴（provenance）が付く。機能の変更なし。
+
 ## [1.9.3] - 2026-10-18
 
 - 费用概览卡片去掉说明文字底部的多余边距；计费统计先显示标题和数据，计费兼容说明及 dsh-context 设置合并为默认折叠的一行。
