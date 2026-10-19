@@ -5,6 +5,11 @@
 - 修复或实现他人提出的 issue、讨论或代码建议时，在 PR 正文注明其 GitHub 账号、原始链接和具体贡献；不能只写 `Fixes #编号`。
 - 按实际情况区分问题报告、需求建议、复现、定位和代码贡献，不虚构署名或贡献。
 
+## kinocode-jp フォークでの npm 公開
+
+- 下の「npm 发布令牌的位置」「npm 发布流程」の 2 節は上流（`smallsun` / `dsh-cost-meter`）の手順で、このフォーク（`@kinocode/dsh-cost-meter-ja`）では使わない。
+- このフォークは、GitHub の組織 kinocode-jp のリポジトリから GitHub Actions（npm の Trusted Publishing）でだけ公開する。個人の npm アカウントやトークンでは公開しない。手順は `RELEASING.md`。
+
 ## npm 发布令牌的位置
 
 - npm 发布令牌存放在 **Windows 用户级环境变量 `NPM_TOKEN`** 中（经 `setx` 持久化于注册表 `HKCU\Environment\NPM_TOKEN`；新开终端 / 登录会话自动可用）。
