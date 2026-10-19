@@ -14,7 +14,9 @@ const executablePath = process.env.CM_TEST_BROWSER ?? ['C:/Program Files (x86)/M
 const sources = new Map()
 const state = { config: sanitizeConfig({locale:'zh', peakEnabled:false}), total: { ...zeroDay(), calls: 1 }, meta:{now:1} }
 for (const mode of ['baseline','fixed']) {
- const client = readdirSync('src/client').filter(n=>n.endsWith('.js')).sort().map(name=>mode==='baseline'?execFileSync('git',['show','v1.8.29:src/client/'+name],{encoding:'utf8'}):readFileSync('src/client/'+name,'utf8')).join('').replace('exports.apply = apply','exports.preview={useSessionUsage,SessionStatisticsButton};exports.apply = apply')
+ // The baseline is read with its own file list: the kinocode-jp fork adds src/client files (02-locale-ja.js).
+ const names = mode==='baseline'?execFileSync('git',['ls-tree','--name-only','v1.8.29','src/client/'],{encoding:'utf8'}).split('\n').map(path=>path.slice('src/client/'.length)):readdirSync('src/client')
+ const client = names.filter(n=>n.endsWith('.js')).sort().map(name=>mode==='baseline'?execFileSync('git',['show','v1.8.29:src/client/'+name],{encoding:'utf8'}):readFileSync('src/client/'+name,'utf8')).join('').replace('exports.apply = apply','exports.preview={useSessionUsage,SessionStatisticsButton};exports.apply = apply')
  const code = `import React from ${literal(req.resolve('react'))};import {createRoot} from ${literal(req.resolve('react-dom/client'))};
  window.__ModuleLoader__={load:mod=>window.ui=mod.factory(name=>name==='react'?React:{})};${client}
  const {useSessionUsage,SessionStatisticsButton}=window.ui.preview,h=React.createElement;

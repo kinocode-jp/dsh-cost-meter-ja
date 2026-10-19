@@ -46,7 +46,7 @@ window.__ModuleLoader__.load({
       return session.pending
     }
     function PriceBrowser({ api, state, resolveLocale }) {
-      const en = resolveLocale(state.config) === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
+      const en = resolveLocale(state.config) === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english, resolveLocale(state.config)) : (en ? english : zh)
       const session = priceSession(api)
       const [value, setValue] = useState(() => session.value), [error, setError] = useState(() => session.error), [busy, setBusy] = useState(false)
       const [query, setQuery] = useState(() => session.query), [sort, setSort] = useState(() => session.sort), [page, setPage] = useState(() => session.page)
@@ -119,7 +119,7 @@ window.__ModuleLoader__.load({
       return models.length === 1 ? models[0] : null
     }
     function priceTooltip(model, value, locale, error = '') {
-      const en = locale === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
+      const en = locale === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english, locale) : (en ? english : zh)
       const row = value?.models.find(row => row.id === model.id)
       const lines = [model.name, 'OpenRouter · ' + model.id]
       if (row) {

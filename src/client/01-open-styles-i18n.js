@@ -1575,8 +1575,11 @@ window.__ModuleLoader__.load({
     if (typeof globalThis !== 'undefined') {
       // 日本語フォーク: 分割チャンクの text(zh, en) は、zh/en 以外の言語では DSH のロケール辞書
       // (名前空間 cost-meter-text、英語原文がキー)を引く。日本語は本プラグインが登録する。
-      globalThis.__cmText = (zh, en) => {
-        const active = dshActiveLocale()
+      // 呼び出し側がプラグインの言語(設定で選んだ言語、「自動」なら DSH の言語)を知っていれば
+      // 3 つ目の引数で渡し、メインの画面と同じ言語にする。渡されないときは DSH／ページの言語。
+      globalThis.__cmText = (zh, en, locale) => {
+        const hint = typeof locale === 'string' && locale !== 'auto' ? locale.toLowerCase() : ''
+        const active = hint ? (hint.startsWith('zh') ? 'zh' : hint) : dshActiveLocale()
         globalThis.__cmLang = active
         if (active === 'zh') return zh
         if (active === 'en') return en

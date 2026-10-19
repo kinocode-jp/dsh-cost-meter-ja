@@ -400,7 +400,7 @@ window.__ModuleLoader__.load({
             observer.observe(scope, { childList: true, subtree: true }); sync()
             return () => { observer.disconnect(); node.remove() }
           }, [props.sessionId])
-          const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (getLocale() === 'en' ? english : zh)
+          const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english, getLocale()) : (getLocale() === 'en' ? english : zh)
           const portal = target && props.sessionId ? createPortal(el(ContextCosts, { key: props.sessionId, api, sessionId: props.sessionId, integrated: true, text, revision }), target) : null
           return Original ? el('div', { ref: container, style: { display: 'contents' }, 'data-cm-context-bridge': props.sessionId }, el(Original, props), portal)
             : el(Fragment, null, el('span', { ref: container, hidden: true }), portal)
@@ -545,7 +545,7 @@ window.__ModuleLoader__.load({
     function BillionCompatibilityNotice({ meter, locale }) {
       const ref = useRef(null), [dismissed, setDismissed] = useState('')
       const id = meter?.noticeId ?? '', storageKey = 'dsh-cost-meter:billion-compatibility:' + id
-      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en) : (locale === 'en' ? en : zh)
+      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en, locale) : (locale === 'en' ? en : zh)
       let seen = dismissed === id
       try { seen ||= window.localStorage.getItem(storageKey) === 'seen' } catch {}
       const visible = id && !seen && ['needs_update', 'changed', 'bridge_missing'].includes(meter.compatibility)
@@ -582,7 +582,7 @@ window.__ModuleLoader__.load({
     }
     function ContextPrompt({ manager, getLocale }) {
       const state = React.useSyncExternalStore(manager.subscribe, manager.getSnapshot), ref = useRef(null)
-      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en) : getLocale() === 'en' ? en : zh
+      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en, getLocale()) : getLocale() === 'en' ? en : zh
       useEffect(() => {
         const dialog = ref.current
         if (!state.prompt || !dialog) return
@@ -621,7 +621,7 @@ window.__ModuleLoader__.load({
             el('button', { type: 'button', className: 'cm-context-primary', disabled: !state.available || state.saving, onClick: () => void manager.choose(true) }, text('启用联动', 'Enable integration')))))
     }
     function ContextIntegrationSettings({ manager, getLocale }) {
-      const state = React.useSyncExternalStore(manager.subscribe, manager.getSnapshot), text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en) : getLocale() === 'en' ? en : zh
+      const state = React.useSyncExternalStore(manager.subscribe, manager.getSnapshot), text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en, getLocale()) : getLocale() === 'en' ? en : zh
       return el('details', { className: 'cm-plan cm-context-setting', 'aria-label': text('dsh-context 联动设置', 'dsh-context integration settings') }, el('style', null, contextCostsCss + introCss),
         el('summary', null, 'dsh-context ' + text('联动', 'integration') + ' · ' + (state.enabled ? text('已启用', 'On') : text('未启用', 'Off'))), el('div', null,
         el('label', null, el('input', { type: 'checkbox', role: 'switch', checked: state.enabled, disabled: state.saving || !state.available, onChange: event => void manager.choose(event.target.checked) }), text('在 dsh-context 面板中显示上下文费用', 'Show context costs in dsh-context')),
@@ -1276,7 +1276,7 @@ window.__ModuleLoader__.load({
     }
 
     function SessionStatistics({ state, api, sessionId, formatMoneyUsd, formatTokens, resolveLocale, contextIntegration }) {
-      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en) : (resolveLocale ? resolveLocale(state.config) : state.config.locale) === 'en' ? en : zh
+      const text = (zh, en) => globalThis.__cmText ? globalThis.__cmText(zh, en, resolveLocale ? resolveLocale(state.config) : state.config.locale) : (resolveLocale ? resolveLocale(state.config) : state.config.locale) === 'en' ? en : zh
       const [revision, setRevision] = useState(0), preference = useStatisticsBasis(state.config, api, text), { basis } = preference
       const refreshKey = refreshKeyOf(state, revision)
       const money = n => formatMoneyUsd(n, { ...state.config, decimals: Math.max(n !== 0 && Math.abs(n) < .01 ? 8 : 4, state.config.decimals ?? 2) })
@@ -1294,7 +1294,7 @@ window.__ModuleLoader__.load({
 
     function Statistics({ state, api, sessionId = '', formatMoneyUsd, formatTokens, resolveLocale, contextIntegration }) {
       const en = resolveLocale ? resolveLocale(state.config) === 'en' : (state.config.locale === 'en' || state.config.locale !== 'zh' && (state.config.activeLocale || state.meta?.locale || (typeof navigator !== 'undefined' && /^zh/i.test(navigator.language) ? 'zh' : 'en')) === 'en')
-      const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
+      const text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english, resolveLocale?.(state.config)) : (en ? english : zh)
       const [period, setPeriod] = useState(sessionId ? 'all' : 'week'), [custom, setCustom] = useState(null)
       const [scope, setScope] = useState({ id: sessionId, title: sessionId }), [provider, setProvider] = useState(''), [model, setModel] = useState('')
       const preference = useStatisticsBasis(state.config, api, text), { basis } = preference, [offset, setOffset] = useState(0), [revision, setRevision] = useState(0), [showModels, setShowModels] = useState(false)

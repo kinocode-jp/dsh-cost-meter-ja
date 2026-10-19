@@ -19,7 +19,7 @@ window.__ModuleLoader__.load({
     function DisplaySettings(props) {
       const { draft, setDraft, t, locale, formatMoneyUsd, renderSidebar } = props
       const config = draft ?? props.state.config
-      const en = locale === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english) : (en ? english : zh)
+      const en = locale === 'en', text = (zh, english) => globalThis.__cmText ? globalThis.__cmText(zh, english, locale) : (en ? english : zh)
       const [region, setRegion] = useState('sidebar'), [expanded, setExpanded] = useState(false)
       const [selected, select] = useState(null)
       const [examples, setExamples] = useState(() => {

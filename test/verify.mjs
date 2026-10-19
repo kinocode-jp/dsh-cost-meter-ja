@@ -3676,7 +3676,8 @@ console.log('[ok] OpenRouter/SiliconFlow/CommandCode 解析器与白名单通过
   const result = await svc.importLegacyHistory()
   assert.equal(result.ok, true, '导入 RPC 成功')
   assert.ok(result.message.includes('1'), '导入文案含统计')
-  assert.ok(result.message.includes('1 天') || result.message.includes('1 day'), '导入文案含天数')
+  // kinocode-jp フォーク: ホスト側の文言は既定で日本語(「1 日分」)。
+  assert.ok(result.message.includes('1 天') || result.message.includes('1 day') || result.message.includes('1 日'), '导入文案含天数')
   // 返回 state 的 history 轻量副本含导入日期;getState 快照一致。
   assert.ok(result.state.history.some(h => h.date === oldKey && h.calls > 0), '返回 state 含导入日期')
   const state = await svc.getState()
