@@ -12,7 +12,11 @@
  *   1. 版本号五处对齐:package.json / install.ps1(3 处)/ README.md / README.zh-CN.md(徽章 + 安装行 ×2);
  *   2. CHANGELOG.md 有 `## [版本] - 日期` 小节;
  *   3. docs/UPDATE-HISTORY.md 有 `## v版本(日期)` 小节(缺则 --regen-notes 可自动补);
- *   4. 工作树干净、在 master、与 origin/master 同步(正式发版时)。
+ *   4. 工作树干净、在 main、与 origin/main 同步(正式发版时)。
+ *
+ * kinocode-jp フォーク: npm への公開は RELEASING.md の手順(タグの push → GitHub Actions の Trusted Publishing)で行う。
+ * このスクリプトの tag の push も同じ公開を起こすので、使うなら --dry で版の揃いを確かめるところまでにする。
+ * 既定のブランチは main、リンク先はこのリポジトリ(kinocode-jp/dsh-cost-meter-ja)。
  */
 
 import { execFileSync } from 'node:child_process'
@@ -107,17 +111,17 @@ const branch = sh('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 const dirty = sh('git', ['status', '--porcelain'])
 const sb = sh('git', ['status', '-sb']) ?? ''
 const synced = !/\[ahead \d+/.test(sb) && !/\[behind \d+/.test(sb)
-if (branch !== 'master') fail(`当前分支是 ${branch},应在 master`)
+if (branch !== 'main') fail(`当前分支是 ${branch},应在 main`)
 if (dirty) fail(`工作树不干净:\n${dirty}`)
-if (!synced) fail('本地与 origin/master 不同步(先 git push)')
+if (!synced) fail('本地与 origin/main 不同步(先 git push)')
 if (failures) { console.error(`\n共 ${failures} 项 git 检查未过,终止。`); process.exit(1) }
-log('✓ git:master 分支、工作树干净、与远端同步')
+log('✓ git:main 分支、工作树干净、与远端同步')
 
 // ── 5. 发布素材:docs/release-notes/v<V>.md(缺则由 CHANGELOG 生成,git 检查后再落盘,
 //        否则刚生成的文件会弄脏工作树导致首次发版必败)──────────────────────
 const notesDir = join(repoRoot, 'docs', 'release-notes')
 const notesPath = join(notesDir, `${TAG}.md`)
-const upgrade = `\n## 升级\n\n已安装用户在任意终端重跑一行即可(重跑即为更新):\n\n\`\`\`powershell\nirm https://raw.githubusercontent.com/Han-1413141/dsh-cost-meter/${TAG}/install.ps1 | iex\n\`\`\`\n\n升级后**重启 dsh web** 使插件服务端代码生效,浏览器端刷新页面即可。\n`
+const upgrade = `\n## 升级\n\n已安装用户在任意终端重跑一行即可(重跑即为更新):\n\n\`\`\`powershell\nirm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/${TAG}/install.ps1 | iex\n\`\`\`\n\n升级后**重启 dsh web** 使插件服务端代码生效,浏览器端刷新页面即可。\n`
 if (existsSync(notesPath)) {
   log(`✓ 使用现成的 ${'docs/release-notes/' + TAG + '.md'} 作为 Release 文案`)
 } else if (REGEN || !DRY) {

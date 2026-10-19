@@ -2,7 +2,13 @@
 
 [English](README.md) | **简体中文**
 
-交流与反馈：[加入微信交流群 →](#交流与反馈) · 微信交流群已开放，欢迎您加入。
+> **本仓库是 [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter)（MIT）的日文分支 `@kinocode/dsh-cost-meter-ja`。** 它在上游基础上增加了日文界面、日元（JPY）显示与报价币种，并把默认语言/币种改为日文/日元。
+> 请不要与上游 `dsh-cost-meter` 同时安装。与上游的差异见 [FORK.ja.md](FORK.ja.md)。下文为上游的中文 README，安装命令与链接已改为指向本分支。
+>
+> **感谢上游项目。** 费用统计、价格表、余额、Coding Plan 额度与界面等全部功能，都来自上游作者 Han-1413141（npm：`smallsun`）与 `dsh-cost-meter` 的各位贡献者；本分支只是加上了日文与日元。
+> **中文用户建议直接使用上游插件** [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter)，也欢迎为上游点 Star。详见[致谢](#致谢)。
+
+本分支的问题反馈：[GitHub Issues](https://github.com/kinocode-jp/dsh-cost-meter-ja/issues)。上游的微信交流群见[交流与反馈](#交流与反馈)。
 
 <div align="center">
 
@@ -10,7 +16,7 @@
 
 本会话费用 · 当日费用 · OpenCode Go 订阅额度显示 · 预算与已用百分比 · 官方账户余额 · 自定义 Provider 余额查询(可配任意 HTTP 端点) · 余额三段进度条 · 历史记录 · 峰谷计价时段显示(UTC 01:00–04:00、06:00–10:00 为峰时段;周末与中国法定假日全天按谷价,分别标注) · 峰/谷切换前弹窗与系统通知提醒(位置/提前量/提醒类型可配) · 官方价格一键同步 · 类 Codex Token 用量热图 · 多厂商多模型价格计费(内置 170+ 模型 ID 价格目录与自动匹配) · 主流 Coding Plan 额度查询与显示(Anthropic / Z.ai / MiniMax / Kimi / OpenRouter / SiliconFlow / CommandCode / SCNet / 火山方舟 / 千问 / 小米 MiMo 十一家,含 Volcano Ark AK/SK 签名与 MiMo 控制台 Cookie 查询) · Plan/API 双轨计费(订阅额度与按量金额分离统计,每 1% 额度与满窗的 token/等值金额估算及日/周/月曲线) · 订阅插件兼容(Codex / ChatGPT 订阅) · 手机端适配(dsh-pocket) · 输入框上方额度横条(预算/Go/Coding Plan 用量一条横排显示,可开关)
 
-[![version](https://img.shields.io/badge/version-1.9.3-4176E6)](https://github.com/Han-1413141/dsh-cost-meter)
+[![version](https://img.shields.io/badge/version-1.9.4-4176E6)](https://github.com/kinocode-jp/dsh-cost-meter-ja)
 
 **最低支持宿主：DSH 0.2.0。** 插件把下限声明在 `engines.dsh`（宿主准入插件的闸门），不再支持任何 DSH 0.1.x 版本；本轮适配目标为 npm `next` 标签的 **0.2.1-rc.2**。具体范围与宿主的读取方式见[兼容声明](docs/dsh-0.2.1-compatibility.md#中文)。
 
@@ -29,11 +35,9 @@
 
 启动报 **Ledger is busy** 且费用卡片消失时，参见[账本锁恢复说明](docs/ledger-lock-recovery.md#简体中文)。
 
-[![npm](https://img.shields.io/npm/v/dsh-cost-meter?label=npm)](https://www.npmjs.com/package/dsh-cost-meter)
+[![npm](https://img.shields.io/npm/v/@kinocode/dsh-cost-meter-ja?label=npm)](https://www.npmjs.com/package/@kinocode/dsh-cost-meter-ja)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-dsh--plugin-4176E6)](https://github.com/deepseek-ai/deepseek-harness)
-[![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://awesome-dsh-plugin.com)
-[![WhaleHarness audit](https://whaleharness.com/badge/Han-1413141/dsh-cost-meter/badge.svg)](https://whaleharness.com/audit-report.md)
 
 </div>
 
@@ -338,25 +342,25 @@ Node.js 20 请改用 `npm install -g pnpm@10`。版本要求见 [pnpm 官方安�
 **npm 包名安装**(已发布到 npm registry,始终跟随最新版本;无需 git):
 
 ```sh
-dsh plugin --profile web add dsh-cost-meter
+dsh plugin --profile web add @kinocode/dsh-cost-meter-ja
 ```
 
-**PowerShell 一键脚本**(复制整行粘贴回车;自动补齐 pnpm、自动探测 git,无需克隆仓库;安装链**固定到发布 tag `v1.9.3`**,建议先下载审阅再运行):
+**PowerShell 一键脚本**(复制整行粘贴回车;自动补齐 pnpm、自动探测 git,无需克隆仓库;脚本取自本分支的 `main`,安装发布 tag `v1.9.4`,建议先下载审阅再运行):
 
 ```powershell
-irm https://raw.githubusercontent.com/Han-1413141/dsh-cost-meter/v1.9.3/install.ps1 | iex
+irm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/main/install.ps1 | iex
 ```
 
 **或直接命令行**(机器上需已有 pnpm 与 git;同样固定到 tag):
 
 ```sh
-dsh plugin --profile web add github:Han-1413141/dsh-cost-meter#v1.9.3
+dsh plugin --profile web add github:kinocode-jp/dsh-cost-meter-ja#v1.9.4
 ```
 
 没有 git 时可用 GitHub tag 打包直链:
 
 ```sh
-dsh plugin --profile web add https://github.com/Han-1413141/dsh-cost-meter/archive/refs/tags/v1.9.3.tar.gz
+dsh plugin --profile web add https://github.com/kinocode-jp/dsh-cost-meter-ja/archive/refs/tags/v1.9.4.tar.gz
 ```
 
 安装后**重启** `dsh web`(插件行、Typert 清单与客户端 bundle 均在启动时扫描):
@@ -382,7 +386,7 @@ command -v dsh
 ```sh
 export PATH="$(npm prefix -g)/bin:$PATH"
 pnpm --version
-dsh plugin --profile web add dsh-cost-meter@latest
+dsh plugin --profile web add @kinocode/dsh-cost-meter-ja@latest
 dsh web
 ```
 
@@ -421,10 +425,10 @@ DSH **0.2.1-rc.1 / 0.2.1-rc.2** 宿主自带 pnpm **11.28.5**，默认启用内�
 
    ```yaml
    minimumReleaseAgeExclude:
-     - dsh-cost-meter@1.9.3
+     - '@kinocode/dsh-cost-meter-ja@1.9.4'
    ```
 
-3. 仅本次操作用 CLI 透传 pnpm 参数：`dsh plugin --profile desktop remove dsh-cost-meter --config.minimum-release-age=0`；若只是 lockfile 校验阶段失败，可改用 `--trust-lockfile`。这两个参数已在本机 pnpm 11.28.5 临时 Profile 上实测可用。
+3. 仅本次操作用 CLI 透传 pnpm 参数：`dsh plugin --profile desktop remove @kinocode/dsh-cost-meter-ja --config.minimum-release-age=0`；若只是 lockfile 校验阶段失败，可改用 `--trust-lockfile`。这两个参数已在本机 pnpm 11.28.5 临时 Profile 上实测可用。
 
 反馈前请先打开 `<profile>/.plugin-manager/logs/operation-*/pnpm.log` 读取第一条 `ERR_PNPM_*` 并删除凭据；不要删除 Profile 或账本。详见 [pnpm 供应链策略说明](docs/pnpm-supply-chain-policy.md)。
 
@@ -432,7 +436,7 @@ DSH **0.2.1-rc.1 / 0.2.1-rc.2** 宿主自带 pnpm **11.28.5**，默认启用内�
 
 ```sh
 # 更新:发布新版后用新版 install.ps1 重跑(脚本内固定版本随之更新)
-dsh plugin --profile web remove dsh-cost-meter  # 卸载
+dsh plugin --profile web remove @kinocode/dsh-cost-meter-ja  # 卸载
 ```
 
 安装报错或重装后仍被禁用，见[排障说明](docs/install-troubleshooting.md)。
@@ -440,9 +444,9 @@ dsh plugin --profile web remove dsh-cost-meter  # 卸载
 ### 开发者本地调试
 
 ```sh
-git clone https://github.com/Han-1413141/dsh-cost-meter.git
+git clone https://github.com/kinocode-jp/dsh-cost-meter-ja.git
 cd <克隆目录的父目录>
-dsh plugin --profile web add link:./dsh-cost-meter  # 符号链接,改 lib/client.js 后刷新页面即生效
+dsh plugin --profile web add link:./dsh-cost-meter-ja  # 符号链接,改 lib/client.js 后刷新页面即生效
 ```
 
 ## 计费规则
@@ -551,11 +555,13 @@ dsh --profile web --port 3099                           # 真机启动(观察启
 
 ## 交流与反馈
 
-使用交流、问题反馈和功能建议，欢迎加入微信交流群。
+**本分支（日文/日元）：** 问题与建议请提交到 [GitHub Issues](https://github.com/kinocode-jp/dsh-cost-meter-ja/issues)。只在本分支出现的问题，请不要反馈给上游。
+
+**上游 `dsh-cost-meter`：** 上游项目 [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) 设有微信交流群，欢迎在那里交流使用、反馈问题和提出功能建议。
 
 <p align="center">
-  <a href="docs/community-wechat.jpg"><img src="docs/community-wechat.jpg" alt="dsh-cost-meter 微信交流群二维码" width="320" /></a><br />
-  <a href="docs/community-wechat.jpg">查看二维码大图</a>
+  <a href="docs/community-wechat.jpg"><img src="docs/community-wechat.jpg" alt="上游 dsh-cost-meter 微信交流群二维码" width="320" /></a><br />
+  <a href="docs/community-wechat.jpg">查看二维码大图（上游交流群）</a>
 </p>
 
 ## 更新历史
@@ -564,7 +570,10 @@ dsh --profile web --port 3099                           # 真机启动(观察启
 
 各版本更新总览与社区 issue 处理记录见 [docs/UPDATE-HISTORY.md](docs/UPDATE-HISTORY.md);逐条开发记录见 [CHANGELOG.md](CHANGELOG.md)。
 
-## Star 增长记录
+## Star 增长记录（上游）
+
+上游项目 [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) 的 Star 增长：
+
 
 <a href="https://www.star-history.com/?repos=han-1413141%2Fdsh-cost-meter&type=timeline&legend=bottom-right">
  <picture>
@@ -573,6 +582,11 @@ dsh --profile web --port 3099                           # 真机启动(观察启
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=han-1413141/dsh-cost-meter&type=timeline&legend=bottom-right" />
  </picture>
 </a>
+
+## 致谢
+
+本分支完全建立在上游项目 [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) 之上。衷心感谢创建并维护 `dsh-cost-meter` 的 Han-1413141（npm：`smallsun`），以及在上游贡献代码、反馈与评审的每一位。
+上游项目已收录于 [awesome-dsh-plugin](https://awesome-dsh-plugin.com)，并有 [WhaleHarness 审计](https://whaleharness.com/audit-report.md)（[徽章](https://whaleharness.com/badge/Han-1413141/dsh-cost-meter/badge.svg)）。
 
 ## License
 

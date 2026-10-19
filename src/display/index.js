@@ -152,8 +152,8 @@ window.__ModuleLoader__.load({
         if (!this.state.failed) return el(DisplaySettings, this.props)
         const en = this.props.locale === 'en'
         return el('section', { className: 'cm-display' },
-          el('p', { role: 'alert' }, globalThis.__cmText ? globalThis.__cmText('预览暂不可用，可在下方继续调整显示选项。', 'Preview unavailable. Display options are still available below.') : en ? 'Preview unavailable. Display options are still available below.' : '预览暂不可用，可在下方继续调整显示选项。'),
-          el('button', { type: 'button', className: 'cm-btn small', onClick: () => this.setState({ failed: false }) }, globalThis.__cmText ? globalThis.__cmText('重试预览', 'Retry preview') : en ? 'Retry preview' : '重试预览'),
+          el('p', { role: 'alert' }, globalThis.__cmText ? globalThis.__cmText('预览暂不可用，可在下方继续调整显示选项。', 'Preview unavailable. Display options are still available below.', this.props.locale) : en ? 'Preview unavailable. Display options are still available below.' : '预览暂不可用，可在下方继续调整显示选项。'),
+          el('button', { type: 'button', className: 'cm-btn small', onClick: () => this.setState({ failed: false }) }, globalThis.__cmText ? globalThis.__cmText('重试预览', 'Retry preview', this.props.locale) : en ? 'Retry preview' : '重试预览'),
           el(DetailedSettings, { ...this.props, open: true }), this.props.renderModelsSettings?.())
       }
     }
@@ -161,7 +161,7 @@ window.__ModuleLoader__.load({
       const config=state.config
       const setField=(key,value)=>setDraft(previous=>({...previous,[key]:value}))
       return el('details', { className: 'cm-display-details', open: open || undefined },
-        el('summary', null, globalThis.__cmText ? globalThis.__cmText('详细设置 · 布局、金额格式与刷新频率', 'More options · layout, currency and refresh intervals') : locale === 'en' ? 'More options · layout, currency and refresh intervals' : '详细设置 · 布局、金额格式与刷新频率'),
+        el('summary', null, globalThis.__cmText ? globalThis.__cmText('详细设置 · 布局、金额格式与刷新频率', 'More options · layout, currency and refresh intervals', locale) : locale === 'en' ? 'More options · layout, currency and refresh intervals' : '详细设置 · 布局、金额格式与刷新频率'),
         el('div', { className: 'cm-grid' },
             el('div', { className: 'cm-grid-group' }, t('groupGeneral')),
             ...['includeSubagentCost', 'codexQuotaEnabled', 'codexQuotaSidebar'].map(key => el('label', { key, className: 'cm-check' },

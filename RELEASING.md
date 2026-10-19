@@ -11,7 +11,7 @@
 
 ## 公開の手順
 
-1. `package.json` の `version`を上げ、CHANGELOG があれば追記してコミットする（作者は kinocode）。
+1. `package.json` の `version`を上げ、CHANGELOG があれば追記してコミットする（作者は kinocode）。`install.ps1` の `$PinnedRev` と、`README.md`・`README.zh-CN.md` のバッジと導入の行（`#v<version>`、タグのアーカイブ）、`docs/install-troubleshooting.md` の版も新しい版にそろえる。v1.9.4 のタグにある `install.ps1` は上流を入れる古いものなので、`irm` の行は今は `main` を指している。次の版からは、そのタグを指してよい。
 2. PR を作り、CI が通ったら手元で `main` に fast-forward して push する。
 3. `node scripts/build.mjs` で `lib/` を作り直してコミットし、`npm pack --dry-run` で同梱物を確かめる（ワークフローはコミット済みの `lib/` をそのまま公開する）。
 4. 版のタグを付けて push する。

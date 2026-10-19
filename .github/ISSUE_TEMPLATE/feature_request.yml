@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        感谢提出想法!请先确认 [CHANGELOG](https://github.com/Han-1413141/dsh-cost-meter/blob/master/CHANGELOG.md) 与已有 issue 中没有相同/相近的内容。较大的功能建议先在这里讨论清楚再动手实现。
+        感谢提出想法!请先确认 [CHANGELOG](https://github.com/kinocode-jp/dsh-cost-meter-ja/blob/main/CHANGELOG.md) 与已有 issue 中没有相同/相近的内容。较大的功能建议先在这里讨论清楚再动手实现。
   - type: textarea
     id: problem
     attributes:

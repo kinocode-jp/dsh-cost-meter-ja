@@ -15,7 +15,8 @@ window.__ModuleLoader__.load({
     function Community({ locale, footer = false }) {
       const [seen, setSeen] = useState(hasSeen)
       const en = locale === 'en'
-      const url = 'https://github.com/Han-1413141/dsh-cost-meter/blob/master/' + ((en || globalThis.__cmLang === 'ja') ? 'README.md#community' : 'README.zh-CN.md#交流与反馈')
+      // 日本語フォーク: 交流・フィードバックはこのリポジトリの README へ(上流の紹介もそこに載せている)。
+      const url = 'https://github.com/kinocode-jp/dsh-cost-meter-ja/blob/main/' + ((en || globalThis.__cmLang === 'ja') ? 'README.md#community' : 'README.zh-CN.md#交流与反馈')
       const dismiss = () => {
         dismissed = true
         try { window.localStorage.setItem(SEEN_KEY, '1') } catch (_) { /* Closing still works without browser storage. */ }
@@ -29,11 +30,11 @@ window.__ModuleLoader__.load({
         return () => { listeners.delete(setSeen); window.removeEventListener('storage', sync) }
       }, [])
       const linkProps = { href: url, target: '_blank', rel: 'noopener noreferrer' }
-      if (footer) return seen ? el('footer', { className: 'cm-community-entry' }, el('a', linkProps, en ? 'Community & feedback ↗' : (globalThis.__cmText ? globalThis.__cmText('交流与反馈 ↗','Community & feedback ↗') : '交流与反馈 ↗'))) : null
+      if (footer) return seen ? el('footer', { className: 'cm-community-entry' }, el('a', linkProps, en ? 'Community & feedback ↗' : (globalThis.__cmText ? globalThis.__cmText('交流与反馈 ↗','Community & feedback ↗', locale) : '交流与反馈 ↗'))) : null
       return seen ? null : el('aside', { className: 'cm-community-notice', role: 'status' },
-          el('span', null, en ? 'The plugin WeChat group is open' : (globalThis.__cmText ? globalThis.__cmText('插件交流群已开放','The plugin WeChat group is open') : '插件交流群已开放')),
-          el('a', linkProps, en ? 'View QR code ↗' : (globalThis.__cmText ? globalThis.__cmText('查看二维码 ↗','View QR code ↗') : '查看二维码 ↗')),
-          el('button', { type: 'button', className: 'cm-btn small', 'aria-label': en ? 'Dismiss community notice' : (globalThis.__cmText ? globalThis.__cmText('关闭交流群提示','Dismiss community notice') : '关闭交流群提示'), onClick: dismiss }, '×'))
+          el('span', null, en ? 'The plugin WeChat group is open' : (globalThis.__cmText ? globalThis.__cmText('插件交流群已开放','The plugin WeChat group is open', locale) : '插件交流群已开放')),
+          el('a', linkProps, en ? 'View QR code ↗' : (globalThis.__cmText ? globalThis.__cmText('查看二维码 ↗','View QR code ↗', locale) : '查看二维码 ↗')),
+          el('button', { type: 'button', className: 'cm-btn small', 'aria-label': en ? 'Dismiss community notice' : (globalThis.__cmText ? globalThis.__cmText('关闭交流群提示','Dismiss community notice', locale) : '关闭交流群提示'), onClick: dismiss }, '×'))
     }
     function mount(ctx) {
       const style = document.createElement('style')

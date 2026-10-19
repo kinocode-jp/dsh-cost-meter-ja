@@ -576,8 +576,8 @@ window.__ModuleLoader__.load({
             : text('原版 billion-context 的自动计费接入尚未完成。更新费用插件后请完全重启 DSH，让新启动的本地代理接入计费；仍有问题时，到交流群反馈或提交 issue。', 'Automatic billing for the original billion-context package is not connected. Fully restart DSH after updating cost-meter so its local proxy starts with metering. If the problem persists, contact the community group or open an issue.')),
         el('p', null, text('反馈时请附 billion-context、费用插件及 DSH 的版本。', 'Include the billion-context, cost-meter and DSH versions in your report.')),
         el('footer', null,
-          el('a', { href: 'https://github.com/Han-1413141/dsh-cost-meter/blob/master/README.zh-CN.md#交流与反馈', target: '_blank', rel: 'noopener noreferrer', onClick: dismiss }, text('加入交流群', 'Community group')),
-          el('a', { href: 'https://github.com/Han-1413141/dsh-cost-meter/issues/new?template=bug_report.yml', target: '_blank', rel: 'noopener noreferrer', onClick: dismiss }, text('提交 issue', 'Open an issue')),
+          el('a', { href: 'https://github.com/kinocode-jp/dsh-cost-meter-ja/blob/main/README.md#community', target: '_blank', rel: 'noopener noreferrer', onClick: dismiss }, text('加入交流群', 'Community group')),
+          el('a', { href: 'https://github.com/kinocode-jp/dsh-cost-meter-ja/issues/new?template=bug_report.yml', target: '_blank', rel: 'noopener noreferrer', onClick: dismiss }, text('提交 issue', 'Open an issue')),
           el('button', { type: 'button', autoFocus: true, onClick: dismiss }, text('知道了', 'Dismiss'))))
     }
     function ContextPrompt({ manager, getLocale }) {

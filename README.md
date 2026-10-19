@@ -3,14 +3,22 @@
 > **This is the Japanese fork `@kinocode/dsh-cost-meter-ja`** of [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) (MIT).
 > It adds a Japanese UI registered through DSH's locale system, JPY as a display and quote currency, and Japanese/JPY defaults.
 > Install with `dsh plugin add @kinocode/dsh-cost-meter-ja`; do not install it together with the upstream `dsh-cost-meter`.
-> Changes from upstream: [FORK.ja.md](FORK.ja.md). The text below is the upstream README.
+> Changes from upstream: [FORK.ja.md](FORK.ja.md). The text below is the upstream README, with install commands and links pointed at this fork.
+>
+> **Thanks to the upstream project.** Everything here — cost tracking, pricing, balances, Coding Plan quotas and the UI — is the work of
+> Han-1413141 (npm: `smallsun`) and the contributors of `dsh-cost-meter`; this fork only adds Japanese and JPY on top. If you read Chinese or
+> English, please consider using and starring the upstream plugin. See [Acknowledgements](#acknowledgements).
 >
 > **日本語フォーク `@kinocode/dsh-cost-meter-ja`** です。上流の `dsh-cost-meter` とは一緒に入れないでください。変更点は [FORK.ja.md](FORK.ja.md) を参照。
+>
+> **上流への感謝:** 費用の集計、料金表、残高、Coding Plan のクォータ、画面など、このプラグインの中身はすべて上流 [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) の
+> 作者 Han-1413141（npm: `smallsun`）さんと貢献者の皆さんの成果です。このフォークは日本語と日本円を足しただけです。
+> 中国語・英語で使う方は、ぜひ上流のプラグインを使ってください。詳しくは[謝辞](#acknowledgements)。
 
 
 **English** | [简体中文](README.zh-CN.md)
 
-Community and feedback: [Join the WeChat group →](#community). The WeChat group is open. You're welcome to join.
+Feedback on this fork: [GitHub issues](https://github.com/kinocode-jp/dsh-cost-meter-ja/issues) (日本語でどうぞ). The upstream project's WeChat group is introduced in [Community](#community).
 
 <div align="center">
 
@@ -18,7 +26,7 @@ Community and feedback: [Join the WeChat group →](#community). The WeChat grou
 
 Per-conversation cost · daily totals · OpenCode Go subscription quota display · budget with usage percentage · official account balance · custom provider balance · balance progress bar · history · peak/off-peak pricing hours display (peak hours UTC 01:00–04:00, 06:00–10:00; weekends and Chinese public holidays are off-peak all day, with separate labels) · pre-switch popup & system-notification alerts for peak/off-peak changes (position / lead time / alert type configurable) · one-click price sync from the official docs · Codex-style token usage heat grid · multi-vendor model pricing (built-in 170+ model-ID catalog with auto-matching) · mainstream Coding Plan quota queries & display (Anthropic / Z.ai / MiniMax / Kimi / OpenRouter / SiliconFlow / CommandCode / SCNet / Volcano Ark / Qwen / Xiaomi MiMo / Factory Droid) plan/API dual-track billing (subscription quota vs pay-as-you-go money separated, per-1% & full-window token/equivalent-cost estimates with daily/weekly/monthly curves) · subscription plugin compatibility (Codex / ChatGPT subscription plans) · mobile layout (dsh-pocket) · quota strip above the input box (budget / Go / coding-plan usage in one row, toggleable)
 
-[![version](https://img.shields.io/badge/version-1.9.3-4176E6)](https://github.com/Han-1413141/dsh-cost-meter)
+[![version](https://img.shields.io/badge/version-1.9.4-4176E6)](https://github.com/kinocode-jp/dsh-cost-meter-ja)
 
 **Minimum supported host: DSH 0.2.0.** The plugin declares the floor in `engines.dsh`, the host's admission gate for plugins, and no longer supports any DSH 0.1.x release; the adaptation target is the npm `next` release **0.2.1-rc.2**. Exact ranges and how the host reads them: [compatibility declaration](docs/dsh-0.2.1-compatibility.md#english).
 
@@ -37,11 +45,9 @@ Host records inside the declared range, and the earlier 0.1.x history, are in th
 
 If startup reports **Ledger is busy** and the cost widgets are missing, see [ledger lock recovery](docs/ledger-lock-recovery.md#english).
 
-[![npm](https://img.shields.io/npm/v/dsh-cost-meter?label=npm)](https://www.npmjs.com/package/dsh-cost-meter)
+[![npm](https://img.shields.io/npm/v/@kinocode/dsh-cost-meter-ja?label=npm)](https://www.npmjs.com/package/@kinocode/dsh-cost-meter-ja)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![dsh](https://img.shields.io/badge/DeepSeek%20Harness-dsh--plugin-4176E6)](https://github.com/deepseek-ai/deepseek-harness)
-[![awesome · DSH plugin](https://awesome-dsh-plugin.com/badge.svg)](https://awesome-dsh-plugin.com)
-[![WhaleHarness audit](https://whaleharness.com/badge/Han-1413141/dsh-cost-meter/badge.svg)](https://whaleharness.com/audit-report.md)
 
 </div>
 
@@ -346,25 +352,25 @@ On Node.js 20, use `npm install -g pnpm@10` instead. See [pnpm installation and 
 **npm package name** (published to the npm registry, always tracks the latest version; no git needed):
 
 ```sh
-dsh plugin --profile web add dsh-cost-meter
+dsh plugin --profile web add @kinocode/dsh-cost-meter-ja
 ```
 
-**PowerShell one-click script** (copy the whole line, paste, press Enter; pnpm is provisioned automatically, git is auto-detected — no clone needed; the install chain is **pinned to the release tag `v1.9.3`** — review the script before running):
+**PowerShell one-click script** (copy the whole line, paste, press Enter; pnpm is provisioned automatically, git is auto-detected — no clone needed; the script is taken from this fork's `main` branch and installs the release tag `v1.9.4` — review the script before running):
 
 ```powershell
-irm https://raw.githubusercontent.com/Han-1413141/dsh-cost-meter/v1.9.3/install.ps1 | iex
+irm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/main/install.ps1 | iex
 ```
 
 **Or a plain command line** (the machine must already have pnpm and git; also pinned to the tag):
 
 ```sh
-dsh plugin --profile web add github:Han-1413141/dsh-cost-meter#v1.9.3
+dsh plugin --profile web add github:kinocode-jp/dsh-cost-meter-ja#v1.9.4
 ```
 
 Without git, use the GitHub tag archive:
 
 ```sh
-dsh plugin --profile web add https://github.com/Han-1413141/dsh-cost-meter/archive/refs/tags/v1.9.3.tar.gz
+dsh plugin --profile web add https://github.com/kinocode-jp/dsh-cost-meter-ja/archive/refs/tags/v1.9.4.tar.gz
 ```
 
 After installing, **restart** `dsh web` (plugin rows, the Typert manifest and the client bundle are all scanned at startup):
@@ -390,7 +396,7 @@ If npm installed pnpm but the shell cannot find it, add npm's global executable 
 ```sh
 export PATH="$(npm prefix -g)/bin:$PATH"
 pnpm --version
-dsh plugin --profile web add dsh-cost-meter@latest
+dsh plugin --profile web add @kinocode/dsh-cost-meter-ja@latest
 dsh web
 ```
 
@@ -429,10 +435,10 @@ Workarounds:
 
    ```yaml
    minimumReleaseAgeExclude:
-     - dsh-cost-meter@1.9.3
+     - '@kinocode/dsh-cost-meter-ja@1.9.4'
    ```
 
-3. For a one-off CLI operation, forward the pnpm flag: `dsh plugin --profile desktop remove dsh-cost-meter --config.minimum-release-age=0` (or add `--trust-lockfile` when only lockfile verification fails). Both flags were verified against pnpm 11.28.5 in a temporary profile.
+3. For a one-off CLI operation, forward the pnpm flag: `dsh plugin --profile desktop remove @kinocode/dsh-cost-meter-ja --config.minimum-release-age=0` (or add `--trust-lockfile` when only lockfile verification fails). Both flags were verified against pnpm 11.28.5 in a temporary profile.
 
 Read the first `ERR_PNPM_*` line in `<profile>/.plugin-manager/logs/operation-*/pnpm.log` before reporting and remove credentials. Do not delete the profile or the ledger. Details: [pnpm supply-chain policy](docs/pnpm-supply-chain-policy.md).
 
@@ -440,7 +446,7 @@ Read the first `ERR_PNPM_*` line in `<profile>/.plugin-manager/logs/operation-*/
 
 ```sh
 # update: re-run the new release's install.ps1 (the pinned tag inside it moves with the release)
-dsh plugin --profile web remove dsh-cost-meter  # uninstall
+dsh plugin --profile web remove @kinocode/dsh-cost-meter-ja  # uninstall
 ```
 
 Installation errors and plugins still disabled after reinstall: see [troubleshooting](docs/install-troubleshooting.md).
@@ -448,9 +454,9 @@ Installation errors and plugins still disabled after reinstall: see [troubleshoo
 ### Local development
 
 ```sh
-git clone https://github.com/Han-1413141/dsh-cost-meter.git
+git clone https://github.com/kinocode-jp/dsh-cost-meter-ja.git
 cd <parent directory of the clone>
-dsh plugin --profile web add link:./dsh-cost-meter  # symlink; edit lib/client.js, refresh the page, done
+dsh plugin --profile web add link:./dsh-cost-meter-ja  # symlink; edit lib/client.js, refresh the page, done
 ```
 
 ## Billing rules
@@ -555,11 +561,15 @@ Check and clear the host search before changing stored data.
 
 ## Community
 
-Join the WeChat group to discuss the plugin, share feedback, and suggest features.
+**This fork (Japanese / JPY):** report problems and ideas in [GitHub issues](https://github.com/kinocode-jp/dsh-cost-meter-ja/issues) — Japanese is welcome. Please do not take problems that only happen in this fork to the upstream project.
+
+このフォーク（日本語・日本円）についての不具合や要望は、[GitHub の Issues](https://github.com/kinocode-jp/dsh-cost-meter-ja/issues) に日本語で書いてください。フォークだけで起きる問題は、上流には持ち込まないでください。
+
+**Upstream `dsh-cost-meter`:** the upstream project ([Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter)) has a WeChat group for discussing the plugin, feedback and feature ideas.
 
 <p align="center">
-  <a href="docs/community-wechat.jpg"><img src="docs/community-wechat.jpg" alt="dsh-cost-meter WeChat community QR code" width="320" /></a><br />
-  <a href="docs/community-wechat.jpg">View full-size QR code</a>
+  <a href="docs/community-wechat.jpg"><img src="docs/community-wechat.jpg" alt="Upstream dsh-cost-meter WeChat community QR code" width="320" /></a><br />
+  <a href="docs/community-wechat.jpg">View full-size QR code (upstream group)</a>
 </p>
 
 ## Update history
@@ -568,7 +578,10 @@ Join the WeChat group to discuss the plugin, share feedback, and suggest feature
 
 A per-version overview and the community-issue resolution log live in [docs/UPDATE-HISTORY.md](docs/UPDATE-HISTORY.md) (中文); the itemized changelog is [CHANGELOG.md](CHANGELOG.md).
 
-## Star History
+## Star History (upstream)
+
+Stars of the upstream project [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter):
+
 
 <a href="https://www.star-history.com/?repos=han-1413141%2Fdsh-cost-meter&type=timeline&legend=bottom-right">
  <picture>
@@ -577,6 +590,15 @@ A per-version overview and the community-issue resolution log live in [docs/UPDA
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=han-1413141/dsh-cost-meter&type=timeline&legend=bottom-right" />
  </picture>
 </a>
+
+## Acknowledgements
+
+This fork exists only because of the upstream project [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter). Many thanks to Han-1413141 (npm: `smallsun`), who created and maintains `dsh-cost-meter`,
+and to everyone who contributed code, reports and reviews there. The upstream project is listed on [awesome-dsh-plugin](https://awesome-dsh-plugin.com)
+and has a [WhaleHarness audit](https://whaleharness.com/audit-report.md) ([badge](https://whaleharness.com/badge/Han-1413141/dsh-cost-meter/badge.svg)).
+
+上流 [Han-1413141/dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) があってこそのフォークです。`dsh-cost-meter` を作り、保守している Han-1413141（npm: `smallsun`）さん、
+そしてコード・報告・レビューで上流に貢献している皆さんに感謝します。
 
 ## License
 
