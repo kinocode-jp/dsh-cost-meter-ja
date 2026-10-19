@@ -99,7 +99,7 @@ try {
   globalThis.fetch = async () => ({ ok: false, status: 401, json: async () => ({ code: 401, loginUrl: 'x' }) })
   const expired = await meter.refreshCodingPlan('mimo')
   assert.equal(expired.ok, false, '401 应报失败')
-  assert.match(expired.message, /登录态已过期|login has expired/, '专属过期文案:' + expired.message)
+  assert.match(expired.message, /登录态已过期|login has expired|ログインが切れ/, '专属过期文案:' + expired.message)
   assert.equal((await meter.getState()).config.codingPlans.mimo.enabled, true, '过期不影响 enable')
   for (const dispose of cleanups.splice(0).reverse()) dispose()
   const diskText = readFileSync(join(storage, 'ledger.json'), 'utf8')

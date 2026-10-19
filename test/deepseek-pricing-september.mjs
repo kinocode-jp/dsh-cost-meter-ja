@@ -9,6 +9,7 @@ import { DEFAULT_PRICE_TABLE, DEFAULT_PRICE_TABLE_CNY, AUGUST_PRICE_TABLE, AUGUS
 import { Ledger, sanitizeConfig, applyConfigPatch, localDayKey } from '../lib/store.js'
 import { apply, runStartupImports, __testProjection } from '../lib/index.js'
 import { stateSchema } from '../lib/typert.host.js'
+import { fxRatesOf } from '../lib/exchange-rates.js'
 
 const flashAt = Date.parse('2026-09-10T04:00:00Z'), proAt = Date.parse('2026-09-14T04:00:00Z')
 const peak = { enabled: true, effectiveAtMs: Date.parse('2026-08-01T00:00:00Z'), windows: DEFAULT_PEAK_WINDOWS }
@@ -146,7 +147,8 @@ try {
   let projected = projection.init()
   projected = projection.apply(projected, { type: 'request/header', seq: 0, time: flashAt, data: { header: { config: { provider: 'deepseek', model: 'deepseek-v4-flash' } } } })
   projected = projection.apply(projected, { type: 'assistant/message', seq: 1, time: flashAt + 1000, data: { usage: { inputTokens: 1000, cacheReadTokens: 100, outputTokens: 400 } } })
-  near(projected.totals.cost, 0.002602 / state.config.exchangeRate)
+  // kinocode-jp フォーク: 表示通貨の既定が JPY なので、CNY 建ての価格は exchangeRate ではなく CNY のレートで換算される。
+  near(projected.totals.cost, 0.002602 / fxRatesOf(state.config).CNY)
 } finally {
   for (const dispose of cleanup.reverse()) await dispose()
   if (oldHome === undefined) delete process.env.DSH_HOME

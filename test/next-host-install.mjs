@@ -36,7 +36,8 @@ try {
   run(['plugin', '--profile', 'web', 'add', tarball])
   const profile = JSON.parse(readFileSync(join(home, 'profiles', 'web', 'package.json'), 'utf8'))
   assert.ok(profile.dsh.profile.bundles.includes(pkg.name), 'normal add registers the bundle without a version exemption')
-  assert.match(run(['--profile', 'web', '--dump-config']), /name: dsh-cost-meter/)
+  // kinocode-jp fork: the bundle is listed under the fork's package name (quoted in YAML because of the "@").
+  assert.ok(run(['--profile', 'web', '--dump-config']).split('\n').some(line => /name: ['"]?(.+?)['"]?\s*$/.exec(line)?.[1] === pkg.name), 'the dumped config lists the plugin by its package name')
   const patch = join(work, 'probe.patch.yml')
   writeFileSync(patch, `- insert:\n    - id: cost-meter-compatibility-probe\n      name: ${JSON.stringify(pathToFileURL(join(repo, 'test/fixtures/host-compatibility-probe/index.mjs')).href)}\n`)
   const socket = createServer()

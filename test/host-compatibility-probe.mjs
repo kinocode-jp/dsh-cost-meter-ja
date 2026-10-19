@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { createRequire } from 'node:module'
 import { fileURLToPath, pathToFileURL } from 'node:url'
-import { realpathSync, writeFileSync, rmSync, mkdirSync } from 'node:fs'
+import { readFileSync, realpathSync, writeFileSync, rmSync, mkdirSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
 
 export const name = 'cost-meter-compatibility-probe'
@@ -14,7 +14,9 @@ export async function apply(ctx) {
   const profile = process.env.CM_COMPAT_PROFILE ?? 'web'
   assert.ok(['web', 'desktop'].includes(profile))
   const profileRequire = createRequire(join(home, 'profiles', profile, 'package.json'))
-  const pluginRequire = createRequire(profileRequire.resolve('dsh-cost-meter'))
+  // The plugin is installed under its package name (renamed in the kinocode-jp fork).
+  const pluginName = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).name
+  const pluginRequire = createRequire(profileRequire.resolve(pluginName))
   const hostRequire = createRequire(resolve(process.env.CM_HOST_PACKAGE))
   const installMode = process.env.CM_COMPAT_INSTALL_MODE === 'linked' ? 'linked' : 'packed'
   const peers = {}
