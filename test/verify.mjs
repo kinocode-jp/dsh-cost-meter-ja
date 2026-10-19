@@ -3162,7 +3162,8 @@ console.log('[ok] OpenRouter/SiliconFlow/CommandCode 解析器与白名单通过
   r = reconcileBalanceDelta(cnyBase, { ...bal(91.66), currency: 'CNY' }, 0.74, day, t1, { exchangeRate: 7.2 })
   assert.equal(r.event.kind, 'ok', '折算后与账本一致判 ok(此前跨币种直比恒 drift)')
   const indexSrcRecon = readFileSync(join(import.meta.dirname, '..', 'lib', 'index.js'), 'utf8')
-  assert.ok(indexSrcRecon.includes('exchangeRate: ledger.config.exchangeRate'), '对账调用传入汇率做折算')
+  // kinocode-jp フォーク: 表示通貨が JPY でも CNY のレートで換算する(fxRatesOf(ledger.config).CNY)。
+  assert.ok(indexSrcRecon.includes('const exchangeRate = fxRatesOf(ledger.config).CNY') && indexSrcRecon.includes('{ exchangeRate: exchangeRate }'), '对账调用传入汇率做折算')
   assert.ok(indexSrcRecon.includes('spentCurrency'), '提示按余额真实币种取符号')
   assert.equal((indexSrcRecon.match(/reconcileGrantedRelease: '/g) ?? []).length, 2, '赠送余额到期/回收提示 zh/en 双份(issue #302)')
   assert.ok(indexSrcRecon.includes('赠送余额到期/回收而非消费'), 'zh 提示说明差额不是消费')
