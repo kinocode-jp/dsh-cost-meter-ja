@@ -24,7 +24,8 @@ for (const bundle of bundles) {
   const matched = markers.filter(marker => text.includes(marker))
   assert.ok(matched.length > 0, `${bundle} 缺少 dsh-pocket 手机端适配标记(1023px / data-dsh-pocket-layout)`)
   if (bundle === '../lib/client.js') {
-    assert.ok(bytes < 262144, `lib/client.js ${bytes} bytes 必须 < 262144 (DSH STORE per-file bound)`)
+    // kinocode-jp fork: the Japanese column raises the bound to 393216 (scripts/build.mjs CLIENT_BOUND, test/verify.mjs).
+    assert.ok(bytes < 393216, `lib/client.js ${bytes} bytes 必须 < 393216 (fork bound; DSH STORE per-file bound is 262144)`)
   }
   console.log(`[ok] dsh-pocket 手机端静态断言: ${bundle} (${bytes} bytes, 命中 ${matched.join(' + ')})`)
 }
