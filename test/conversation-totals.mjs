@@ -7,9 +7,11 @@ import { Ledger, sanitizeConfig } from '../lib/store.js'
 import { billingStatistics } from '../lib/billing-statistics.js'
 import { conversationOwners, conversationRows, aggregateSessionCost } from '../lib/session-tree.js'
 import { mergeLedger } from '../lib/ledger-persistence.js'
+import { FX_FIELDS } from '../lib/exchange-rates.js'
 
 const keys = ['input', 'output', 'cacheRead', 'cacheWrite', 'reasoning', 'calls', 'cost', 'apiCost']
-const frozenKeys = ['costCny', 'apiCostCny', 'costEur', 'apiCostEur']
+// All frozen FX fields, including the kinocode-jp fork's costJpy / apiCostJpy.
+const frozenKeys = FX_FIELDS
 // Frozen daily FX amounts are derived and additive; structural expectations below
 // describe the USD/usage shape, so strip them before comparing (issue #300).
 const withoutFrozen = value => Array.isArray(value) ? value.map(withoutFrozen)
