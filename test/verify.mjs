@@ -5779,7 +5779,8 @@ await import('./typert-codecs.mjs')
   const todayKey81 = localDayKey(Date.now())
   writeFileSync(join(root81, 'storages', 'cost-meter', 'ledger.json'), JSON.stringify({
     version: 1,
-    config: sanitizeConfig({ balance: { reconcile: true }, exchangeRate: 7.2 }),
+    // kinocode-jp フォーク: 既定の言語が日本語なので、中国語の文言を確かめるため zh に固定する。
+    config: sanitizeConfig({ locale: 'zh', balance: { reconcile: true }, exchangeRate: 7.2 }),
     balanceRef: { date: todayKey81, total: 100, granted: 1, topped: 99, currency: 'CNY', at: Date.now() - 3600_000, ledgerCost: 0 },
     days: {
       [todayKey81]: {
@@ -5848,7 +5849,8 @@ await import('./typert-codecs.mjs')
   const todayKey302 = localDayKey(Date.now())
   writeFileSync(join(root302, 'storages', 'cost-meter', 'ledger.json'), JSON.stringify({
     version: 1,
-    config: sanitizeConfig({ balance: { reconcile: true }, exchangeRate: 7.2 }),
+    // kinocode-jp フォーク: 既定の言語が日本語なので、中国語の文言を確かめるため zh に固定する。
+    config: sanitizeConfig({ locale: 'zh', balance: { reconcile: true }, exchangeRate: 7.2 }),
     balanceRef: { date: todayKey302, total: 827.2620, granted: 38.4004, topped: 788.8616, currency: 'CNY', at: Date.now() - 3600_000, ledgerCost: 0 },
     days: {},
   }))

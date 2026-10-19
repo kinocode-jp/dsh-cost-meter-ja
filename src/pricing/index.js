@@ -383,7 +383,7 @@ window.__ModuleLoader__.load({
     }
 
     function Chevron({ open, className }) {
-      return el('svg', { className: 'cm-pricing-chevron ' + className + (open ? ' is-open' : (globalThis.__cmText ? globalThis.__cmText('',' is-open') : '')), width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, el('path', { d: 'm9 5 7 7-7 7' }))
+      return el('svg', { className: 'cm-pricing-chevron ' + className + (open ? ' is-open' : ''), width: 16, height: 16, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true }, el('path', { d: 'm9 5 7 7-7 7' }))
     }
 
     function Catalog({ state, draft, setDraft, t, locale, rpc, renderEditor, vendorLabels, priceEditor }) {
