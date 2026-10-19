@@ -39,7 +39,7 @@ try {
     try {
       await host.plugin(Registry).await()
       host.typert.register({ ...TYPERT, invocations: TYPERT.invocations.filter(def => !missing.includes(def.method)) })
-      const original = host.typert.getPackage('dsh-cost-meter')
+      const original = host.typert.getPackage(TYPERT.package)
       // Fixture identity only: the production authentication policy is unchanged.
       const connection = new HostConnectionService(host, [], { isAuthenticated: () => true })
       if (Gateway.inject?.includes('remoteAccess')) await host.plugin((await imp('@deepseek-ai/dsh-api-remote-access')).default).await()
@@ -78,7 +78,7 @@ try {
         else assert.equal(result.value.codexCompat.promptDismissed, true)
       }
       await plugin.dispose()
-      assert.equal(host.typert.getPackage('dsh-cost-meter'), original, 'does not replace the host-owned base manifest')
+      assert.equal(host.typert.getPackage(TYPERT.package), original, 'does not replace the host-owned base manifest')
       assert.equal(host.typert.getPackage('dsh-cost-meter-codex-compat'), undefined, 'supplementary routes belong to the plugin lifetime')
       for (const method of missing) assert.equal(host.typert.local.get('costMeter/' + method), undefined)
       assert.deepEqual(errors, [])

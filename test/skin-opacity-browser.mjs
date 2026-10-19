@@ -33,7 +33,7 @@ window.clear=()=>root.render(null);window.ready=true;
 const compiled = await build({ stdin: { contents: source, resolveDir: process.cwd(), loader: 'js' }, bundle: true, write: false, format: 'iife', platform: 'browser' })
 const server = createServer((request, response) => {
   response.setHeader('content-type', request.url === '/app.js' ? 'text/javascript' : 'text/html')
-  response.end(request.url === '/app.js' ? compiled.outputFiles[0].contents : '<!doctype html><html><head><meta charset="utf-8"></head><body><div id="root"></div><script src="/app.js"></script></body></html>')
+  response.end(request.url === '/app.js' ? compiled.outputFiles[0].contents : '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"></head><body><div id="root"></div><script src="/app.js"></script></body></html>')
 })
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
 const url = 'http://127.0.0.1:' + server.address().port, browser = await chromium.launch({ executablePath, headless: true })

@@ -50,7 +50,7 @@ ${readFileSync('src/pricing/index.js', 'utf8')};
   window.fixtureReady=true;
 })();`
 const compiled = await build({ stdin: { contents: code, resolveDir: process.cwd(), loader: 'js' }, bundle: true, write: false, format: 'iife', platform: 'browser' })
-const html = '<!doctype html><html><meta charset="utf-8"><style>body{margin:0;padding:12px;font:13px/1.5 system-ui;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary)}#root{max-width:900px;margin:auto}</style><div id="root"></div><script src="/app.js"></script></html>'
+const html = '<!doctype html><html lang="zh-CN"><meta charset="utf-8"><style>body{margin:0;padding:12px;font:13px/1.5 system-ui;background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary)}#root{max-width:900px;margin:auto}</style><div id="root"></div><script src="/app.js"></script></html>'
 const server = createServer((request, response) => {
   if (request.url === '/app.js') { response.setHeader('content-type', 'text/javascript'); response.end(compiled.outputFiles[0].contents) }
   else if (request.url === '/') { response.setHeader('content-type', 'text/html; charset=utf-8'); response.end(html) }

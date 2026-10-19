@@ -141,9 +141,10 @@ try {
     await first.api.reload()
     // Negative control uses the original conflicting identity with the real
     // registry; keep this check in CI without requiring historical Git tags.
-    const identity = statistics.CONTRIBUTION.package
-    statistics.CONTRIBUTION.package = 'dsh-cost-meter'
-    await assert.rejects(first.api.loadStatistics(), /Remote package "dsh-cost-meter" is already registered/)
+    // The main client's identity is the package name (renamed in the kinocode-jp fork).
+    const identity = statistics.CONTRIBUTION.package, mainIdentity = TYPERT.package
+    statistics.CONTRIBUTION.package = mainIdentity
+    await assert.rejects(first.api.loadStatistics(), error => String(error?.message).includes(`Remote package "${mainIdentity}" is already registered`))
     statistics.CONTRIBUTION.package = identity
     const [Page, samePage] = await Promise.all([first.api.loadStatistics(), first.api.loadStatistics()])
     assert.equal(Page, samePage, 'concurrent opens share one mount')

@@ -2,7 +2,7 @@ name: install-smoke
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -10,6 +10,11 @@ permissions:
   contents: read
 
 env:
+  # kinocode-jp fork: the package is published as @kinocode/dsh-cost-meter-ja (npm pack names the
+  # tarball kinocode-dsh-cost-meter-ja-<version>.tgz) and git installs come from this repository.
+  # This repository's history starts at the fork, so the historical baselines some tests compare
+  # against (v1.8.6, v1.8.29) are fetched from the upstream repository, UPSTREAM_REPO.
+  UPSTREAM_REPO: https://github.com/Han-1413141/dsh-cost-meter.git
   # Single pin for every job that installs a DSH closure directly: the npm `latest` closure
   # (0.2.0-rc.2). The other two hosts live in their fixtures: test/fixtures/install-host
   # (plugin install smoke, same closure) and test/fixtures/next-host (npm `next`, currently
@@ -83,7 +88,7 @@ jobs:
           node test/model-stats-browser.mjs
           node test/factory-quota-browser.mjs
           node test/display-settings-browser.mjs
-          git fetch --depth=1 origin tag v1.8.29
+          git fetch --no-tags --depth=1 "$UPSTREAM_REPO" +refs/tags/v1.8.29:refs/tags/v1.8.29
           node test/idle-performance-browser.mjs
       - name: Save context regression browser evidence
         if: always()
@@ -129,6 +134,7 @@ jobs:
         run: |
           export DSH_TEST_NODE_MODULES="$PWD/.tmp-sidebar-host/node_modules"
           node test/sidebar-search-recovery.mjs
+          git fetch --no-tags --depth=1 "$UPSTREAM_REPO" +refs/tags/v1.8.6:refs/tags/v1.8.6
           node test/credential-editor-dom.mjs --baseline v1.8.6
 
   statistics-client:
@@ -190,7 +196,7 @@ jobs:
           node test/native-search-proxy.mjs
           mkdir -p .tmp-native-package
           npm pack --pack-destination .tmp-native-package
-          node test/native-search-profile.mjs .tmp-native-package/dsh-cost-meter-*.tgz
+          node test/native-search-profile.mjs .tmp-native-package/kinocode-dsh-cost-meter-ja-*.tgz
 
   marketplace-git-install:
     runs-on: windows-latest
@@ -212,10 +218,11 @@ jobs:
           TEST_REV: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           $env:DSH_HOME = Join-Path $env:RUNNER_TEMP 'dsh-cost-meter-git-install'
-          node .tmp-next-host/node_modules/@deepseek-ai/dsh/lib/bin.js plugin --profile web add "git+https://github.com/han-1413141/dsh-cost-meter.git#$env:TEST_REV"
+          # kinocode-jp fork: install the tested commit from this repository under the fork's package name.
+          node .tmp-next-host/node_modules/@deepseek-ai/dsh/lib/bin.js plugin --profile web add "git+https://github.com/kinocode-jp/dsh-cost-meter-ja.git#$env:TEST_REV"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $config = node .tmp-next-host/node_modules/@deepseek-ai/dsh/lib/bin.js --profile web --dump-config
-          if ($LASTEXITCODE -ne 0 -or -not ($config | Select-String 'name: dsh-cost-meter')) { exit 1 }
+          if ($LASTEXITCODE -ne 0 -or -not ($config | Select-String 'name: [''"]?@kinocode/dsh-cost-meter-ja')) { $config; exit 1 }
 
   next-host-compatibility:
     runs-on: ubuntu-latest
@@ -256,7 +263,7 @@ jobs:
           export DSH_TEST_NODE_MODULES="$PWD/.tmp-next-host/node_modules"
           mkdir -p .tmp-next-package
           npm pack --pack-destination .tmp-next-package
-          node test/next-host-install.mjs .tmp-next-package/dsh-cost-meter-*.tgz
+          node test/next-host-install.mjs .tmp-next-package/kinocode-dsh-cost-meter-ja-*.tgz
 
   market-hot-install:
     runs-on: ubuntu-latest
@@ -316,10 +323,10 @@ jobs:
           - os: windows-latest
             # Windows leg exercises install.ps1 end-to-end, including its
             # pnpm auto-provisioning (pnpm is deliberately not preinstalled).
-            verify-cmd: pwsh -NoProfile -Command "dsh --profile web --dump-config | Select-String dsh-cost-meter"
+            verify-cmd: pwsh -NoProfile -Command "if (-not (dsh --profile web --dump-config | Select-String -SimpleMatch 'kinocode/dsh-cost-meter-ja')) { exit 1 }"
           - os: ubuntu-latest
             # Linux leg exercises the README installer with the tested commit.
-            verify-cmd: dsh --profile web --dump-config | grep dsh-cost-meter
+            verify-cmd: dsh --profile web --dump-config | grep -F @kinocode/dsh-cost-meter-ja
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -346,7 +353,8 @@ jobs:
         shell: bash
         env:
           TEST_REV: ${{ github.sha }}
-        run: dsh plugin --profile web add "github:Han-1413141/dsh-cost-meter#$TEST_REV"
+        # kinocode-jp fork: the tested commit is installed from this repository.
+        run: dsh plugin --profile web add "github:kinocode-jp/dsh-cost-meter-ja#$TEST_REV"
       # Both legs install the checked-out commit, including the PR merge commit.
       # A previously published tag must not hide an installation regression.
       - name: One-click install (Windows leg, install.ps1)

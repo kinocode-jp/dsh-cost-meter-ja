@@ -56,7 +56,7 @@ try {
       if (RemoteAccess) await host.plugin(RemoteAccess).await()
       await host.plugin(Gateway, {}).await()
       if (mode === 'already-registered') host.typert.register(TYPERT)
-      const existing = host.get('typert')?.getPackage('dsh-cost-meter')
+      const existing = host.get('typert')?.getPackage(TYPERT.package)
       if (mode === 'stale-lock-cold') {
         const lock = join(work, 'storages', 'cost-meter', 'ledger.json.lock')
         mkdirSync(lock)
@@ -79,30 +79,30 @@ try {
       if (mode === 'unload-before-registry') {
         await hot.dispose()
         await host.plugin(Registry).await()
-        assert.equal(host.typert.getPackage('dsh-cost-meter'), undefined)
+        assert.equal(host.typert.getPackage(TYPERT.package), undefined)
         assert.equal(host.get('costMeter'), undefined)
         continue
       }
       if (late) await host.plugin(Registry).await()
       if (mode === 'negative') {
         await new Promise(resolve => setImmediate(resolve))
-        assert.equal(host.typert.getPackage('dsh-cost-meter'), undefined)
+        assert.equal(host.typert.getPackage(TYPERT.package), undefined)
         await assert.rejects(invokeState(),
           error => error.code === 'gateway/invocation-unavailable', 'negative control: standalone file entry has no RPC manifest')
         continue
       }
-      await settle(() => !!host.typert.getPackage('dsh-cost-meter'))
+      await settle(() => !!host.typert.getPackage(TYPERT.package))
       const state = await invokeState()
       assert.ok(state.config && state.today, `${mode}: real ledger RPC works without restart`)
-      if (existing) assert.equal(host.typert.getPackage('dsh-cost-meter'), existing)
+      if (existing) assert.equal(host.typert.getPackage(TYPERT.package), existing)
       if (hot) {
         await hot.dispose()
         assert.equal(host.get('costMeter'), undefined)
-        assert.equal(host.typert.getPackage('dsh-cost-meter'), existing, 'unload removes only the plugin-owned manifest')
+        assert.equal(host.typert.getPackage(TYPERT.package), existing, 'unload removes only the plugin-owned manifest')
         if (mode === 'hot') {
           hot = host.plugin(Include, { path: pathToFileURL(join(work, 'hot.json')).href })
           await hot.await()
-          await settle(() => !!host.typert.getPackage('dsh-cost-meter'))
+          await settle(() => !!host.typert.getPackage(TYPERT.package))
           assert.ok((await invokeState()).config)
         }
       }

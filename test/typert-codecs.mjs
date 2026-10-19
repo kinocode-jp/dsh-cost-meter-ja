@@ -5,6 +5,8 @@ import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import vm from 'node:vm'
 import { TYPERT } from '../lib/typert.host.js'
+// The package that exports TYPERT (renamed in the kinocode-jp fork), read from package.json.
+const PACKAGE_NAME = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).name
 
 // Capture what the shipped (minified) client actually mounts, before UI activation.
 // No source rewriting: this also catches a forgotten client rebuild.
@@ -80,9 +82,9 @@ if (process.env.DSH_TEST_NODE_MODULES) {
 }
 if (loader) {
   const { validateTypertManifest } = await import(pathToFileURL(loader).href)
-  assert.ok(validateTypertManifest('dsh-cost-meter', TYPERT))
+  assert.ok(validateTypertManifest(PACKAGE_NAME, TYPERT))
   const broken = { ...TYPERT, invocations: TYPERT.invocations.map(item => ({ ...item, result: { ...item.result, mode: 'src-json' } })) }
-  assert.throws(() => validateTypertManifest('dsh-cost-meter', broken), /strict codec/)
+  assert.throws(() => validateTypertManifest(PACKAGE_NAME, broken), /strict codec/)
   console.log('[ok] 安装的真实宿主 loader 接受双入口 codec，拒绝无效清单')
 } else {
   console.log('[skip] 未安装宿主 loader；设置 DSH_TEST_NODE_MODULES 可运行真实宿主校验')

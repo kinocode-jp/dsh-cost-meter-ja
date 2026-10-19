@@ -1875,7 +1875,10 @@ console.log('[ok] 宽泛匹配与跨厂商兑底(路由 provider 费用为零修
   // 官方余额的 401 缓存与 500 自动恢复由 balance-credentials.mjs 实际调用验证。
   assert.ok(retryIndexSource.includes("...goQuotaCache, value: { ...emptyGoQuota(), status: 'error'"), 'Go 额度硬失败写 error 状态并保留旧 fetchedAt')
   // 自定义余额的失败与恢复通过 cache-lifecycle.mjs 实际调用服务验证。
-  assert.ok(retryIndexSource.includes("...(codingPlanCaches[id] ?? { fetchedAt: 0, value: emptyCodingPlan() }),\n          value: { ...emptyCodingPlan(), status: 'error'"), 'Coding Plan 硬失败写 error 状态并保留旧 fetchedAt')
+  // kinocode-jp フォーク: 直前の取得が成功していれば 1 時間まではその値を stale として残し、
+  // それ以外は上流どおり error 状態を書く(外側の fetchedAt はどちらでも保つ)。
+  assert.ok(retryIndexSource.includes("...(codingPlanCaches[id] ?? { fetchedAt: 0, value: emptyCodingPlan() }),\n          value: keepPrev\n"), 'Coding Plan 硬失败保留旧 fetchedAt(直前の成功値は stale で保持)')
+  assert.ok(retryIndexSource.includes(": { ...emptyCodingPlan(), status: 'error', message, fetchedAt: now }"), 'Coding Plan 硬失败(保持する値がない場合)写 error 状态')
   assert.ok(retryIndexSource.includes("error && error.soft === true"), '软失败判定读取 error.soft 标记')
   console.log('[ok] 外部查询软/硬失败缓存策略断言通过')
 }

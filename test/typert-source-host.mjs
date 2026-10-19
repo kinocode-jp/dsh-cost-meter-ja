@@ -1,13 +1,15 @@
 // The npm alpha still uses schema. Issue #149 was reported from a source checkout,
 // so exercise the actual loader, registry and both gateways from a pinned commit.
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, resolve, dirname } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { createRequire } from 'node:module'
 import { build } from 'esbuild'
 import { TYPERT } from '../lib/typert.host.js'
+// The package that exports TYPERT (renamed in the kinocode-jp fork), read from package.json.
+const PACKAGE_NAME = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).name
 import { CLIENT_CONTRIBUTION } from './typert-codecs.mjs'
 
 assert.ok(process.env.DSH_TEST_SOURCE_ROOT, 'set DSH_TEST_SOURCE_ROOT to the upstream source checkout')
@@ -36,14 +38,14 @@ try {
     } }],
   })
   const { Context, Service, Registry, Gateway, applyClient, validateTypertManifest } = await import(pathToFileURL(outfile).href)
-  assert.ok(validateTypertManifest('dsh-cost-meter', TYPERT))
+  assert.ok(validateTypertManifest(PACKAGE_NAME, TYPERT))
   const withoutFactory = codec => { const { create, ...old } = codec; return old }
   for (const descriptor of TYPERT.invocations) {
     for (const broken of [
       { ...descriptor, result: withoutFactory(descriptor.result) },
       ...descriptor.parameters.map((_, index) => ({ ...descriptor, parameters: descriptor.parameters.map((p, i) => i === index ? { ...p, codec: withoutFactory(p.codec) } : p) })),
     ]) {
-      assert.throws(() => validateTypertManifest('dsh-cost-meter', { ...TYPERT, invocations: [broken] }), /no create\(\) factory/, 'negative control reproduces the reported startup failure')
+      assert.throws(() => validateTypertManifest(PACKAGE_NAME, { ...TYPERT, invocations: [broken] }), /no create\(\) factory/, 'negative control reproduces the reported startup failure')
     }
   }
   const host = new Context(), client = new Context()
