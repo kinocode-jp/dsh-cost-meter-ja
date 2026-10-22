@@ -2099,73 +2099,43 @@
     function CornerChips(props) {
       const costStore = props.useCost ? props.useCost(s => s) : undefined
       const state = costStore?.state
+      const [open, setOpen] = useState(false)
+      const [scrolling, setScrolling] = useState(false)
+      const scrollTimer = useRef(null)
+      const dockEnabled = state?.config?.sidebarModels?.dock === true
+      useEffect(() => {
+        setScrolling(false)
+        return () => { clearTimeout(scrollTimer.current); scrollTimer.current = null }
+      }, [open, dockEnabled])
+      const onScroll = () => {
+        setScrolling(true)
+        clearTimeout(scrollTimer.current)
+        scrollTimer.current = setTimeout(() => { scrollTimer.current = null; setScrolling(false) }, 700)
+      }
       if (!state) return null
       const config = state.config
       const t = makeT(resolveLocale(config))
-      const corner = config.corner ?? { enabled: false, goRolling: true, goWeekly: true, goMonthly: true, budget: true }
-      const goQuota = state.goQuota
-      const goOk = config?.goQuota?.enabled !== false && goQuota?.status === 'ok'
-      const pctOf = win => (win !== null && typeof win?.percent === 'number')
-        ? Math.round(Math.max(0, Math.min(100, win.percent)))
-        : null
-      const chips = []
-      if (config.sidebarModels?.dock) {
-        const rows = sidebarModelRows(state, config.sidebarModels.period, t)
-        if (rows.length) chips.push({ key: 'model-top', text: el(Fragment, null, el('span', { className: 'cm-bal-label' }, rows[0].label), el('span', { className: 'cm-bal-amt' }, formatMoneyUsd(rows[0].cost, config))), tip: rows[0].label + ' ' + formatMoneyUsd(rows[0].cost, config), level: 'ok' })
-      }
-      const pushGo = (on, win, shortKey, labelKey) => {
-        if (!corner.enabled || !on || !goOk) return
-        const pct = pctOf(win)
-        if (pct === null) return
-        const resets = typeof win.resetsAt === 'string' && win.resetsAt.length > 0
-          ? t('goResetAt', { time: new Date(win.resetsAt).toLocaleString() })
-          : ''
-        chips.push({
-          key: shortKey,
-          text: t(shortKey) + ' ' + pct + '%',
-          tip: t(labelKey) + ': ' + pct + '%' + (resets ? ' · ' + resets : ''),
-          level: pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok',
-        })
-      }
-      const mainKey = config?.goQuota?.main === 'weekly' || config?.goQuota?.main === 'monthly' ? config.goQuota.main : 'rolling'
-      const goOrder = [mainKey, ...['rolling', 'weekly', 'monthly'].filter(k => k !== mainKey)]
-      const defOf = k => k === 'rolling'
-        ? ['goRolling', goQuota?.rolling, 'goShortRolling', 'cornerGoRolling']
-        : k === 'weekly'
-          ? ['goWeekly', goQuota?.weekly, 'goShortWeekly', 'cornerGoWeekly']
-          : ['goMonthly', goQuota?.monthly, 'goShortMonthly', 'cornerGoMonthly']
-      for (const k of goOrder) {
-        const [flagKey, win, shortKey, labelKey] = defOf(k)
-        pushGo(corner[flagKey] === true, win, shortKey, labelKey)
-      }
-      // 预算 chip:预算图框同款口径(≥80% 预警、≥100% 超支)。
-      if (corner.enabled && corner.budget === true) {
-        const budget = config.budget ?? { enabled: false, amount: 100, period: 'month' }
-        if (budget.enabled === true) {
-          const rate = Number(config.exchangeRate)
-          const usedUsd = state.budgetUsed ?? (
-            budget.period === 'day' ? displayCostOf(state.today, config)
-              : budget.period === 'all' ? displayCostOf(state.total, config)
-                : displayCostOf(state.month, config))
-          const used = usedUsd * (Number.isFinite(rate) && rate > 0 ? rate : 1)
-          const amount = Math.max(0, Number(budget.amount) || 0)
-          const pct = amount > 0 ? Math.min(999, used / amount * 100) : null
-          if (pct !== null) {
-            const level = pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok'
-            chips.push({
-              key: 'budget',
-              text: t('budgetShort') + ' ' + pct.toFixed(1) + '%',
-              tip: t('budgetOf', { period: t(PERIOD_KEYS[budget.period] ?? 'periodMonth') }) + ' · '
-                + t('usedOf', { used: formatMoneyValue(used, config), amount: formatMoneyValue(amount, config) }),
-              level,
-            })
-          }
-        }
-      }
-      if (chips.length === 0) return null
-      return el('div', { className: 'cm-corner' },
-        chips.map(c => el(Tooltip, { portal: true, key: c.key, label: c.tip, side: 'top', delayMs: 500 },
-          el('span', { className: 'cm-corner-chip' + (c.key === 'model-top' ? ' cm-model-top' : '') + (c.level === 'ok' ? '' : ' ' + c.level) }, c.text))))
+      // モデル別トークン使用量に絞る:クォータ窓(5時間/週/月)と予算チップは出さない。
+      if (config.sidebarModels?.dock !== true) return null
+      const rows = sidebarModelRows(state, config.sidebarModels.period, t)
+      if (rows.length === 0) return null
+      return el('div', { className: 'cm-corner' + (open ? ' cm-corner-open' : '') },
+        el('button', {
+          type: 'button',
+          className: 'cm-corner-toggle',
+          'aria-expanded': String(open),
+          title: t('modelStatsTitle'),
+          onClick: () => setOpen(!open),
+        }, el(WalletIcon, { size: 16 })),
+        open ? el('div', { className: 'cm-corner-scroll' + (scrolling ? ' cm-scrolling' : ''), onScroll, tabIndex: 0, role: 'region', 'aria-label': t('modelStatsTitle') },
+          rows.map(r => el('span', {
+            key: r.key,
+            className: 'cm-corner-chip cm-model-top',
+            title: r.label + ' · ' + t('modelStatsInput') + ' ' + formatTokens(r.input) + ' / ' + t('modelStatsOutput') + ' ' + formatTokens(r.output),
+            'aria-label': r.label + ' · ' + t('modelStatsInput') + ' ' + formatTokens(r.input) + ' / ' + t('modelStatsOutput') + ' ' + formatTokens(r.output),
+          },
+            el(CornerModelIcon, { row: r }),
+            el('span', { className: 'cm-bal-amt' }, formatTokens(r.input) + ' | ' + formatTokens(r.output))))) : null)
     }
 
     /**
@@ -3484,5 +3454,19 @@
       if (!wide) nodes.push(peakNoticeRailEl(state, config, t))
       if (modelsOn) nodes.splice(config.sidebarModels.position === 'first' ? 0 : config.sidebarModels.position === 'afterBalance' ? afterBalance : nodes.length, 0,
         el(SidebarModelCosts, { key: 'models', state, wide, preview }))
-      return el('div', { ...(simple ? { tabIndex: 0, role: 'region', 'aria-label': t('sidebarSimple') } : {}), className: 'cm-footer-stack' + (wide ? '' : ' rail') + (compactWide ? ' compact' : '') + (simple ? ' simple' : '') }, ...nodes)
+      const stack = el('div', { ...(simple ? { tabIndex: 0, role: 'region', 'aria-label': t('sidebarSimple') } : {}), className: 'cm-footer-stack' + (wide ? '' : ' rail') + (compactWide ? ' compact' : '') + (simple ? ' simple' : '') }, ...nodes)
+      if (!wide || preview) return stack
+      return el(CollapsibleFooter, { label: showToday ? t('today') + ' ' + sidebarTodayValue(state.today, config, t) : t('sidebarCards'), t }, stack)
+    }
+
+    // サイドバーの料金カード全体を、クリックで1行表示に畳む(状態は localStorage に保存)。
+    const CM_COLLAPSE_KEY = 'dsh-cost-meter-ja.sidebarCollapsed'
+    function CollapsibleFooter(props) {
+      const [collapsed, setCollapsed] = useState(() => { try { return window.localStorage.getItem(CM_COLLAPSE_KEY) === '1' } catch { return false } })
+      const toggle = () => setCollapsed(prev => { const next = !prev; try { window.localStorage.setItem(CM_COLLAPSE_KEY, next ? '1' : '0') } catch {} return next })
+      const title = props.t(collapsed ? 'sidebarCardsExpand' : 'sidebarCardsCollapse')
+      const bar = el('button', { type: 'button', className: 'cm-collapse-bar', onClick: toggle, 'aria-expanded': !collapsed, title },
+        el('span', { className: 'cm-collapse-caret' }, collapsed ? '\u25b8' : '\u25be'),
+        collapsed ? el('span', { className: 'cm-num' }, props.label) : null)
+      return el('div', { className: 'cm-collapsible', style: { order: -1, width: '100%' } }, bar, collapsed ? null : props.children)
     }

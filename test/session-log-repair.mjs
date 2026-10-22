@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, appendFileSync, symlinkSync, unlinkSync } from 'node:fs'
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync, appendFileSync, symlinkSync, unlinkSync, realpathSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join, dirname, basename, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -14,7 +14,10 @@ import { installNativeSearchBilling } from '../lib/native-search-billing.js'
 import { nativeSearchRecordsFor } from '../lib/native-search-history.js'
 import { Ledger, sanitizeConfig } from '../lib/store.js'
 
-const root = mkdtempSync(join(tmpdir(), 'cm-log-repair-'))
+// macOS 的 tmpdir 可经 /var → /private/var 链接；普通夹具使用物理路径，
+// 下方显式创建的链接仍必须被修复器拒绝。
+const tempRoot = realpathSync(tmpdir())
+const root = mkdtempSync(join(tempRoot, 'cm-log-repair-'))
 const hostContexts = []
 const at = Date.now() - 2000
 const data = { provider: 'deepseek-official', model: 'deepseek-v4-flash', startedAtMs: at + 1, requestId: randomUUID(), usage: { inputTokens: 100, outputTokens: 20, cacheReadTokens: 5, cacheWriteTokens: 0, reasoningTokens: 0 } }
@@ -192,6 +195,6 @@ try {
   console.log('会话日志修复：默认只读、限定事件、逐帧保留、备份、幂等、截断/竞争保护通过')
 } finally {
   for (const context of hostContexts.reverse()) await context.fiber.dispose()
-  assert.equal(dirname(root), tmpdir())
+  assert.equal(dirname(root), tempRoot)
   rmSync(root, { recursive: true, force: true })
 }

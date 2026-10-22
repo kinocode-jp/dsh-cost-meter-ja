@@ -42,7 +42,7 @@ assert.equal(recursiveReads, 1)
 forgetHostLocale(reentrant); assert.equal(hostLocaleOf(reentrant), 'en'); assert.equal(recursiveReads, 2)
 
 const work = mkdtempSync(join(tmpdir(), 'cm-host-locale-'))
-const names = ['DSH_HOME', 'DEEPSEEK_API_KEY', 'DSH_DEEPSEEK_API_KEY', 'DEEPSEEK_BALANCE_API_KEY', 'OPENCODE_GO_API_KEY', 'OPENCODE_API_KEY', 'GO_API_KEY']
+const names = ['DSH_HOME', 'HOME', 'USERPROFILE', 'XDG_CONFIG_HOME', 'DEEPSEEK_API_KEY', 'DSH_DEEPSEEK_API_KEY', 'DEEPSEEK_BALANCE_API_KEY', 'OPENCODE_GO_API_KEY', 'OPENCODE_API_KEY', 'GO_API_KEY']
 const saved = Object.fromEntries(names.map(name => [name, process.env[name]]))
 const originalFetch = globalThis.fetch
 const effects = [], events = new Map()
@@ -50,6 +50,10 @@ let service
 try {
   for (const name of names) delete process.env[name]
   process.env.DSH_HOME = work
+  // 缺凭据夹具也隔离 CLI 登录态，不能读取开发机的 opencode auth.json。
+  process.env.HOME = work
+  process.env.USERPROFILE = work
+  process.env.XDG_CONFIG_HOME = join(work, 'config')
   const file = join(work, 'storages', 'cost-meter', 'ledger.json')
   mkdirSync(join(work, 'storages', 'cost-meter'), { recursive: true })
   writeFileSync(file, JSON.stringify({ version: 1, days: {}, migrations: ['ja-fork-locale-currency-defaults', 'ja-fork-locale-default-2'], config: { locale: 'auto', goQuota: { enabled: true }, balance: { display: 'off' } } }))

@@ -13,8 +13,9 @@ vm.runInNewContext(src.replace('exports.apply = apply', 'exports.test = { Sideba
   Date: Clock, navigator: { language: 'zh' }, window: { __ModuleLoader__: { load: v => { factory = v.factory } }, localStorage: { getItem: () => null } },
 })
 const ui = factory(name => name === 'react' ? { createElement: el, Fragment: 'fragment', useRef: value => ({ current: value }), useEffect() {}, useState: value => [typeof value === 'function' ? value() : value, () => {}] } : { Tooltip: 'tooltip' }).test
+// createElement 的子节点也必须作为 props.children 传给包装组件。
 const render = n => Array.isArray(n) ? n.map(render) : n && typeof n === 'object'
-  ? typeof n.type === 'function' ? render(n.type(n.props)) : { ...n, children: n.children.map(render) } : n
+  ? typeof n.type === 'function' ? render(n.type({ ...n.props, children: n.children.length === 1 ? n.children[0] : n.children })) : { ...n, children: n.children.map(render) } : n
 const nodes = n => Array.isArray(n) ? n.flatMap(nodes) : n && typeof n === 'object' ? [n, ...nodes(n.children)] : []
 const text = n => Array.isArray(n) ? n.map(text).join('') : n && typeof n === 'object' ? text(n.children) : n == null ? '' : String(n)
 const hasClass = (n, cls) => n.props.className?.split(' ').includes(cls)

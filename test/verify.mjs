@@ -2087,10 +2087,13 @@ console.log('[ok] OpenRouter/SiliconFlow/CommandCode 解析器与白名单通过
 // 8) 历史账本按模型回填:回放会话日志重建旧账本缺失的 byProviderModel。
 {
   const cfg = sanitizeConfig({})
-  // 峰谷时代前的两个时刻(legacyBase 历史价);两者间隔不跨本地午夜,保证同属一天。
-  const legacyAt = Date.parse(LEGACY_BASE_BOUNDARY) - 3 * 3600_000
-  const legacyAt2 = Date.parse(LEGACY_BASE_BOUNDARY) - 60_000
+  // 峰谷时代前的两个时刻(legacyBase 历史价):取分界前一天的本地正午,
+  // 避免固定 UTC 偏移在 Asia/Tokyo 等时区跨本地午夜。
+  const legacyAt = new Date(Date.parse(LEGACY_BASE_BOUNDARY) - 86400_000).setHours(12, 0, 0, 0)
+  const legacyAt2 = legacyAt + 60_000
   const dayKey = localDayKey(legacyAt)
+  assert.equal(localDayKey(legacyAt2), dayKey, '回填夹具的两个样本同属本地日期')
+  assert.ok(legacyAt2 < Date.parse(LEGACY_BASE_BOUNDARY), '回填夹具的两个样本均使用历史价')
   const mkSessionLog = (id, events) => [JSON.stringify({ type: 'session', version: 0, id, createdAt: legacyAt, delegationDepth: 0 }), ...events.map(e => JSON.stringify(e))].join('\n') + '\n'
   const usageEvent = (turn, step, time, usage, kind = 'message') => kind === 'message'
     ? { type: 'assistant/message', seq: 0, time, data: { turn, step, usage } }

@@ -10,7 +10,7 @@ const sourceDir = new URL('../src/client/', import.meta.url)
 const source = readdirSync(sourceDir).filter(name => name.endsWith('.js')).sort().map(name => readFileSync(new URL(name, sourceDir), 'utf8')).join('')
 const expose = ['SidebarModelCosts', 'ModelSidebarSettings', 'sidebarModelRows', 'modelStatsRows', 'MODEL_SIDEBAR_DEFAULTS', 'MODEL_OPEN_KEY', 'QuotaCard', 'useQuotaRefresh', 'QuotasSection', 'PlanQuotaCard', 'GatewayQuotaCard', 'GoQuotaCard', 'GoQuotaSettings', 'CustomBalanceEntryPanel', 'SidebarFooter', 'CornerChips', 'parseConfig', 'makeT', 'CODING_PLAN_ROWS']
 expose.push('CostSection', 'MiniMaxPlanCard')
-expose.push('BalancePanel', 'CredentialField', 'parseBalance')
+expose.push('BalancePanel', 'CredentialField', 'parseBalance', 'CollapsibleFooter', 'CornerModelIcon', 'css')
 const element = (type, props, ...children) => ({ type, props: props ?? {}, children })
 const nodes = value => Array.isArray(value) ? value.flatMap(nodes) : value && typeof value === 'object' ? [value, ...nodes(value.children)] : []
 const textOf = value => Array.isArray(value) ? value.map(textOf).join(' ') : value && typeof value === 'object' ? textOf(value.children) : typeof value === 'string' || typeof value === 'number' ? String(value) : ''
@@ -217,15 +217,92 @@ assert.match(textOf(empty.tree), new RegExp(t('modelStatsEmpty')))
 let dockState = { ...state, config: { ...state.config, sidebarModels: { ...state.config.sidebarModels, dock: true },
   goQuota: { enabled: true }, budget: { enabled: true, amount: 100 }, corner: { ...base.corner, enabled: false } },
   goQuota: { status: 'ok', rolling: { percent: 80 }, weekly: { percent: 20 } } }
-assert.equal(nodes(e.ui.CornerChips({ useCost: pick => pick({ state: dockState }) })).filter(n => n.props?.key === 'model-top').length, 1)
-assert.equal(withClass(e.ui.CornerChips({ useCost: pick => pick({ state: dockState }) }), 'cm-corner-chip').length, 1)
+const corner = e.mount(e.ui.CornerChips, { useCost: pick => pick({ state: dockState }) })
+const cornerToggle = () => withClass(corner.tree, 'cm-corner-toggle')[0]
+assert.equal(cornerToggle().props['aria-expanded'], 'false', '模型用量默认收起')
+assert.equal(withClass(corner.tree, 'cm-corner-chip').length, 0)
+cornerToggle().props.onClick(); await e.flush()
+assert.equal(cornerToggle().props['aria-expanded'], 'true')
+const dockRows = e.ui.sidebarModelRows(dockState, dockState.config.sidebarModels.period, t)
+assert.ok(dockRows.length > 1, '夹具包含多个模型，展开后不能只显示第一项')
+assert.deepEqual(withClass(corner.tree, 'cm-model-top').map(n => n.props.key), plain(dockRows.map(r => r.key)))
+assert.equal(withClass(corner.tree, 'cm-corner-chip').length, dockRows.length, '只显示各模型用量，不带出 Go/预算芯片')
+for (const chip of withClass(corner.tree, 'cm-model-top')) {
+  assert.match(chip.props.title, /Input.*Output/, '模型用量保留输入与输出说明')
+  assert.match(textOf(chip), /\|/, '模型用量显示输入与输出 token')
+  assert.ok(chip.children.some(n => n?.type === e.ui.CornerModelIcon))
+  assert.equal(withClass(chip, 'cm-bal-label').length, 0, '可见内容不再重复长模型名')
+  assert.equal(chip.props['aria-label'], chip.props.title)
+}
+// Scroll activity survives pointer departure, re-arms one short timer, and cleans up.
+const scroll = () => withClass(corner.tree, 'cm-corner-scroll')[0]
+assert.equal(scroll().props.tabIndex, 0)
+scroll().props.onScroll(); await e.flush()
+assert.equal(withClass(corner.tree, 'cm-scrolling').length, 1)
+scroll().props.onScroll(); await e.flush()
+assert.equal([...e.timers.values()].filter(timer => timer.delay === 700).length, 1)
+await e.tick(700)
+assert.equal(withClass(corner.tree, 'cm-scrolling').length, 0)
+scroll().props.onScroll(); await e.flush()
+cornerToggle().props.onClick(); await e.flush()
+assert.equal([...e.timers.values()].filter(timer => timer.delay === 700).length, 0, '关闭时清除滚动计时器')
+assert.equal(cornerToggle().props['aria-expanded'], 'false', '模型用量可再次收起')
+assert.equal(withClass(corner.tree, 'cm-corner-chip').length, 0)
+{
+  const env = environment()
+  let snapshot
+  const card = env.mount(env.ui.CornerChips, { useCost: pick => pick({ state: snapshot }) })
+  const hookCount = card.hooks.length
+  snapshot = dockState; card.render()
+  withClass(card.tree, 'cm-corner-toggle')[0].props.onClick(); await env.flush()
+  withClass(card.tree, 'cm-corner-scroll')[0].props.onScroll(); await env.flush()
+  snapshot = { ...dockState, config: { ...dockState.config, sidebarModels: { ...dockState.config.sidebarModels, dock: false } } }
+  card.render()
+  assert.equal(card.tree, null, 'dock 关闭仍隐藏所有模型信息')
+  assert.equal(card.hooks.length, hookCount, '无快照/关闭配置也保持 hook 顺序')
+  assert.equal(env.timers.size, 0)
+  snapshot = dockState; card.render()
+  withClass(card.tree, 'cm-corner-scroll')[0].props.onScroll(); await env.flush()
+  card.dispose(); assert.equal(env.timers.size, 0, '卸载时取消短计时器')
+  for (const key of ['deepseek:deepseek-chat', 'openrouter:anthropic/claude-opus', 'openai:gpt-6', 'google:gemini-pro', 'qwen:qwen3', 'moonshot:kimi-k2', 'minimax:MiniMax-M2', 'mistral:codestral']) {
+    const icon = env.ui.CornerModelIcon({ row: { key, label: key } })
+    assert.equal(icon.type, 'svg', key + ' 使用已有品牌图形')
+    assert.ok(icon.children[0].props.d.length > 30)
+    assert.equal(icon.props['aria-hidden'], true)
+  }
+  const fallback = env.ui.CornerModelIcon({ row: { key: 'custom:nebula-model', label: 'Nebula' } })
+  assert.equal(textOf(fallback), 'NE', '未知模型使用有意义的模型缩写')
+  assert.match(e.ui.css, /\.cm-corner-scroll\.cm-scrolling\{scrollbar-width:thin/)
+}
+// Hidden today cost must not leak into the persisted collapsed summary in any locale.
+for (const locale of ['en', 'zh', 'ja']) for (const collapsed of [false, true])
+for (const visibility of [{ sidebar: true, hideTodayCost: true }, { sidebar: false, hideTodayCost: false }, { sidebar: true, hideTodayCost: false }]) {
+  const env = environment(), translate = env.ui.makeT(locale)
+  env.storage.set('dsh-cost-meter-ja.sidebarCollapsed', collapsed ? '1' : '0')
+  const hidden = !visibility.sidebar || visibility.hideTodayCost
+  const snapshot = { ...state, config: { ...state.config, locale, ...visibility, sidebarModels: { ...state.config.sidebarModels, enabled: true } } }
+  const footer = env.mount(env.ui.SidebarFooter, { wide: true, useCost: pick => pick({ state: snapshot }) })
+  assert.equal(footer.tree.type, env.ui.CollapsibleFooter)
+  if (hidden) assert.equal(footer.tree.props.label, translate('sidebarCards'))
+  else assert.ok(footer.tree.props.label.startsWith(translate('today') + ' '))
+  const wrapper = env.mount(env.ui.CollapsibleFooter, { ...footer.tree.props, children: footer.tree.children[0] })
+  assert.equal(withClass(wrapper.tree, 'cm-collapse-bar')[0].props['aria-expanded'], !collapsed)
+  assert.equal(withClass(wrapper.tree, 'cm-footer-stack').length, collapsed ? 0 : 1)
+  assert.equal(nodes(wrapper.tree).filter(n => n.type === env.ui.SidebarModelCosts).length, collapsed ? 0 : 1, '展开时保留模型卡片')
+  if (collapsed && hidden) assert.equal(textOf(wrapper.tree).trim(), '▸ ' + translate('sidebarCards'))
+  withClass(wrapper.tree, 'cm-collapse-bar')[0].props.onClick(); await env.flush()
+  assert.equal(env.storage.get('dsh-cost-meter-ja.sidebarCollapsed'), collapsed ? '0' : '1')
+  env.dispose()
+}
 for (const position of ['first', 'afterBalance', 'last']) {
   const footer = e.mount(e.ui.SidebarFooter, { wide: true, useCost: pick => pick({ state: { ...state,
     config: { ...state.config, sidebarSimple: false, hideOfficialBalance: false,
       balance: { ...base.balance, display: 'both', showProgressBar: false }, budget: { ...base.budget, enabled: true },
       sidebarModels: { ...state.config.sidebarModels, position } } } }) })
   assert.equal(nodes(footer.tree).filter(n => n.type === e.ui.SidebarModelCosts).length, 1)
-  const order = footer.tree.children.filter(n => n && typeof n === 'object').map(n => n.type.name)
+  const stacks = withClass(footer.tree, 'cm-footer-stack')
+  assert.equal(stacks.length, 1, '折叠包装内只渲染一个额度堆栈')
+  const order = stacks[0].children.filter(n => n && typeof n === 'object').map(n => n.type.name)
   assert.deepEqual(order, position === 'first' ? ['SidebarModelCosts', 'BalanceRowContent', 'BudgetBoxContent']
     : position === 'afterBalance' ? ['BalanceRowContent', 'SidebarModelCosts', 'BudgetBoxContent']
     : ['BalanceRowContent', 'BudgetBoxContent', 'SidebarModelCosts'])

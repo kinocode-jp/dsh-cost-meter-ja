@@ -84,7 +84,14 @@ const win = { percent: 25, resetsAt: new Date(Date.now() + 3600000).toISOString(
 config = sanitizeConfig({ ...base, budget: { enabled: true }, codingPlans: { kimi: { enabled: true, display: 'sidebar' } }, sidebarSimple: true, sidebarSimplePromptSeen: true })
 const state = { config, today: totals, month: totals, total: totals, codingPlans: { kimi: { status: 'ok', windows: { daily: win }, fetchedAt: Date.now() } }, gatewayQuotas: { sources: [] } }
 ui.codexQuotaCache.status = 'unavailable'
-const footer = wide => { hooks = []; hookIndex = 0; return ui.SidebarFooter({ wide, useCost: pick => pick({ state }), api }) }
+const footer = wide => {
+  hooks = []; hookIndex = 0
+  const tree = ui.SidebarFooter({ wide, useCost: pick => pick({ state }), api })
+  // 宽栏可在额度堆栈外增加折叠容器；布局与键盘行为属于实际堆栈。
+  const stacks = nodes(tree).filter(n => /(?:^|\s)cm-footer-stack(?:\s|$)/.test(n.props.className ?? ''))
+  assert.equal(stacks.length, 1, '只渲染一个额度堆栈')
+  return stacks[0]
+}
 const simple = footer(true)
 assert.match(simple.props.className, /simple/)
 assert.doesNotMatch(simple.props.className, /compact/)
