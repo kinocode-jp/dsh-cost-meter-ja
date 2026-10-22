@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [1.9.5] - 2026-10-23
+
+- （kinocode-jp フォーク）Claude の残量取得で OAuth の beta ヘッダを送り、429 は一時的な失敗として扱う。モデルのアイコンを表示。料金カードを折りたためるように。
+
 - 修复 OpenDesign Control Key 无法从凭据编辑器保存的问题，并补齐旧配置迁移。感谢 @unifilitence 在 [#317](https://github.com/Han-1413141/dsh-cost-meter/issues/317) 的问题报告与根因定位。
 - OpenDesign 整体修正：`VELA_CONTROL_KEY` 别名与环境变量正确显示凭据状态；额度／钱包部分失败的原因在卡片及提示中显示；无生效套餐时仍保留经过校验的 preflight 余额，成员身份不一致时拒绝混用。补充保存、读取、清除、工作区／密钥切换、凭据库与查询链路验证。
 
