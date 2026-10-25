@@ -9,14 +9,13 @@
   Desktop 使用自带的 dsh 命令和 pnpm；先启动一次并完全退出 Desktop，再传入 -Profile desktop。
   Desktop 默认安装与 $PinnedRev 对应的 npm 正式版；其他 Profile 固定到发布 tag。
   需要装其它 rev 时用 -Rev 参数覆盖(如 CI 冒烟装被测提交):
-   - git 源固定到 tag:  github:kinocode-jp/dsh-cost-meter-ja#v1.9.4
+   - git 源固定到 tag:  github:kinocode-jp/dsh-cost-meter-ja#v1.9.6
    - 无 git 时用 tag 打包直链(内容与 tag 一一对应)
    - pnpm 固定版本:     11.21.0(corepack prepare / npm i -g pnpm@11.21.0)
   已安装时重跑本脚本即可对齐到当前脚本固定的版本。
 
   一键用法(复制整行到 PowerShell 粘贴回车;先审阅再运行):
-    irm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/main/install.ps1 | iex
-    (v1.9.4 のタグ上の install.ps1 は上流を入れる旧版のため、main のものを使う)
+    irm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/v1.9.6/install.ps1 | iex
 
   手动用法(先下载本文件审阅):
     powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
@@ -35,7 +34,7 @@ $ErrorActionPreference = 'Stop'
 $Package      = '@kinocode/dsh-cost-meter-ja'
 $Owner        = 'kinocode-jp'
 $Repo         = 'dsh-cost-meter-ja'
-$PinnedRev    = 'v1.9.4'   # 固定发布 tag:发布新版本时同步更新此值与 README 中的安装行
+$PinnedRev    = 'v1.9.6'   # 固定发布 tag:发布新版本时同步更新此值与 README 中的安装行
 $InstallRev   = if ($Rev) { $Rev } else { $PinnedRev }
 $PnpmVersion  = '11.21.0'   # 固定 pnpm 版本,保证安装链可复现
 $GitSpec = "github:$Owner/$Repo#$InstallRev"

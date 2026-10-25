@@ -117,11 +117,24 @@ try {
   assert.equal(await page.evaluate(()=>JSON.stringify(window.current())),configBeforeSource)
   assert.equal(await page.evaluate(()=>window.patches.length),patchesBeforeSource,'source switch never saves example configuration')
   assert.ok(await page.locator('.cm-preview').evaluate(n=>parseFloat(getComputedStyle(n).fontSize)>=14))
-  // Compare actual card DOM and geometry at equal width in all three modes.
+  // The live footer adds persistent collapse chrome that the inert preview omits.
+  // Compare card geometry within each stack, and verify that chrome separately.
+  const liveCollapse=page.locator('#actual-sidebar > .cm-collapsible > .cm-collapse-bar')
+  assert.equal(await liveCollapse.getAttribute('aria-expanded'),'true')
+  assert.equal(await liveCollapse.isVisible(),true)
+  assert.equal(await page.locator('.cm-sidebar-live .cm-collapse-bar').count(),0)
+  assert.equal(await liveCollapse.evaluate(n=>Math.round(n.parentElement.querySelector('.cm-footer-stack').getBoundingClientRect().top-n.parentElement.getBoundingClientRect().top)),26,'live collapse chrome offsets the card stack by 26px')
+  await liveCollapse.evaluate(n=>n.click())
+  assert.equal(await liveCollapse.getAttribute('aria-expanded'),'false')
+  assert.equal(await page.locator('#actual-sidebar .cm-footer-stack').count(),0,'collapsing removes live cards')
+  assert.equal(await page.locator('.cm-sidebar-live .cm-footer-stack').count(),1,'live collapse does not hide the preview')
+  await liveCollapse.evaluate(n=>n.click())
+  assert.equal(await liveCollapse.getAttribute('aria-expanded'),'true')
+  assert.equal(await page.locator('#actual-sidebar .cm-footer-stack').count(),1,'expanding restores live cards')
   const parity=async()=>{
     await page.evaluate(()=>{document.getElementById('actual-sidebar').style.width=document.querySelector('.cm-sidebar-live').getBoundingClientRect().width+'px'})
     const values=await page.evaluate(()=>{
-      const snapshot=root=>{const host=root.getBoundingClientRect();return [...root.querySelectorAll('.cm-footer-stack > *,[data-cm-display],.cm-bbox-head,.cm-bbox-line,.cm-bbox-bar')].map(n=>{const r=n.getBoundingClientRect();return{class:n.className,text:n.dataset.cmDisplay==='peak'?n.textContent.replace(/\d+/g,'#'):n.textContent,x:Math.round(r.x-host.x),y:Math.round(r.y-host.y),w:Math.round(r.width),h:Math.round(r.height)}})}
+      const snapshot=container=>{const root=container.querySelector('.cm-footer-stack');const host=root.getBoundingClientRect();return [...root.querySelectorAll(':scope > *,[data-cm-display],.cm-bbox-head,.cm-bbox-line,.cm-bbox-bar')].map(n=>{const r=n.getBoundingClientRect();return{class:n.className,text:n.dataset.cmDisplay==='peak'?n.textContent.replace(/\d+/g,'#'):n.textContent,x:Math.round(r.x-host.x),y:Math.round(r.y-host.y),w:Math.round(r.width),h:Math.round(r.height)}})}
       return[snapshot(document.querySelector('.cm-sidebar-live')),snapshot(document.getElementById('actual-sidebar'))]
     })
     assert.deepEqual(values[0],values[1],'preview and real sidebar share exact card layout')

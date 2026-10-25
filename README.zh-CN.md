@@ -16,7 +16,7 @@
 
 本会话费用 · 当日费用 · OpenCode Go 订阅额度显示 · 预算与已用百分比 · 官方账户余额 · 自定义 Provider 余额查询(可配任意 HTTP 端点) · 余额三段进度条 · 历史记录 · 峰谷计价时段显示(UTC 01:00–04:00、06:00–10:00 为峰时段;周末与中国法定假日全天按谷价,分别标注) · 峰/谷切换前弹窗与系统通知提醒(位置/提前量/提醒类型可配) · 官方价格一键同步 · 类 Codex Token 用量热图 · 多厂商多模型价格计费(内置 170+ 模型 ID 价格目录与自动匹配) · 主流 Coding Plan 额度查询与显示(Anthropic / Z.ai / MiniMax / Kimi / OpenRouter / SiliconFlow / CommandCode / SCNet / 火山方舟 / 千问 / 小米 MiMo 十一家,含 Volcano Ark AK/SK 签名与 MiMo 控制台 Cookie 查询) · Plan/API 双轨计费(订阅额度与按量金额分离统计,每 1% 额度与满窗的 token/等值金额估算及日/周/月曲线) · 订阅插件兼容(Codex / ChatGPT 订阅) · 手机端适配(dsh-pocket) · 输入框上方额度横条(预算/Go/Coding Plan 用量一条横排显示,可开关)
 
-[![version](https://img.shields.io/badge/version-1.9.4-4176E6)](https://github.com/kinocode-jp/dsh-cost-meter-ja)
+[![version](https://img.shields.io/badge/version-1.9.6-4176E6)](https://github.com/kinocode-jp/dsh-cost-meter-ja)
 
 **最低支持宿主：DSH 0.2.0。** 插件把下限声明在 `engines.dsh`（宿主准入插件的闸门），不再支持任何 DSH 0.1.x 版本；本轮适配目标为 npm `next` 标签的 **0.2.1-rc.2**。具体范围与宿主的读取方式见[兼容声明](docs/dsh-0.2.1-compatibility.md#中文)。
 
@@ -345,22 +345,22 @@ Node.js 20 请改用 `npm install -g pnpm@10`。版本要求见 [pnpm 官方安�
 dsh plugin --profile web add @kinocode/dsh-cost-meter-ja
 ```
 
-**PowerShell 一键脚本**(复制整行粘贴回车;自动补齐 pnpm、自动探测 git,无需克隆仓库;脚本取自本分支的 `main`,安装发布 tag `v1.9.4`,建议先下载审阅再运行):
+**PowerShell 一键脚本**(复制整行粘贴回车;自动补齐 pnpm、自动探测 git,无需克隆仓库;脚本与插件均固定到本分支的发布 tag `v1.9.6`,建议先下载审阅再运行):
 
 ```powershell
-irm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/kinocode-jp/dsh-cost-meter-ja/v1.9.6/install.ps1 | iex
 ```
 
 **或直接命令行**(机器上需已有 pnpm 与 git;同样固定到 tag):
 
 ```sh
-dsh plugin --profile web add github:kinocode-jp/dsh-cost-meter-ja#v1.9.4
+dsh plugin --profile web add github:kinocode-jp/dsh-cost-meter-ja#v1.9.6
 ```
 
 没有 git 时可用 GitHub tag 打包直链:
 
 ```sh
-dsh plugin --profile web add https://github.com/kinocode-jp/dsh-cost-meter-ja/archive/refs/tags/v1.9.4.tar.gz
+dsh plugin --profile web add https://github.com/kinocode-jp/dsh-cost-meter-ja/archive/refs/tags/v1.9.6.tar.gz
 ```
 
 安装后**重启** `dsh web`(插件行、Typert 清单与客户端 bundle 均在启动时扫描):
@@ -425,7 +425,7 @@ DSH **0.2.1-rc.1 / 0.2.1-rc.2** 宿主自带 pnpm **11.28.5**，默认启用内�
 
    ```yaml
    minimumReleaseAgeExclude:
-     - '@kinocode/dsh-cost-meter-ja@1.9.4'
+     - '@kinocode/dsh-cost-meter-ja@1.9.6'
    ```
 
 3. 仅本次操作用 CLI 透传 pnpm 参数：`dsh plugin --profile desktop remove @kinocode/dsh-cost-meter-ja --config.minimum-release-age=0`；若只是 lockfile 校验阶段失败，可改用 `--trust-lockfile`。这两个参数已在本机 pnpm 11.28.5 临时 Profile 上实测可用。

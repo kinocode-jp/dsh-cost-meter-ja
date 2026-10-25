@@ -1292,17 +1292,15 @@
       api += leftoverBilled
       return { total, api }
     }
-    /** 日本語フォーク: カスタム見積もり(JPY)の換算レート。未取得なら表示通貨 JPY の手入力レート、なければ 150。 */
-    function jpyRateOfLocal(config) {
+    /** Same quote precedence as host fxRatesOf/fxRateFor; display fallback is not a historical quote. */
+    function fxRateOfLocal(config, currency) {
       const valid = value => typeof value === 'number' && Number.isFinite(value) && value > 0 && value < 1e6
-      if (valid(config.fxRates?.JPY)) return config.fxRates.JPY
-      return config.currency === 'JPY' && valid(config.exchangeRate) ? config.exchangeRate : 150
+      if (currency === 'USD') return 1
+      if (config?.currency === currency && (currency !== 'JPY' || config.exchangeRateAuto === false) && valid(config.exchangeRate)) return config.exchangeRate
+      return valid(config?.fxRates?.[currency]) ? config.fxRates[currency] : ({ CNY: 7.2, EUR: 0.92, JPY: 150 }[currency] ?? 1)
     }
-    function cnyRateOfLocal(config) {
-      const valid = value => typeof value === 'number' && Number.isFinite(value) && value > 0 && value < 1e6
-      if (config.currency === 'CNY' && valid(config.exchangeRate)) return config.exchangeRate
-      return valid(config.fxRates?.CNY) ? config.fxRates.CNY : 7.2
-    }
+    function jpyRateOfLocal(config) { return fxRateOfLocal(config, 'JPY') }
+    function cnyRateOfLocal(config) { return fxRateOfLocal(config, 'CNY') }
     /** 快速判定:投影里是否存在 Plan 类模型(无则徽章/dock 走宿主精确成本快路径)。 */
     function usageHasPlanClass(usage, config) {
       if (!usage || !config) return false
@@ -1716,8 +1714,7 @@
       const code = typeof currency === 'string' ? currency.toUpperCase() : ''
       const n = Number(value)
       if (!Number.isFinite(n) || !['USD', 'CNY', 'EUR'].includes(code)) return null
-      const valid = v => typeof v === 'number' && Number.isFinite(v) && v > 0 && v < 1e6
-      const rate = code === 'USD' ? 1 : valid(config.fxRates?.[code]) ? config.fxRates[code] : code === 'CNY' ? 7.2 : 0.92
+      const rate = fxRateOfLocal(config, code)
       return formatMoneyUsd(n / rate, config)
     }
     function formatBalanceMoney(value, config, currency) {
@@ -1769,8 +1766,7 @@
       if (unit === 'USD') return usd
       // 积分不能由美元花费换算。
       if (unit === 'CREDITS') return 0
-      const rate = Number(config?.exchangeRate)
-      return usd * (Number.isFinite(rate) && rate > 0 ? rate : 1)
+      return usd * fxRateOfLocal(config, unit)
     }
 
     function computeBalanceSegments({ remaining, spend, todayUsed, cap }) {

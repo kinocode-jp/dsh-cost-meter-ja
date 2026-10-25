@@ -6969,5 +6969,6 @@ console.log('[ok] 全部验证通过')
 
 await import('./exchange-rates.mjs')
 await import('./jpy-currency.mjs')
+await import('./jpy-first-quote.mjs')
 await import('./custom-model-prices.mjs')
 await import('./context-activity.mjs')
